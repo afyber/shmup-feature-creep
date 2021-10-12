@@ -149,58 +149,57 @@ public class Screen {
 		else if (xScale == 0 || yScale == 0) {
 			return new ScaledSpriteInfo(new byte[1][4], 0, 0);
 		}
-		else {
-			// TODO: handle negative values
-			byte[][] newDataX = new byte[data.length][Math.round(data[0].length / 4 * xScale) * 4];
 
-			float runningTally = 0;
-			int intTally;
-			int newX = 0;
-			int newXOrigin = 0;
-			for (int oldX = 0; oldX < data[0].length; oldX += 4) {
-				if (oldX / 4 == originX) {
-					newXOrigin = newX;
-				}
-				runningTally += xScale;
-				intTally = (int)runningTally;
-				if (intTally > 0) {
-					for (int y = 0; y < data.length; y++) {
-						for (int i = 0; i < intTally; i++) {
-							newDataX[y][newX * 4 + i * 4] = data[y][oldX];
-							newDataX[y][newX * 4 + i * 4 + 1] = data[y][oldX + 1];
-							newDataX[y][newX * 4 + i * 4 + 2] = data[y][oldX + 2];
-							newDataX[y][newX * 4 + i * 4 + 3] = data[y][oldX + 3];
-						}
-					}
-					runningTally -= intTally;
-					newX += intTally;
-				}
+		// TODO: handle negative values
+		byte[][] newDataX = new byte[data.length][Math.round(data[0].length / 4 * xScale) * 4];
+
+		float runningTally = 0;
+		int intTally;
+		int newX = 0;
+		int newXOrigin = 0;
+		for (int oldX = 0; oldX < data[0].length; oldX += 4) {
+			if (oldX / 4 == originX) {
+				newXOrigin = newX;
 			}
-
-			byte[][] newDataY = new byte[Math.round(data.length * yScale)][newDataX[0].length];
-
-			runningTally = 0;
-			int newY = 0;
-			int newYOrigin = 0;
-			for (int oldY = 0; oldY < data.length; oldY++) {
-				if (oldY == originY) {
-					newYOrigin = newY;
-				}
-				runningTally += yScale;
-				intTally = (int)runningTally;
-				if (intTally > 0) {
-					for (int x = 0; x < newDataY[0].length; x++) {
-						for (int i = 0; i < intTally; i++) {
-							newDataY[newY + i][x] = newDataX[oldY][x];
-						}
+			runningTally += xScale;
+			intTally = (int)runningTally;
+			if (intTally > 0) {
+				for (int y = 0; y < data.length; y++) {
+					for (int i = 0; i < intTally; i++) {
+						newDataX[y][newX * 4 + i * 4] = data[y][oldX];
+						newDataX[y][newX * 4 + i * 4 + 1] = data[y][oldX + 1];
+						newDataX[y][newX * 4 + i * 4 + 2] = data[y][oldX + 2];
+						newDataX[y][newX * 4 + i * 4 + 3] = data[y][oldX + 3];
 					}
-					runningTally -= intTally;
-					newY += intTally;
 				}
+				runningTally -= intTally;
+				newX += intTally;
 			}
-
-			return new ScaledSpriteInfo(newDataY, newXOrigin, newYOrigin);
 		}
+
+		byte[][] newDataY = new byte[Math.round(data.length * yScale)][newDataX[0].length];
+
+		runningTally = 0;
+		int newY = 0;
+		int newYOrigin = 0;
+		for (int oldY = 0; oldY < data.length; oldY++) {
+			if (oldY == originY) {
+				newYOrigin = newY;
+			}
+			runningTally += yScale;
+			intTally = (int)runningTally;
+			if (intTally > 0) {
+				for (int x = 0; x < newDataY[0].length; x++) {
+					for (int i = 0; i < intTally; i++) {
+						newDataY[newY + i][x] = newDataX[oldY][x];
+					}
+				}
+				runningTally -= intTally;
+				newY += intTally;
+			}
+		}
+
+		return new ScaledSpriteInfo(newDataY, newXOrigin, newYOrigin);
 	}
 
 	public static boolean isWindowClosed() {

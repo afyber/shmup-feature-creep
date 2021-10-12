@@ -82,7 +82,6 @@ public class SpriteSheet {
 			y = Integer.parseInt(splitEvenMore[1]);
 			width = Integer.parseInt(splitEvenMore[2]);
 			height = Integer.parseInt(splitEvenMore[3]);
-			// TODO
 			originX = Integer.parseInt(splitEvenMore[4]);
 			originY = Integer.parseInt(splitEvenMore[5]);
 
@@ -104,15 +103,6 @@ public class SpriteSheet {
 		}
 
 		return new SpriteSheetRegion(newBytes, info.dataWidth(), info.dataHeight(), info.originX(), info.originY());
-	}
-
-	public static void testPngLoading() {
-		PngReaderByte reader = new PngReaderByte(new File("test4.png"));
-		System.out.println(reader.imgInfo.cols);
-		while (reader.hasMoreRows()) {
-			System.out.println(Arrays.toString(reader.readRowByte().getScanline()));
-		}
-		reader.end();
 	}
 
 	record SpriteInformation(int dataBeginX, int dataBeginY, int dataWidth, int dataHeight, int originX, int originY) {}
