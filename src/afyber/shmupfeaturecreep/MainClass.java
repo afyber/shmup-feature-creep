@@ -5,7 +5,7 @@ import afyber.shmupfeaturecreep.engine.Timing;
 import afyber.shmupfeaturecreep.engine.World;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class MainClass {
 
@@ -18,9 +18,7 @@ public class MainClass {
 
 	public static final boolean DEBUG = true;
 
-	public static World world;
-
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) {
 		if (DEBUG)
 			System.out.println("Program start");
 
@@ -30,7 +28,7 @@ public class MainClass {
 
 		Keyboard.clearKeys();
 
-		world = new World();
+		World world = new World();
 
 		if (DEBUG)
 			System.out.println("Main Loop Start");
@@ -40,10 +38,10 @@ public class MainClass {
 
 			Keyboard.applyKeyQueue();
 
-			// update all the stuff
-			// FIXME: alarms set in create code for the first room will take one extra frame
+			// BUG: alarms from create code set at room start will apply one frame early
 			world.alarmAll();
 
+			// update all the stuff
 			world.updateAll();
 
 			// draw everything
@@ -57,7 +55,14 @@ public class MainClass {
 			Keyboard.frameDone();
 
 			Timing.mainLoopBodyEnded();
-			Timing.calculateTimeAndWaitThread();
+			try {
+				Timing.calculateTimeAndWaitThread();
+			}
+			catch (InterruptedException e) {
+				System.out.println("For some reason an InterruptedException happened while waiting the main thread.");
+				e.printStackTrace();
+				Thread.currentThread().interrupt();
+			}
 		}
 
 		if (DEBUG)
