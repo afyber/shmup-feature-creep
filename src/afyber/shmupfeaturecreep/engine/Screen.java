@@ -112,9 +112,12 @@ public class Screen {
 
 	private static void copySpriteRegionToImage(SpriteSheetRegion sprite, DrawRequest request) {
 		// all this to say, if the sprite does not overlap the image, do not draw it
-		if ((request.x() < 0 || request.x() >= image.getWidth() || request.y() < 0 || request.y() >= image.getHeight()) &&
-				(request.x() + sprite.dataWidth() / 4 < 0 || request.x() + sprite.dataWidth() / 4 >= image.getWidth() ||
-						request.y() + sprite.dataHeight() < 0 || request.y() + sprite.dataHeight() >= image.getHeight())) {
+		int actualX = request.x() - Math.round(sprite.originX() * request.xScale());
+		int actualY = request.y() - Math.round(sprite.originY() * request.yScale());
+		int actualX2 = actualX + Math.round(sprite.dataWidth() * request.xScale());
+		int actualY2 = actualY + Math.round(sprite.dataHeight() * request.yScale());
+		if ((actualX < 0 || actualX >= image.getWidth() || actualY < 0 || actualY >= image.getHeight()) &&
+				(actualX2 < 0 || actualX2 >= image.getWidth() || actualY2 < 0 || actualY2 >= image.getHeight())) {
 			return;
 		}
 
