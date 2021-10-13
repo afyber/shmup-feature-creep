@@ -183,7 +183,7 @@ public class DynamicObject {
 		return spriteIndex;
 	}
 
-	public final int getAlarms(int alarm) {
+	public final int getAlarm(int alarm) {
 		return this.alarm[alarm];
 	}
 

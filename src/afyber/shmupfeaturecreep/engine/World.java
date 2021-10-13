@@ -69,24 +69,27 @@ public class World {
 	public void alarmAll() {
 		for (DynamicObject gameObject: allGameObjects) {
 			for (int i = 0; i < 10; i++) {
-				int value = gameObject.getAlarms(i);
-				if (value == 0) {
-					switch (i) {
-						case 0 -> gameObject.alarm1();
-						case 1 -> gameObject.alarm2();
-						case 2 -> gameObject.alarm3();
-						case 3 -> gameObject.alarm4();
-						case 4 -> gameObject.alarm5();
-						case 5 -> gameObject.alarm6();
-						case 6 -> gameObject.alarm7();
-						case 7 -> gameObject.alarm8();
-						case 8 -> gameObject.alarm9();
-						case 9 -> gameObject.alarm10();
-					}
-					gameObject.setAlarm(i, -1);
-				}
-				else if (value > 0) {
+				// NOTE: here, if the alarm is > 0, subtract 1
+				int value = gameObject.getAlarm(i);
+				if (value > 0) {
 					gameObject.setAlarm(i, value - 1);
+
+					// here, if it has just become 0 from that subtraction, trigger the alarm
+					if (gameObject.getAlarm(i) == 0) {
+						gameObject.setAlarm(i, -1);
+						switch (i) {
+							case 0 -> gameObject.alarm1();
+							case 1 -> gameObject.alarm2();
+							case 2 -> gameObject.alarm3();
+							case 3 -> gameObject.alarm4();
+							case 4 -> gameObject.alarm5();
+							case 5 -> gameObject.alarm6();
+							case 6 -> gameObject.alarm7();
+							case 7 -> gameObject.alarm8();
+							case 8 -> gameObject.alarm9();
+							case 9 -> gameObject.alarm10();
+						}
+					}
 				}
 			}
 		}
