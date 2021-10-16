@@ -3,9 +3,11 @@ package afyber.shmupfeaturecreep.engine.world;
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
+import afyber.shmupfeaturecreep.engine.rooms.ObjectCreationReference;
 import afyber.shmupfeaturecreep.engine.rooms.ObjectReference;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
+import afyber.shmupfeaturecreep.game.Player;
 import afyber.shmupfeaturecreep.game.TestInstanceClass;
 import afyber.shmupfeaturecreep.game.TestInstanceClass2;
 import afyber.shmupfeaturecreep.game.TestInstanceClass3;
@@ -23,6 +25,8 @@ public class World {
 
 	private ArrayList<StaticObject> allTiles;
 	private ArrayList<DynamicObject> allGameObjects;
+	private ArrayList<ObjectDestructionReference> gameObjectsToRemove;
+	private ArrayList<ObjectCreationReference> gameObjectsToAdd;
 
 	private int nextAvailableGameObjectID = 1;
 
@@ -31,6 +35,8 @@ public class World {
 	public World() {
 		allTiles = new ArrayList<>();
 		allGameObjects = new ArrayList<>();
+		gameObjectsToAdd = new ArrayList<>();
+		gameObjectsToRemove = new ArrayList<>();
 		worldMiddleman = new WorldMiddleman(this);
 		allTiles.add(new StaticObject("sprite_2", 16, 32));
 		allTiles.add(new StaticObject("sprite_3", 64, 128));
@@ -39,6 +45,26 @@ public class World {
 		}
 		createInstance(TestInstanceClass.class, 64, 64, 0);
 		createInstance(TestInstanceClass3.class, 256, 256, -10);
+		createInstance(Player.class, 320, 256, 100);
+	}
+
+	public void destroyAll() {
+		for (ObjectDestructionReference toDestroy: gameObjectsToRemove) {
+			if (toDestroy.useInstanceID()) {
+				instanceDestroy(toDestroy.reference());
+			}
+			else {
+				instanceDestroy(toDestroy.objClass());
+			}
+		}
+		gameObjectsToRemove.clear();
+	}
+
+	public void createAll() {
+		for (ObjectCreationReference toCreate: gameObjectsToAdd) {
+			createInstance(toCreate.objectClass(), toCreate.x(), toCreate.y(), toCreate.depth());
+		}
+		gameObjectsToAdd.clear();
 	}
 
 	public void drawAll() {
@@ -101,6 +127,28 @@ public class World {
 		int toReturn = nextAvailableGameObjectID;
 		nextAvailableGameObjectID++;
 		return toReturn;
+	}
+
+	public ObjectReference queueObjectCreation(Class classRef, float x, float y, int depth) {
+		int id = getNextAvailableGameObjectID();
+		gameObjectsToAdd.add(new ObjectCreationReference(classRef, x, y, depth, id));
+		return new ObjectReference(id);
+	}
+
+	public void queueObjectDestruction(ObjectReference ref) {
+		gameObjectsToRemove.add(new ObjectDestructionReference(true, ref, null));
+	}
+
+	public void queueObjectDestruction(Class classRef) {
+		gameObjectsToRemove.add(new ObjectDestructionReference(false, null, classRef));
+	}
+
+	public void setAlarm(ObjectReference ref, int alarm, int value) {
+		for (DynamicObject object: allGameObjects) {
+			if (object.getInstanceID() == ref.instanceID()) {
+				object.setAlarm(alarm, value);
+			}
+		}
 	}
 
 	public ObjectReference createInstance(Class classRef, float x, float y, int depth) {

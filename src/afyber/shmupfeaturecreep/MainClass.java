@@ -39,6 +39,10 @@ public class MainClass {
 
 			Keyboard.applyKeyQueue();
 
+			world.destroyAll();
+
+			world.createAll();
+
 			// BUG: alarms from create code set at room start will apply one frame early
 			world.alarmAll();
 

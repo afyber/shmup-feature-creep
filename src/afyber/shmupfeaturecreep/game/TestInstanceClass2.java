@@ -8,6 +8,10 @@ public class TestInstanceClass2 extends DynamicObject {
 
 	public TestInstanceClass2(float x, float y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
+	}
+
+	@Override
+	public void create(WorldMiddleman world) {
 		spriteIndex = "sprite_1";
 	}
 

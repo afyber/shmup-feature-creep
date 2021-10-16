@@ -1,0 +1,2 @@
+player_sprite_normal:0,0,16,16,8,8
+player_bullet:16,0,16,16,8,8

@@ -18,15 +18,15 @@ public class WorldMiddleman {
 	}
 
 	public ObjectReference createInstance(Class classRef, float x, float y, int depth) {
-		return world.createInstance(classRef, x, y, depth);
+		return world.queueObjectCreation(classRef, x, y, depth);
 	}
 
 	public void instanceDestroy(ObjectReference ref) {
-		world.instanceDestroy(ref);
+		world.queueObjectDestruction(ref);
 	}
 
 	public void instanceDestroy(Class objectClass) {
-		world.instanceDestroy(objectClass);
+		world.queueObjectDestruction(objectClass);
 	}
 
 	public boolean instanceExists(ObjectReference ref) {
@@ -43,5 +43,9 @@ public class WorldMiddleman {
 
 	public boolean isColliding(DynamicObject caller, Class other) {
 		return world.isColliding(caller, other);
+	}
+
+	public void setAlarm(ObjectReference obj, int alarm, int value) {
+		world.setAlarm(obj, alarm, value);
 	}
 }

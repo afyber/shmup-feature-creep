@@ -56,6 +56,7 @@ public class Screen {
 
 		allSpriteSheets = new ArrayList<>();
 		allSpriteSheets.add(new SpriteSheet("spritesheets/test6"));
+		allSpriteSheets.add(new SpriteSheet("spritesheets/spritesheet1"));
 	}
 
 	public static void draw(String spriteName, float x, float y, int depth) {

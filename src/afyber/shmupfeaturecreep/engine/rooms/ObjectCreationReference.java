@@ -5,4 +5,4 @@ package afyber.shmupfeaturecreep.engine.rooms;
  *
  * @author afyber
  */
-public record RoomCreationObjectReference(Class objectClass, float x, float y, int depth) {}
+public record ObjectCreationReference(Class objectClass, float x, float y, int depth, int instanceID) {}
