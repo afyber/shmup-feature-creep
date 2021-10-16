@@ -4,7 +4,6 @@ import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.rooms.ObjectCreationReference;
-import afyber.shmupfeaturecreep.engine.rooms.ObjectReference;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
 import afyber.shmupfeaturecreep.game.Player;
@@ -49,20 +48,20 @@ public class World {
 	}
 
 	public void destroyAll() {
-		for (ObjectDestructionReference toDestroy: gameObjectsToRemove) {
-			if (toDestroy.useInstanceID()) {
-				instanceDestroy(toDestroy.reference());
+		for (ObjectDestructionReference destroyRef: gameObjectsToRemove) {
+			if (destroyRef.useInstanceID()) {
+				instanceDestroy(destroyRef.objRef());
 			}
 			else {
-				instanceDestroy(toDestroy.objClass());
+				instanceDestroy(destroyRef.classRef());
 			}
 		}
 		gameObjectsToRemove.clear();
 	}
 
 	public void createAll() {
-		for (ObjectCreationReference toCreate: gameObjectsToAdd) {
-			createInstance(toCreate.objectClass(), toCreate.x(), toCreate.y(), toCreate.depth());
+		for (ObjectCreationReference createRef: gameObjectsToAdd) {
+			createInstance(createRef.objectClass(), createRef.x(), createRef.y(), createRef.depth());
 		}
 		gameObjectsToAdd.clear();
 	}
@@ -71,51 +70,51 @@ public class World {
 		for (StaticObject tile: allTiles) {
 			tile.draw();
 		}
-		for (DynamicObject gameObject: allGameObjects) {
-			gameObject.preDraw(worldMiddleman);
+		for (DynamicObject object: allGameObjects) {
+			object.preDraw(worldMiddleman);
 		}
-		for (DynamicObject gameObject: allGameObjects) {
-			gameObject.draw(worldMiddleman);
+		for (DynamicObject object: allGameObjects) {
+			object.draw(worldMiddleman);
 		}
-		for (DynamicObject gameObject: allGameObjects) {
-			gameObject.postDraw(worldMiddleman);
+		for (DynamicObject object: allGameObjects) {
+			object.postDraw(worldMiddleman);
 		}
 	}
 
 	public void updateAll() {
-		for (DynamicObject gameObject: allGameObjects) {
-			gameObject.preUpdate(worldMiddleman);
+		for (DynamicObject object: allGameObjects) {
+			object.preUpdate(worldMiddleman);
 		}
-		for (DynamicObject gameObject: allGameObjects) {
-			gameObject.update(worldMiddleman);
+		for (DynamicObject object: allGameObjects) {
+			object.update(worldMiddleman);
 		}
-		for (DynamicObject gameObject: allGameObjects) {
-			gameObject.postUpdate(worldMiddleman);
+		for (DynamicObject object: allGameObjects) {
+			object.postUpdate(worldMiddleman);
 		}
 	}
 
 	public void alarmAll() {
-		for (DynamicObject gameObject: allGameObjects) {
+		for (DynamicObject object: allGameObjects) {
 			for (int i = 0; i < 10; i++) {
 				// NOTE: here, if the alarm is > 0, subtract 1
-				int value = gameObject.getAlarm(i);
+				int value = object.getAlarm(i);
 				if (value > 0) {
-					gameObject.setAlarm(i, value - 1);
+					object.setAlarm(i, value - 1);
 
 					// here, if it has just become 0 from that subtraction, trigger the alarm
-					if (gameObject.getAlarm(i) == 0) {
-						gameObject.setAlarm(i, -1);
+					if (object.getAlarm(i) == 0) {
+						object.setAlarm(i, -1);
 						switch (i) {
-							case 0 -> gameObject.alarm1(worldMiddleman);
-							case 1 -> gameObject.alarm2(worldMiddleman);
-							case 2 -> gameObject.alarm3(worldMiddleman);
-							case 3 -> gameObject.alarm4(worldMiddleman);
-							case 4 -> gameObject.alarm5(worldMiddleman);
-							case 5 -> gameObject.alarm6(worldMiddleman);
-							case 6 -> gameObject.alarm7(worldMiddleman);
-							case 7 -> gameObject.alarm8(worldMiddleman);
-							case 8 -> gameObject.alarm9(worldMiddleman);
-							case 9 -> gameObject.alarm10(worldMiddleman);
+							case 0 -> object.alarm1(worldMiddleman);
+							case 1 -> object.alarm2(worldMiddleman);
+							case 2 -> object.alarm3(worldMiddleman);
+							case 3 -> object.alarm4(worldMiddleman);
+							case 4 -> object.alarm5(worldMiddleman);
+							case 5 -> object.alarm6(worldMiddleman);
+							case 6 -> object.alarm7(worldMiddleman);
+							case 7 -> object.alarm8(worldMiddleman);
+							case 8 -> object.alarm9(worldMiddleman);
+							case 9 -> object.alarm10(worldMiddleman);
 						}
 					}
 				}
@@ -129,36 +128,36 @@ public class World {
 		return toReturn;
 	}
 
-	public ObjectReference queueObjectCreation(Class classRef, float x, float y, int depth) {
+	public int queueObjectCreation(Class classRef, float x, float y, int depth) {
 		int id = getNextAvailableGameObjectID();
 		gameObjectsToAdd.add(new ObjectCreationReference(classRef, x, y, depth, id));
-		return new ObjectReference(id);
+		return id;
 	}
 
-	public void queueObjectDestruction(ObjectReference ref) {
-		gameObjectsToRemove.add(new ObjectDestructionReference(true, ref, null));
+	public void queueObjectDestruction(int objRef) {
+		gameObjectsToRemove.add(new ObjectDestructionReference(true, objRef, null));
 	}
 
 	public void queueObjectDestruction(Class classRef) {
-		gameObjectsToRemove.add(new ObjectDestructionReference(false, null, classRef));
+		gameObjectsToRemove.add(new ObjectDestructionReference(false, -1, classRef));
 	}
 
-	public void setAlarm(ObjectReference ref, int alarm, int value) {
+	public void setAlarm(int objRef, int alarm, int value) {
 		for (DynamicObject object: allGameObjects) {
-			if (object.getInstanceID() == ref.instanceID()) {
+			if (object.getInstanceID() == objRef) {
 				object.setAlarm(alarm, value);
 			}
 		}
 	}
 
-	public ObjectReference createInstance(Class classRef, float x, float y, int depth) {
+	public int createInstance(Class classRef, float x, float y, int depth) {
 		try {
 			Constructor con = classRef.getConstructor(Float.TYPE, Float.TYPE, Integer.TYPE, Integer.TYPE);
 			int id = getNextAvailableGameObjectID();
 			DynamicObject newObject = (DynamicObject)(con.newInstance(x, y, depth, id));
 			newObject.create(worldMiddleman);
 			allGameObjects.add(newObject);
-			return new ObjectReference(id);
+			return id;
 		}
 		catch (NoSuchMethodException e) {
 			if (MainClass.DEBUG)
@@ -181,13 +180,13 @@ public class World {
 			e.printStackTrace();
 		}
 		// -1 is not a valid instance ID, so nothing will happen if you try to do something to it
-		return new ObjectReference(-1);
+		return -1;
 	}
 
-	public void instanceDestroy(ObjectReference ref) {
-		if (ref.instanceID() != -1) {
+	public void instanceDestroy(int objRef) {
+		if (objRef != -1) {
 			for (DynamicObject object: allGameObjects) {
-				if (object.getInstanceID() == ref.instanceID()) {
+				if (object.getInstanceID() == objRef) {
 					object.destroy(worldMiddleman);
 					allGameObjects.remove(object);
 					break;
@@ -196,9 +195,9 @@ public class World {
 		}
 	}
 
-	public void instanceDestroy(Class objectClass) {
+	public void instanceDestroy(Class classRef) {
 		for (DynamicObject object: allGameObjects) {
-			if (object.getClass() == objectClass) {
+			if (object.getClass() == classRef) {
 				object.destroy(worldMiddleman);
 				allGameObjects.remove(object);
 				break;
@@ -206,10 +205,10 @@ public class World {
 		}
 	}
 
-	public boolean instanceExists(ObjectReference ref) {
-		if (ref.instanceID() != -1) {
+	public boolean instanceExists(int objRef) {
+		if (objRef != -1) {
 			for (DynamicObject object: allGameObjects) {
-				if (object.getInstanceID() == ref.instanceID()) {
+				if (object.getInstanceID() == objRef) {
 					return true;
 				}
 			}
@@ -217,19 +216,19 @@ public class World {
 		return false;
 	}
 
-	public boolean instanceExists(Class objectClass) {
+	public boolean instanceExists(Class classRef) {
 		for (DynamicObject object: allGameObjects) {
-			if (object.getClass() == objectClass) {
+			if (object.getClass() == classRef) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public boolean isColliding(DynamicObject caller, ObjectReference other) {
+	public boolean isColliding(DynamicObject caller, int objRef) {
 		DynamicObject otherObject = null;
 		for (DynamicObject object: allGameObjects) {
-			if (object.getInstanceID() == other.instanceID()) {
+			if (object.getInstanceID() == objRef) {
 				otherObject = object;
 				break;
 			}
@@ -267,9 +266,9 @@ public class World {
 		return false;
 	}
 
-	public boolean isColliding(DynamicObject caller, Class other) {
+	public boolean isColliding(DynamicObject caller, Class classRef) {
 		for (DynamicObject object: allGameObjects) {
-			if ((object.getClass() == other || object.getClass().isInstance(other)) && isColliding(caller, new ObjectReference(object.getInstanceID()))) {
+			if ((object.getClass() == classRef || object.getClass().isInstance(classRef)) && isColliding(caller, object.getInstanceID())) {
 				return true;
 			}
 		}

@@ -1,7 +1,6 @@
 package afyber.shmupfeaturecreep.game;
 
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
-import afyber.shmupfeaturecreep.engine.rooms.ObjectReference;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class PlayerBullet extends DynamicObject {
@@ -18,7 +17,7 @@ public class PlayerBullet extends DynamicObject {
 
 	@Override
 	public void alarm1(WorldMiddleman world) {
-		world.instanceDestroy(new ObjectReference(instanceID));
+		world.instanceDestroy(instanceID);
 	}
 
 	@Override

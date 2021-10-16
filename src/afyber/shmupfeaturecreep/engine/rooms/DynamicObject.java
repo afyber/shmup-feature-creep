@@ -166,7 +166,7 @@ public class DynamicObject {
 		this.imageXScale = imageXScale;
 	}
 
-	public void setImageYScale(float imageYScale) {
+	public final void setImageYScale(float imageYScale) {
 		this.imageYScale = imageYScale;
 	}
 
@@ -196,11 +196,11 @@ public class DynamicObject {
 		return this.alarm[alarm];
 	}
 
-	public float getImageXScale() {
+	public final float getImageXScale() {
 		return imageXScale;
 	}
 
-	public float getImageYScale() {
+	public final float getImageYScale() {
 		return imageYScale;
 	}
 

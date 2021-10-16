@@ -1,7 +1,6 @@
 package afyber.shmupfeaturecreep.engine.world;
 
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
-import afyber.shmupfeaturecreep.engine.rooms.ObjectReference;
 
 /**
  * This is shown to DynamicObjects so that they have a way to access world, yes this requires maintaining the same
@@ -17,35 +16,35 @@ public class WorldMiddleman {
 		this.world = world;
 	}
 
-	public ObjectReference createInstance(Class classRef, float x, float y, int depth) {
+	public int createInstance(Class classRef, float x, float y, int depth) {
 		return world.queueObjectCreation(classRef, x, y, depth);
 	}
 
-	public void instanceDestroy(ObjectReference ref) {
-		world.queueObjectDestruction(ref);
+	public void instanceDestroy(int objRef) {
+		world.queueObjectDestruction(objRef);
 	}
 
-	public void instanceDestroy(Class objectClass) {
-		world.queueObjectDestruction(objectClass);
+	public void instanceDestroy(Class classRef) {
+		world.queueObjectDestruction(classRef);
 	}
 
-	public boolean instanceExists(ObjectReference ref) {
-		return world.instanceExists(ref);
+	public boolean instanceExists(int objRef) {
+		return world.instanceExists(objRef);
 	}
 
-	public boolean instanceExists(Class objectClass) {
-		return world.instanceExists(objectClass);
+	public boolean instanceExists(Class classRef) {
+		return world.instanceExists(classRef);
 	}
 
-	public boolean isColliding(DynamicObject caller, ObjectReference other) {
-		return world.isColliding(caller, other);
+	public boolean isColliding(DynamicObject caller, int objRef) {
+		return world.isColliding(caller, objRef);
 	}
 
-	public boolean isColliding(DynamicObject caller, Class other) {
-		return world.isColliding(caller, other);
+	public boolean isColliding(DynamicObject caller, Class classRef) {
+		return world.isColliding(caller, classRef);
 	}
 
-	public void setAlarm(ObjectReference obj, int alarm, int value) {
-		world.setAlarm(obj, alarm, value);
+	public void setAlarm(int objRef, int alarm, int value) {
+		world.setAlarm(objRef, alarm, value);
 	}
 }

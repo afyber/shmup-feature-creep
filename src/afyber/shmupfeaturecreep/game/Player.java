@@ -2,7 +2,6 @@ package afyber.shmupfeaturecreep.game;
 
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
-import afyber.shmupfeaturecreep.engine.rooms.ObjectReference;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class Player extends DynamicObject {
@@ -28,7 +27,7 @@ public class Player extends DynamicObject {
 
 	@Override
 	public void alarm8(WorldMiddleman world) {
-		ObjectReference bul = world.createInstance(PlayerBullet.class, x, y + 2, depth);
+		int bul = world.createInstance(PlayerBullet.class, x, y + 2, depth);
 		world.setAlarm(bul, 0, 120);
 		if (Keyboard.keyDown("z")) {
 			alarm[7] = 4;
