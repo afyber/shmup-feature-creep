@@ -123,7 +123,6 @@ public class Screen {
 
 		// the sprite is at least partially on-screen
 		ScaledSpriteInfo scaledSprite = scaleImageData(sprite.data(), request.xScale(), request.yScale(), sprite.originX(), sprite.originY());
-		// TODO: properly figure out origin scaling to prevent annoying jerkiness
 		byte[][] spriteData = scaledSprite.data();
 		for (int y = 0; y < spriteData.length; y++) {
 			for (int x = 0; x < spriteData[0].length / 4; x++) {
@@ -138,14 +137,15 @@ public class Screen {
 				if (Byte.toUnsignedInt(spriteData[y][x * 4 + 3]) == 0xFF) {
 					image.setRGB(calculatedX, calculatedY, 0xFF000000 | Byte.toUnsignedInt(spriteData[y][x * 4]) << 16 | Byte.toUnsignedInt(spriteData[y][x * 4 + 1]) << 8 | Byte.toUnsignedInt(spriteData[y][x * 4 + 2]));
 				}
-				else if (Byte.toUnsignedInt(spriteData[y][x + 3]) != 0) {
+				else if (Byte.toUnsignedInt(spriteData[y][x * 4 + 3]) != 0) {
 					// TODO: apply transparency
 				}
 			}
 		}
 	}
 
-	private static ScaledSpriteInfo scaleImageData(byte[][] data, float xScale, float yScale, int originX, int originY) {
+	public static ScaledSpriteInfo scaleImageData(byte[][] data, float xScale, float yScale, int originX, int originY) {
+		// TODO: properly figure out scaling to prevent annoying jerkiness when constantly changing scale
 		if (xScale == 1 && yScale == 1) {
 			return new ScaledSpriteInfo(data, originX, originY);
 		}
@@ -153,53 +153,85 @@ public class Screen {
 			return new ScaledSpriteInfo(new byte[1][4], 0, 0);
 		}
 
+		boolean xNegative = xScale < 0;
+		if (xNegative) {
+			xScale = -xScale;
+		}
+		boolean yNegative = yScale < 0;
+		if (yNegative) {
+			yScale = -yScale;
+		}
+
 		// TODO: handle negative values
-		byte[][] newDataX = new byte[data.length][Math.round(data[0].length / 4 * xScale) * 4];
+		byte[][] newDataX;
 
 		float runningTally = 0;
 		int intTally;
-		int newX = 0;
 		int newXOrigin = 0;
-		for (int oldX = 0; oldX < data[0].length; oldX += 4) {
-			if (oldX / 4 == originX) {
-				newXOrigin = newX;
-			}
-			runningTally += xScale;
-			intTally = (int)runningTally;
-			if (intTally > 0) {
-				for (int y = 0; y < data.length; y++) {
-					for (int i = 0; i < intTally; i++) {
-						newDataX[y][newX * 4 + i * 4] = data[y][oldX];
-						newDataX[y][newX * 4 + i * 4 + 1] = data[y][oldX + 1];
-						newDataX[y][newX * 4 + i * 4 + 2] = data[y][oldX + 2];
-						newDataX[y][newX * 4 + i * 4 + 3] = data[y][oldX + 3];
-					}
+		if (xScale != 1) {
+			newDataX = new byte[data.length][Math.round(data[0].length / 4 * xScale) * 4];
+			int newX = 0;
+			for (int oldX = 0; oldX < data[0].length; oldX += 4) {
+				if (oldX / 4 == originX) {
+					newXOrigin = newX;
 				}
-				runningTally -= intTally;
-				newX += intTally;
+				runningTally += xScale;
+				intTally = (int)runningTally;
+				if (intTally > 0) {
+					for (int y = 0; y < data.length; y++) {
+						for (int i = 0; i < intTally; i++) {
+							newDataX[y][newX * 4 + i * 4] = data[y][oldX];
+							newDataX[y][newX * 4 + i * 4 + 1] = data[y][oldX + 1];
+							newDataX[y][newX * 4 + i * 4 + 2] = data[y][oldX + 2];
+							newDataX[y][newX * 4 + i * 4 + 3] = data[y][oldX + 3];
+						}
+					}
+					runningTally -= intTally;
+					newX += intTally;
+				}
 			}
 		}
+		else {
+			newDataX = data;
+			newXOrigin = originX;
+		}
 
-		byte[][] newDataY = new byte[Math.round(data.length * yScale)][newDataX[0].length];
+		byte[][] newDataY;
 
-		runningTally = 0;
-		int newY = 0;
 		int newYOrigin = 0;
-		for (int oldY = 0; oldY < data.length; oldY++) {
-			if (oldY == originY) {
-				newYOrigin = newY;
-			}
-			runningTally += yScale;
-			intTally = (int)runningTally;
-			if (intTally > 0) {
-				for (int x = 0; x < newDataY[0].length; x++) {
-					for (int i = 0; i < intTally; i++) {
-						newDataY[newY + i][x] = newDataX[oldY][x];
-					}
+		if (yScale != 1) {
+			newDataY = new byte[Math.round(data.length * yScale)][newDataX[0].length];
+			runningTally = 0;
+			int newY = 0;
+			for (int oldY = 0; oldY < data.length; oldY++) {
+				if (oldY == originY) {
+					newYOrigin = newY;
 				}
-				runningTally -= intTally;
-				newY += intTally;
+				runningTally += yScale;
+				intTally = (int)runningTally;
+				if (intTally > 0) {
+					for (int x = 0; x < newDataY[0].length; x++) {
+						for (int i = 0; i < intTally; i++) {
+							newDataY[newY + i][x] = newDataX[oldY][x];
+						}
+					}
+					runningTally -= intTally;
+					newY += intTally;
+				}
 			}
+		}
+		else {
+			newYOrigin = originY;
+			newDataY = newDataX;
+		}
+
+		if (xNegative && newDataY.length != 0) {
+			GeneralUtil.reverseBottomSpriteArrays(newDataY);
+			newXOrigin = newDataY[0].length / 4 - newXOrigin;
+		}
+		if (yNegative) {
+			GeneralUtil.reverseTopSpriteArray(newDataY);
+			newYOrigin = newDataY.length - newYOrigin;
 		}
 
 		return new ScaledSpriteInfo(newDataY, newXOrigin, newYOrigin);
