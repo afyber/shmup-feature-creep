@@ -3,6 +3,11 @@ package afyber.shmupfeaturecreep.engine.input;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * This class is the KeyListener attached to the custom JFrame
+ *
+ * @author afyber
+ */
 public class KeyboardHandler implements KeyListener {
 
 	@Override

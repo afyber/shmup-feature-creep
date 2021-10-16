@@ -19,6 +19,7 @@ public class MainClass {
 	public static final boolean DEBUG = true;
 
 	public static void main(String[] args) {
+		// TODO: use a logger
 		if (DEBUG)
 			System.out.println("Program start");
 

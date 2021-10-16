@@ -2,10 +2,15 @@ package afyber.shmupfeaturecreep.engine;
 
 import java.util.Random;
 
+/**
+ * Utils for random numbers
+ *
+ * @author afyber
+ */
 public class RandomUtil {
 	private RandomUtil() {}
 
-	private static Random random = new Random(System.currentTimeMillis());
+	private static final Random random = new Random(System.currentTimeMillis());
 
 	public static int randInt(int boundInclusive) {
 		return random.nextInt(boundInclusive + 1);

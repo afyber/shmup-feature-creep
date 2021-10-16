@@ -1,5 +1,10 @@
 package afyber.shmupfeaturecreep.engine;
 
+/**
+ * A few things that wanted their own class
+ *
+ * @author afyber
+ */
 public class GeneralUtil {
 	private GeneralUtil() {}
 
@@ -13,7 +18,10 @@ public class GeneralUtil {
 	}
 
 	public static void reverseBottomSpriteArrays(byte[][] byteArray) {
-		byte tmp1, tmp2, tmp3, tmp4;
+		byte tmp1;
+		byte tmp2;
+		byte tmp3;
+		byte tmp4;
 		for (byte[] row: byteArray) {
 			for (int i = 0; i < row.length / 2; i += 4) {
 				// TODO: Someday I'll refactor the code to not require this

@@ -3,7 +3,7 @@ package afyber.shmupfeaturecreep.engine.rooms;
 import afyber.shmupfeaturecreep.engine.Screen;
 
 /**
- * Once again we have here a class that does things
+ * Once again we have here a class that does things, but this time while standing still not doing things
  *
  * @author afyber
  */
