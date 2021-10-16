@@ -2,8 +2,8 @@ package afyber.shmupfeaturecreep;
 
 import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.Timing;
-import afyber.shmupfeaturecreep.engine.World;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
+import afyber.shmupfeaturecreep.engine.world.World;
 
 import java.awt.*;
 

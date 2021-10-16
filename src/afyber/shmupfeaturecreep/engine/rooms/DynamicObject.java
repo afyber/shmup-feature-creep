@@ -1,6 +1,7 @@
 package afyber.shmupfeaturecreep.engine.rooms;
 
 import afyber.shmupfeaturecreep.engine.Screen;
+import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 import java.util.Arrays;
 
@@ -37,83 +38,79 @@ public class DynamicObject {
 		Arrays.fill(alarm, -1);
 	}
 
-	public void create() {
+	public void create(WorldMiddleman world) {
 		// to override
 	}
 
-	public void postCreate() {
+	public void postCreate(WorldMiddleman world) {
 		// to override
 	}
 
-	public void preUpdate() {
+	public void preUpdate(WorldMiddleman world) {
 		// to override
 	}
 
-	public void update() {
+	public void update(WorldMiddleman world) {
 		// to override
 	}
 
-	public void postUpdate() {
+	public void postUpdate(WorldMiddleman world) {
 		// to override
 	}
 
-	public void preDraw() {
+	public void preDraw(WorldMiddleman world) {
 		// to override
 	}
 
-	public void draw() {
+	public void draw(WorldMiddleman world) {
 		drawSelf();
 	}
 
-	public void postDraw() {
+	public void postDraw(WorldMiddleman world) {
 		// to override
 	}
 
-	public void preDestroy() {
+	public void destroy(WorldMiddleman world) {
 		// to override
 	}
 
-	public void destroy() {
+	public void alarm1(WorldMiddleman world) {
 		// to override
 	}
 
-	public void alarm1() {
+	public void alarm2(WorldMiddleman world) {
 		// to override
 	}
 
-	public void alarm2() {
+	public void alarm3(WorldMiddleman world) {
 		// to override
 	}
 
-	public void alarm3() {
+	public void alarm4(WorldMiddleman world) {
 		// to override
 	}
 
-	public void alarm4() {
+	public void alarm5(WorldMiddleman world) {
 		// to override
 	}
 
-	public void alarm5() {
+	public void alarm6(WorldMiddleman world) {
 		// to override
 	}
 
-	public void alarm6() {
+	public void alarm7(WorldMiddleman world) {
 		// to override
 	}
 
-	public void alarm7() {
+	public void alarm8(WorldMiddleman world) {
 		// to override
 	}
 
-	public void alarm8() {
+	public void alarm9(WorldMiddleman world) {
 		// to override
 	}
 
-	public void alarm9() {
-		// to override
-	}
-
-	public void alarm10() {
+	public void alarm10(WorldMiddleman world) {
 		// to override
 	}
 
@@ -165,6 +162,14 @@ public class DynamicObject {
 		this.alarm[alarm] = value;
 	}
 
+	public final void setImageXScale(float imageXScale) {
+		this.imageXScale = imageXScale;
+	}
+
+	public void setImageYScale(float imageYScale) {
+		this.imageYScale = imageYScale;
+	}
+
 	public final float getX() {
 		return x;
 	}
@@ -189,6 +194,14 @@ public class DynamicObject {
 
 	public final int getAlarm(int alarm) {
 		return this.alarm[alarm];
+	}
+
+	public float getImageXScale() {
+		return imageXScale;
+	}
+
+	public float getImageYScale() {
+		return imageYScale;
 	}
 
 	public final int getInstanceID() {

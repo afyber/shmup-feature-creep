@@ -2,6 +2,7 @@ package afyber.shmupfeaturecreep.game;
 
 import afyber.shmupfeaturecreep.engine.RandomUtil;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
+import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class TestInstanceClass2 extends DynamicObject {
 
@@ -11,7 +12,7 @@ public class TestInstanceClass2 extends DynamicObject {
 	}
 
 	@Override
-	public void update() {
+	public void update(WorldMiddleman world) {
 		x = RandomUtil.randInt(639);
 		y = RandomUtil.randInt(399);
 	}

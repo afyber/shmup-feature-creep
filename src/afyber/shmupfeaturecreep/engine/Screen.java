@@ -122,7 +122,7 @@ public class Screen {
 		}
 
 		// the sprite is at least partially on-screen
-		ScaledSpriteInfo scaledSprite = scaleImageData(sprite.data(), request.xScale(), request.yScale(), sprite.originX(), sprite.originY());
+		SpriteSheetRegion scaledSprite = scaleImageData(sprite.data(), request.xScale(), request.yScale(), sprite.originX(), sprite.originY());
 		byte[][] spriteData = scaledSprite.data();
 		for (int y = 0; y < spriteData.length; y++) {
 			for (int x = 0; x < spriteData[0].length / 4; x++) {
@@ -144,13 +144,13 @@ public class Screen {
 		}
 	}
 
-	public static ScaledSpriteInfo scaleImageData(byte[][] data, float xScale, float yScale, int originX, int originY) {
+	public static SpriteSheetRegion scaleImageData(byte[][] data, float xScale, float yScale, int originX, int originY) {
 		// TODO: properly figure out scaling to prevent annoying jerkiness when constantly changing scale
 		if (xScale == 1 && yScale == 1) {
-			return new ScaledSpriteInfo(data, originX, originY);
+			return new SpriteSheetRegion(data, data[0].length, data.length, originX, originY);
 		}
 		else if (xScale == 0 || yScale == 0) {
-			return new ScaledSpriteInfo(new byte[1][4], 0, 0);
+			return new SpriteSheetRegion(new byte[1][4], 1, 1, 0, 0);
 		}
 
 		boolean xNegative = xScale < 0;
@@ -168,9 +168,10 @@ public class Screen {
 		float runningTally = 0;
 		int intTally;
 		int newXOrigin = 0;
+		int newX = data[0].length / 4;
 		if (xScale != 1) {
+			newX = 0;
 			newDataX = new byte[data.length][Math.round(data[0].length / 4 * xScale) * 4];
-			int newX = 0;
 			for (int oldX = 0; oldX < data[0].length; oldX += 4) {
 				if (oldX / 4 == originX) {
 					newXOrigin = newX;
@@ -199,10 +200,11 @@ public class Screen {
 		byte[][] newDataY;
 
 		int newYOrigin = 0;
+		int newY = data.length;
 		if (yScale != 1) {
+			newY = 0;
 			newDataY = new byte[Math.round(data.length * yScale)][newDataX[0].length];
 			runningTally = 0;
-			int newY = 0;
 			for (int oldY = 0; oldY < data.length; oldY++) {
 				if (oldY == originY) {
 					newYOrigin = newY;
@@ -234,7 +236,21 @@ public class Screen {
 			newYOrigin = newDataY.length - newYOrigin;
 		}
 
-		return new ScaledSpriteInfo(newDataY, newXOrigin, newYOrigin);
+		return new SpriteSheetRegion(newDataY, newX, newY, newXOrigin, newYOrigin);
+	}
+
+	public static SpriteSheetRegion getSpriteScaled(String spriteName, float xScale, float yScale) {
+		SpriteSheetRegion region = null;
+		for (SpriteSheet spriteSheet: allSpriteSheets) {
+			if (spriteSheet.hasSprite(spriteName)) {
+				region = spriteSheet.getSprite(spriteName);
+				break;
+			}
+		}
+		if (region != null) {
+			return scaleImageData(region.data(), xScale, yScale, region.originX(), region.originY());
+		}
+		return null;
 	}
 
 	public static boolean isWindowClosed() {
