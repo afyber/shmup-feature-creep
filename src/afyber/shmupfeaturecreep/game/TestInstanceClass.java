@@ -10,6 +10,7 @@ public class TestInstanceClass extends DynamicObject {
 	public TestInstanceClass(float x, float y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		spriteIndex = "sprite_2";
+		collisionIndex = "sprite_2";
 		siner = 0;
 	}
 
@@ -27,14 +28,14 @@ public class TestInstanceClass extends DynamicObject {
 		if (Keyboard.keyJustDown("up")) {
 			y -= 10;
 		}
-		imageXScale = (float)(Math.sin(Math.toRadians(siner)) + 1.5) * 2;
-		//imageYScale = (float)(Math.sin(Math.toRadians(siner + 90)) + 1.5) * 1.6f;
+		imageXScale = (float)(Math.sin(Math.toRadians(siner))) * 3;
+		imageYScale = (float)(Math.sin(Math.toRadians(siner + 95))) * 2.4f;
 		siner++;
 	}
 
 	@Override
 	public void draw() {
 		drawSelf();
-		//draw(spriteIndex, x + 16 * imageXScale, y, imageXScale, imageYScale);
+		draw(spriteIndex, x + 16 * imageXScale, y, imageXScale, imageYScale);
 	}
 }

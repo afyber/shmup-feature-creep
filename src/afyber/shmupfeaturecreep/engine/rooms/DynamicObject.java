@@ -24,8 +24,8 @@ public class DynamicObject {
 	protected float imageXScale = 1;
 	protected float imageYScale = 1;
 
-	protected String spriteIndex = "sprite_1";
-	protected String collisionIndex = "sprite_1";
+	protected String spriteIndex = "";
+	protected String collisionIndex = "";
 
 	protected int[] alarm = new int[10];
 
@@ -159,6 +159,8 @@ public class DynamicObject {
 		this.spriteIndex = spriteIndex;
 	}
 
+	public final void setCollisionIndex(String collisionIndex) { this.collisionIndex = collisionIndex; }
+
 	public final void setAlarm(int alarm, int value) {
 		this.alarm[alarm] = value;
 	}
@@ -182,6 +184,8 @@ public class DynamicObject {
 	public final String getSpriteIndex() {
 		return spriteIndex;
 	}
+
+	public final String getCollisionIndex() { return collisionIndex; }
 
 	public final int getAlarm(int alarm) {
 		return this.alarm[alarm];

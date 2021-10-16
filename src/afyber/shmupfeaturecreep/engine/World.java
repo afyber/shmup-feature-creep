@@ -5,6 +5,8 @@ import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.rooms.ObjectReference;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
 import afyber.shmupfeaturecreep.game.TestInstanceClass;
+import afyber.shmupfeaturecreep.game.TestInstanceClass2;
+import afyber.shmupfeaturecreep.game.TestInstanceClass3;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -28,15 +30,10 @@ public class World {
 		allTiles.add(new StaticObject("sprite_2", 16, 32));
 		allTiles.add(new StaticObject("sprite_3", 64, 128));
 		for (int i = 0; i < 100; i++) {
-			allGameObjects.add(new DynamicObject(16, 48, 0, getNextAvailableGameObjectID()) {
-				@Override
-				public void update() {
-					x = RandomUtil.randInt(639);
-					y = RandomUtil.randInt(399);
-				}
-			});
+			createInstance(TestInstanceClass2.class, 128, 128, 0);
 		}
 		createInstance(TestInstanceClass.class, 64, 64, 0);
+		createInstance(TestInstanceClass3.class, 256, 256, -10);
 	}
 
 	public void drawAll() {
