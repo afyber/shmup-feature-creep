@@ -12,7 +12,7 @@ public class MainClass {
 	public static final String GAME_NAME = "shmupfeaturecreep";
 	public static final String GAME_NAME_NICE = "Shmup: Feature Creep";
 	public static final int WINDOW_WIDTH = 640;
-	public static final int WINDOW_HEIGHT = 400;
+	public static final int WINDOW_HEIGHT = 640;
 
 	private static final int IDEAL_FPS = 60;
 
@@ -25,7 +25,7 @@ public class MainClass {
 
 		Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-		Timing.setIdealFrameTimeMillis(1000L/IDEAL_FPS);
+		Timing.setIdealFrameTimeMillis((long)Math.ceil(1000f/IDEAL_FPS));
 
 		Keyboard.clearKeys();
 
@@ -41,7 +41,7 @@ public class MainClass {
 
 			world.destroyAll();
 
-			world.createAll();
+			world.moveAll();
 
 			// BUG: alarms from create code set at room start will apply one frame early
 			world.alarmAll();

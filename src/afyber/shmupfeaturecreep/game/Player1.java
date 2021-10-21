@@ -4,9 +4,9 @@ import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
-public class Player extends DynamicObject {
+public class Player1 extends DynamicObject {
 
-	public Player(float x, float y, int depth, int instanceID) {
+	public Player1(float x, float y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 	}
 
@@ -20,6 +20,18 @@ public class Player extends DynamicObject {
 
 	@Override
 	public void update(WorldMiddleman world) {
+		if (Keyboard.keyDown("left")) {
+			x -= 2;
+		}
+		if (Keyboard.keyDown("right")) {
+			x += 2;
+		}
+		if (Keyboard.keyDown("down")) {
+			y += 2;
+		}
+		if (Keyboard.keyDown("up")) {
+			y -= 2;
+		}
 		if (Keyboard.keyDown("z") && alarm[7] < 0) {
 			alarm[7] = 1;
 		}
@@ -27,10 +39,11 @@ public class Player extends DynamicObject {
 
 	@Override
 	public void alarm8(WorldMiddleman world) {
-		int bul = world.createInstance(PlayerBullet.class, x, y + 2, depth);
-		world.setAlarm(bul, 0, 120);
+		int bul = world.createInstance(Player1Bullet.class, x - 6, y - 4, depth);
+		//world.setAlarm(bul, 0, 10);
+		world.createInstance(Player1Bullet.class, x + 6, y - 4, depth);
 		if (Keyboard.keyDown("z")) {
-			alarm[7] = 4;
+			alarm[7] = 7;
 		}
 	}
 }

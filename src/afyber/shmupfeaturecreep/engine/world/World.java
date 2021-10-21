@@ -3,13 +3,10 @@ package afyber.shmupfeaturecreep.engine.world;
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
-import afyber.shmupfeaturecreep.engine.rooms.ObjectCreationReference;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
-import afyber.shmupfeaturecreep.game.Player;
-import afyber.shmupfeaturecreep.game.TestInstanceClass;
-import afyber.shmupfeaturecreep.game.TestInstanceClass2;
-import afyber.shmupfeaturecreep.game.TestInstanceClass3;
+import afyber.shmupfeaturecreep.game.BattleController;
+import afyber.shmupfeaturecreep.game.Player1;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -25,7 +22,10 @@ public class World {
 	private ArrayList<StaticObject> allTiles;
 	private ArrayList<DynamicObject> allGameObjects;
 	private ArrayList<ObjectDestructionReference> gameObjectsToRemove;
-	private ArrayList<ObjectCreationReference> gameObjectsToAdd;
+	// this system (I think) even allows for create code to create objects
+	// note that these objects are NOT updated, alarmed, or drawn, they can ONLY have their fields changed
+	// they are added to the allGameObjects list and will start doing that stuff after 1 frame
+	private ArrayList<DynamicObject> gameObjectsCreatedThisFrame;
 
 	private int nextAvailableGameObjectID = 1;
 
@@ -34,17 +34,11 @@ public class World {
 	public World() {
 		allTiles = new ArrayList<>();
 		allGameObjects = new ArrayList<>();
-		gameObjectsToAdd = new ArrayList<>();
 		gameObjectsToRemove = new ArrayList<>();
+		gameObjectsCreatedThisFrame = new ArrayList<>();
 		worldMiddleman = new WorldMiddleman(this);
-		allTiles.add(new StaticObject("sprite_2", 16, 32));
-		allTiles.add(new StaticObject("sprite_3", 64, 128));
-		for (int i = 0; i < 100; i++) {
-			createInstance(TestInstanceClass2.class, 128, 128, 0);
-		}
-		createInstance(TestInstanceClass.class, 64, 64, 0);
-		createInstance(TestInstanceClass3.class, 256, 256, -10);
-		createInstance(Player.class, 320, 256, 100);
+		createInstance(BattleController.class, 0, 0, 0);
+		createInstance(Player1.class, 320, 256, 100);
 	}
 
 	public void destroyAll() {
@@ -59,11 +53,9 @@ public class World {
 		gameObjectsToRemove.clear();
 	}
 
-	public void createAll() {
-		for (ObjectCreationReference createRef: gameObjectsToAdd) {
-			createInstance(createRef.objectClass(), createRef.x(), createRef.y(), createRef.depth());
-		}
-		gameObjectsToAdd.clear();
+	public void moveAll() {
+		allGameObjects.addAll(gameObjectsCreatedThisFrame);
+		gameObjectsCreatedThisFrame.clear();
 	}
 
 	public void drawAll() {
@@ -128,12 +120,6 @@ public class World {
 		return toReturn;
 	}
 
-	public int queueObjectCreation(Class classRef, float x, float y, int depth) {
-		int id = getNextAvailableGameObjectID();
-		gameObjectsToAdd.add(new ObjectCreationReference(classRef, x, y, depth, id));
-		return id;
-	}
-
 	public void queueObjectDestruction(int objRef) {
 		gameObjectsToRemove.add(new ObjectDestructionReference(true, objRef, null));
 	}
@@ -148,6 +134,25 @@ public class World {
 				object.setAlarm(alarm, value);
 			}
 		}
+		for (DynamicObject object: gameObjectsCreatedThisFrame) {
+			if (object.getInstanceID() == objRef) {
+				object.setAlarm(alarm, value);
+			}
+		}
+	}
+
+	public int getAlarm(int objRef, int alarm) {
+		for (DynamicObject object: allGameObjects) {
+			if (object.getInstanceID() == objRef) {
+				return object.getAlarm(alarm);
+			}
+		}
+		for (DynamicObject object: gameObjectsCreatedThisFrame) {
+			if (object.getInstanceID() == objRef) {
+				return object.getAlarm(alarm);
+			}
+		}
+		return -1;
 	}
 
 	public int createInstance(Class classRef, float x, float y, int depth) {
@@ -156,7 +161,7 @@ public class World {
 			int id = getNextAvailableGameObjectID();
 			DynamicObject newObject = (DynamicObject)(con.newInstance(x, y, depth, id));
 			newObject.create(worldMiddleman);
-			allGameObjects.add(newObject);
+			gameObjectsCreatedThisFrame.add(newObject);
 			return id;
 		}
 		catch (NoSuchMethodException e) {
@@ -192,6 +197,13 @@ public class World {
 					break;
 				}
 			}
+			for (DynamicObject object: gameObjectsCreatedThisFrame) {
+				if (object.getInstanceID() == objRef) {
+					object.destroy(worldMiddleman);
+					allGameObjects.remove(object);
+					break;
+				}
+			}
 		}
 	}
 
@@ -200,7 +212,12 @@ public class World {
 			if (object.getClass() == classRef) {
 				object.destroy(worldMiddleman);
 				allGameObjects.remove(object);
-				break;
+			}
+		}
+		for (DynamicObject object: gameObjectsCreatedThisFrame) {
+			if (object.getClass() == classRef) {
+				object.destroy(worldMiddleman);
+				allGameObjects.remove(object);
 			}
 		}
 	}
@@ -212,12 +229,22 @@ public class World {
 					return true;
 				}
 			}
+			for (DynamicObject object: gameObjectsCreatedThisFrame) {
+				if (object.getInstanceID() == objRef) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
 
 	public boolean instanceExists(Class classRef) {
 		for (DynamicObject object: allGameObjects) {
+			if (object.getClass() == classRef) {
+				return true;
+			}
+		}
+		for (DynamicObject object: gameObjectsCreatedThisFrame) {
 			if (object.getClass() == classRef) {
 				return true;
 			}
@@ -241,6 +268,8 @@ public class World {
 			int otherCorner1Y = Math.round(otherObject.getY() - otherRegion.originY());
 			int callerCorner1X = Math.round(caller.getX() - callerRegion.originX());
 			int callerCorner1Y = Math.round(caller.getY() - callerRegion.originY());
+			// TODO: inefficient, checks even if they're too far away for a collision to be possible
+			// FIXME: Nothing about this makes sense
 
 			byte[][] callerData = callerRegion.data();
 			byte[][] otherData = otherRegion.data();
@@ -250,8 +279,8 @@ public class World {
 					if (callerData[i][c * 4 + 3] != 0) {
 						// for every pixel in the other's collision
 						for (int i2 = 0; i2 < otherRegion.dataHeight(); i2++) {
-							for (int c2 = 0; c2 < otherRegion.dataWidth(); c2++) {
-								if (otherData[i][c * 4 + 3] != 0) {
+							for (int c2 = 0; c2 < otherRegion.dataWidth() / 4; c2++) {
+								if (otherData[i2][c2 * 4 + 3] != 0) {
 									if (callerCorner1X + c == otherCorner1X + c2 && callerCorner1Y + i == otherCorner1Y + i2) {
 										return true;
 									}

@@ -1,6 +1,5 @@
 package afyber.shmupfeaturecreep.game;
 
-import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
@@ -21,18 +20,6 @@ public class TestInstanceClass extends DynamicObject {
 
 	@Override
 	public void update(WorldMiddleman world) {
-		if (Keyboard.keyDown("left")) {
-			x -= 1;
-		}
-		if (Keyboard.keyDown("right")) {
-			x += 1;
-		}
-		if (Keyboard.keyJustDown("down")) {
-			y += 10;
-		}
-		if (Keyboard.keyJustDown("up")) {
-			y -= 10;
-		}
 		imageXScale = (float)(Math.sin(Math.toRadians(siner))) * 3;
 		//imageYScale = (float)(Math.sin(Math.toRadians(siner + 95))) * 2.4f;
 		siner++;

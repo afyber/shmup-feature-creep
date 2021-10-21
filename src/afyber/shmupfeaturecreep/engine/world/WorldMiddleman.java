@@ -17,7 +17,7 @@ public class WorldMiddleman {
 	}
 
 	public int createInstance(Class classRef, float x, float y, int depth) {
-		return world.queueObjectCreation(classRef, x, y, depth);
+		return world.createInstance(classRef, x, y, depth);
 	}
 
 	public void instanceDestroy(int objRef) {
@@ -46,5 +46,9 @@ public class WorldMiddleman {
 
 	public void setAlarm(int objRef, int alarm, int value) {
 		world.setAlarm(objRef, alarm, value);
+	}
+
+	public int getAlarm(int objRef, int alarm) {
+		return world.getAlarm(objRef, alarm);
 	}
 }
