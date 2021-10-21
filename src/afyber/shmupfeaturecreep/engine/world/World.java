@@ -1,10 +1,8 @@
 package afyber.shmupfeaturecreep.engine.world;
 
 import afyber.shmupfeaturecreep.MainClass;
-import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
-import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
 import afyber.shmupfeaturecreep.game.BattleController;
 import afyber.shmupfeaturecreep.game.Player1;
 
@@ -246,58 +244,6 @@ public class World {
 		}
 		for (DynamicObject object: gameObjectsCreatedThisFrame) {
 			if (object.getClass() == classRef) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean isColliding(DynamicObject caller, int objRef) {
-		DynamicObject otherObject = null;
-		for (DynamicObject object: allGameObjects) {
-			if (object.getInstanceID() == objRef) {
-				otherObject = object;
-				break;
-			}
-		}
-
-		if (otherObject != null) {
-			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(caller.getCollisionIndex(), caller.getImageXScale(), caller.getImageYScale());
-			SpriteSheetRegion otherRegion = Screen.getSpriteScaled(otherObject.getCollisionIndex(), otherObject.getImageXScale(), otherObject.getImageYScale());
-			int otherCorner1X = Math.round(otherObject.getX() - otherRegion.originX());
-			int otherCorner1Y = Math.round(otherObject.getY() - otherRegion.originY());
-			int callerCorner1X = Math.round(caller.getX() - callerRegion.originX());
-			int callerCorner1Y = Math.round(caller.getY() - callerRegion.originY());
-			// TODO: inefficient, checks even if they're too far away for a collision to be possible
-			// FIXME: Nothing about this makes sense
-
-			byte[][] callerData = callerRegion.data();
-			byte[][] otherData = otherRegion.data();
-			// for every pixel in the caller's collision
-			for (int i = 0; i < callerRegion.dataHeight(); i++) {
-				for (int c = 0; c < callerRegion.dataWidth(); c++) {
-					if (callerData[i][c * 4 + 3] != 0) {
-						// for every pixel in the other's collision
-						for (int i2 = 0; i2 < otherRegion.dataHeight(); i2++) {
-							for (int c2 = 0; c2 < otherRegion.dataWidth() / 4; c2++) {
-								if (otherData[i2][c2 * 4 + 3] != 0) {
-									if (callerCorner1X + c == otherCorner1X + c2 && callerCorner1Y + i == otherCorner1Y + i2) {
-										return true;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-
-	public boolean isColliding(DynamicObject caller, Class classRef) {
-		for (DynamicObject object: allGameObjects) {
-			if ((object.getClass() == classRef || object.getClass().isInstance(classRef)) && isColliding(caller, object.getInstanceID())) {
 				return true;
 			}
 		}

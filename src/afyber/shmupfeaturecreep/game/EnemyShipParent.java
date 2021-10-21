@@ -13,11 +13,11 @@ public class EnemyShipParent extends DynamicObject {
 
 	@Override
 	public void preUpdate(WorldMiddleman world) {
-		if (world.isColliding(this, Player1Bullet.class)) {
+		/*if (world.isColliding(this, Player1Bullet.class)) {
 			health -= 1;
 			if (health <= 0) {
 				world.instanceDestroy(instanceID);
 			}
-		}
+		}*/
 	}
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A cool method of avoiding the multi-threading weirdness is to just use a queue.
+ * A cool method of avoiding the multi-threading weirdness is to just use a queue. (it doesn't but whatever)
  *
  * @author afyber
  */
@@ -16,6 +16,7 @@ public class Keyboard {
 	// and 2 if it is being held down
 	private static HashMap<String, Integer> allKeys = new HashMap<>();
 
+	// FIXME: learn how to synchronize lists and do it to this one
 	private static ArrayList<KeyStateChange> keyStateQueue = new ArrayList<>();
 
 	// NOTE: PACKAGE-PRIVATE
@@ -29,7 +30,7 @@ public class Keyboard {
 
 	public static void applyKeyQueue() {
 		for (KeyStateChange change: keyStateQueue) {
-			if (change.newState() == 1 && allKeys.get(change.key()) > 0) {
+			if (change.key() == null || (change.newState() == 1 && allKeys.get(change.key()) > 0)) {
 				continue;
 			}
 			allKeys.put(change.key(), change.newState());
