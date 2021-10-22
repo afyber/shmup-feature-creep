@@ -74,6 +74,10 @@ public class DynamicObject {
 		// to override
 	}
 
+	public void alarm0(WorldMiddleman world) {
+		// to override
+	}
+
 	public void alarm1(WorldMiddleman world) {
 		// to override
 	}
@@ -107,10 +111,6 @@ public class DynamicObject {
 	}
 
 	public void alarm9(WorldMiddleman world) {
-		// to override
-	}
-
-	public void alarm10(WorldMiddleman world) {
 		// to override
 	}
 

@@ -125,8 +125,8 @@ public class Screen {
 		// the sprite is at least partially on-screen
 		SpriteSheetRegion scaledSprite = scaleImageData(sprite.data(), request.xScale(), request.yScale(), sprite.originX(), sprite.originY());
 		byte[][] spriteData = scaledSprite.data();
-		for (int y = 0; y < spriteData.length; y++) {
-			for (int x = 0; x < spriteData[0].length / 4; x++) {
+		for (int y = 0; y < scaledSprite.dataHeight(); y++) {
+			for (int x = 0; x < scaledSprite.dataWidth() / 4; x++) {
 				int calculatedX = request.x() + x - scaledSprite.originX();
 				int calculatedY = request.y() + y - scaledSprite.originY();
 				if (calculatedX < 0 || calculatedX >= image.getWidth() ||
@@ -151,7 +151,7 @@ public class Screen {
 			return new SpriteSheetRegion(data, data[0].length, data.length, originX, originY);
 		}
 		else if (xScale == 0 || yScale == 0) {
-			return new SpriteSheetRegion(new byte[1][4], 1, 1, 0, 0);
+			return new SpriteSheetRegion(new byte[1][4], 4, 1, 0, 0);
 		}
 
 		boolean xNegative = xScale < 0;
@@ -163,7 +163,6 @@ public class Screen {
 			yScale = -yScale;
 		}
 
-		// TODO: handle negative values
 		byte[][] newDataX;
 
 		float runningTally = 0;
@@ -237,7 +236,7 @@ public class Screen {
 			newYOrigin = newDataY.length - newYOrigin;
 		}
 
-		return new SpriteSheetRegion(newDataY, newX, newY, newXOrigin, newYOrigin);
+		return new SpriteSheetRegion(newDataY, newX * 4, newY, newXOrigin, newYOrigin);
 	}
 
 	public static SpriteSheetRegion getSpriteScaled(String spriteName, float xScale, float yScale) {

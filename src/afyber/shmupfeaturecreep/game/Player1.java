@@ -38,8 +38,9 @@ public class Player1 extends DynamicObject {
 	}
 
 	@Override
-	public void alarm8(WorldMiddleman world) {
-		world.createInstance(Player1Bullet.class, x - 6, y - 4, depth);
+	public void alarm7(WorldMiddleman world) {
+		int bul = world.createInstance(Player1Bullet.class, x - 6, y - 4, depth);
+		world.setAlarm(bul, 0, 10);
 		world.createInstance(Player1Bullet.class, x + 6, y - 4, depth);
 		if (Keyboard.keyDown("z")) {
 			alarm[7] = 7;

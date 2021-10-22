@@ -28,8 +28,8 @@ public class TestInstanceClass extends DynamicObject {
 	@Override
 	public void draw(WorldMiddleman world) {
 		drawSelf();
-		if (world.isColliding(this, TestInstanceClass3.class)) {
+		/*if (world.isColliding(this, TestInstanceClass3.class)) {
 			drawSimple("sprite_3", 320, 0);
-		}
+		}*/
 	}
 }

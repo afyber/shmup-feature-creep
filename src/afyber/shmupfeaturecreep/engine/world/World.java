@@ -35,6 +35,7 @@ public class World {
 		gameObjectsToRemove = new ArrayList<>();
 		gameObjectsCreatedThisFrame = new ArrayList<>();
 		worldMiddleman = new WorldMiddleman(this);
+		// TODO: load room data here
 		createInstance(BattleController.class, 0, 0, 0);
 		createInstance(Player1.class, 320, 256, 100);
 	}
@@ -95,27 +96,21 @@ public class World {
 					if (object.getAlarm(i) == 0) {
 						object.setAlarm(i, -1);
 						switch (i) {
-							case 0 -> object.alarm1(worldMiddleman);
-							case 1 -> object.alarm2(worldMiddleman);
-							case 2 -> object.alarm3(worldMiddleman);
-							case 3 -> object.alarm4(worldMiddleman);
-							case 4 -> object.alarm5(worldMiddleman);
-							case 5 -> object.alarm6(worldMiddleman);
-							case 6 -> object.alarm7(worldMiddleman);
-							case 7 -> object.alarm8(worldMiddleman);
-							case 8 -> object.alarm9(worldMiddleman);
-							case 9 -> object.alarm10(worldMiddleman);
+							case 0 -> object.alarm0(worldMiddleman);
+							case 1 -> object.alarm1(worldMiddleman);
+							case 2 -> object.alarm2(worldMiddleman);
+							case 3 -> object.alarm3(worldMiddleman);
+							case 4 -> object.alarm4(worldMiddleman);
+							case 5 -> object.alarm5(worldMiddleman);
+							case 6 -> object.alarm6(worldMiddleman);
+							case 7 -> object.alarm7(worldMiddleman);
+							case 8 -> object.alarm8(worldMiddleman);
+							case 9 -> object.alarm9(worldMiddleman);
 						}
 					}
 				}
 			}
 		}
-	}
-
-	private int getNextAvailableGameObjectID() {
-		int toReturn = nextAvailableGameObjectID;
-		nextAvailableGameObjectID++;
-		return toReturn;
 	}
 
 	public void queueObjectDestruction(int objRef) {
@@ -127,28 +122,25 @@ public class World {
 	}
 
 	public void setAlarm(int objRef, int alarm, int value) {
-		for (DynamicObject object: allGameObjects) {
-			if (object.getInstanceID() == objRef) {
-				object.setAlarm(alarm, value);
-			}
+		DynamicObject object = objRefToObject(objRef);
+		if (object != null) {
+			object.setAlarm(alarm, value);
+			return;
 		}
-		for (DynamicObject object: gameObjectsCreatedThisFrame) {
-			if (object.getInstanceID() == objRef) {
-				object.setAlarm(alarm, value);
-			}
+		object = objRefToObjectInJustCreated(objRef);
+		if (object != null) {
+			object.setAlarm(alarm, value);
 		}
 	}
 
 	public int getAlarm(int objRef, int alarm) {
-		for (DynamicObject object: allGameObjects) {
-			if (object.getInstanceID() == objRef) {
-				return object.getAlarm(alarm);
-			}
+		DynamicObject object = objRefToObject(objRef);
+		if (object != null) {
+			return object.getAlarm(alarm);
 		}
-		for (DynamicObject object: gameObjectsCreatedThisFrame) {
-			if (object.getInstanceID() == objRef) {
-				return object.getAlarm(alarm);
-			}
+		object = objRefToObjectInJustCreated(objRef);
+		if (object != null) {
+			return object.getAlarm(alarm);
 		}
 		return -1;
 	}
@@ -187,66 +179,83 @@ public class World {
 	}
 
 	public void instanceDestroy(int objRef) {
-		if (objRef != -1) {
-			for (DynamicObject object: allGameObjects) {
-				if (object.getInstanceID() == objRef) {
-					object.destroy(worldMiddleman);
-					allGameObjects.remove(object);
-					break;
-				}
-			}
-			for (DynamicObject object: gameObjectsCreatedThisFrame) {
-				if (object.getInstanceID() == objRef) {
-					object.destroy(worldMiddleman);
-					allGameObjects.remove(object);
-					break;
-				}
-			}
+		DynamicObject object = objRefToObject(objRef);
+		if (object != null) {
+			object.destroy(worldMiddleman);
+			allGameObjects.remove(object);
+			return;
+		}
+		object = objRefToObjectInJustCreated(objRef);
+		if (object != null) {
+			object.destroy(worldMiddleman);
+			gameObjectsCreatedThisFrame.remove(object);
 		}
 	}
 
 	public void instanceDestroy(Class classRef) {
-		for (DynamicObject object: allGameObjects) {
-			if (object.getClass() == classRef) {
-				object.destroy(worldMiddleman);
-				allGameObjects.remove(object);
-			}
+		for (DynamicObject object: classRefToObjectList(classRef)) {
+			object.destroy(worldMiddleman);
+			allGameObjects.remove(object);
 		}
-		for (DynamicObject object: gameObjectsCreatedThisFrame) {
-			if (object.getClass() == classRef) {
-				object.destroy(worldMiddleman);
-				allGameObjects.remove(object);
-			}
+		for (DynamicObject object: classRefToObjectListInJustCreated(classRef)) {
+			object.destroy(worldMiddleman);
+			gameObjectsCreatedThisFrame.remove(object);
 		}
 	}
 
 	public boolean instanceExists(int objRef) {
-		if (objRef != -1) {
-			for (DynamicObject object: allGameObjects) {
-				if (object.getInstanceID() == objRef) {
-					return true;
-				}
-			}
-			for (DynamicObject object: gameObjectsCreatedThisFrame) {
-				if (object.getInstanceID() == objRef) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return objRefToObject(objRef) != null || objRefToObjectInJustCreated(objRef) != null;
 	}
 
 	public boolean instanceExists(Class classRef) {
+		return !classRefToObjectList(classRef).isEmpty() || !classRefToObjectListInJustCreated(classRef).isEmpty();
+	}
+
+	private int getNextAvailableGameObjectID() {
+		int toReturn = nextAvailableGameObjectID;
+		nextAvailableGameObjectID++;
+		return toReturn;
+	}
+
+	private DynamicObject objRefToObject(int objRef) {
+		if (objRef != -1) {
+			for (DynamicObject object: allGameObjects) {
+				if (object.getInstanceID() == objRef) {
+					return object;
+				}
+			}
+		}
+		return null;
+	}
+
+	private DynamicObject objRefToObjectInJustCreated(int objRef) {
+		if (objRef != -1) {
+			for (DynamicObject object: gameObjectsCreatedThisFrame) {
+				if (object.getInstanceID() == objRef) {
+					return object;
+				}
+			}
+		}
+		return null;
+	}
+
+	private ArrayList<DynamicObject> classRefToObjectList(Class classRef) {
+		ArrayList<DynamicObject> list = new ArrayList<>();
 		for (DynamicObject object: allGameObjects) {
-			if (object.getClass() == classRef) {
-				return true;
+			if (classRef.isInstance(object)) {
+				list.add(object);
 			}
 		}
+		return list;
+	}
+
+	private ArrayList<DynamicObject> classRefToObjectListInJustCreated(Class classRef) {
+		ArrayList<DynamicObject> list = new ArrayList<>();
 		for (DynamicObject object: gameObjectsCreatedThisFrame) {
-			if (object.getClass() == classRef) {
-				return true;
+			if (classRef.isInstance(object)) {
+				list.add(object);
 			}
 		}
-		return false;
+		return list;
 	}
 }

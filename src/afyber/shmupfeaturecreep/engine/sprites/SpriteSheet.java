@@ -85,7 +85,7 @@ public class SpriteSheet {
 			originX = Integer.parseInt(splitEvenMore[4]);
 			originY = Integer.parseInt(splitEvenMore[5]);
 
-			SpriteInformation info = new SpriteInformation(x, y, width, height, originX, originY);
+			SpriteInformation info = new SpriteInformation(x * 4, y, width * 4, height, originX, originY);
 			allSprites.put(name, info);
 		}
 	}
@@ -97,13 +97,15 @@ public class SpriteSheet {
 	public SpriteSheetRegion getSprite(String name) {
 		SpriteInformation info = allSprites.get(name);
 
-		byte[][] newBytes = new byte[info.dataHeight()][info.dataWidth() * 4];
+		byte[][] newBytes = new byte[info.dataHeight()][info.dataWidth()];
 		for (int y = 0; y < info.dataHeight(); y++) {
-			System.arraycopy(imageData[y + info.dataBeginY()], info.dataBeginX() * 4, newBytes[y], 0, info.dataWidth() * 4);
+			System.arraycopy(imageData[y + info.dataBeginY()], info.dataBeginX(), newBytes[y], 0, info.dataWidth());
 		}
 
 		return new SpriteSheetRegion(newBytes, info.dataWidth(), info.dataHeight(), info.originX(), info.originY());
 	}
 
+	// IMPORTANT: from now on dataBeginX and dataWidth ALWAYS refers to the x value/width in pixels TIMES 4!
+	// HOWEVER: originX DOES NOT, and refers to the origin in pixels
 	record SpriteInformation(int dataBeginX, int dataBeginY, int dataWidth, int dataHeight, int originX, int originY) {}
 }

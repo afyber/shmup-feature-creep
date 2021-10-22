@@ -19,7 +19,7 @@ public class Player1Bullet extends DynamicObject {
 	}
 
 	@Override
-	public void alarm1(WorldMiddleman world) {
+	public void alarm0(WorldMiddleman world) {
 		world.instanceDestroy(instanceID);
 	}
 

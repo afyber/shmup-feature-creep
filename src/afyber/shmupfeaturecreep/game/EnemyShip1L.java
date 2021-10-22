@@ -41,12 +41,12 @@ public class EnemyShip1L extends EnemyShipParent {
 	}
 
 	@Override
-	public void alarm1(WorldMiddleman world) {
+	public void alarm0(WorldMiddleman world) {
 		world.instanceDestroy(instanceID);
 	}
 
 	@Override
-	public void alarm2(WorldMiddleman world) {
+	public void alarm1(WorldMiddleman world) {
 		targetX -= 400;
 	}
 }
