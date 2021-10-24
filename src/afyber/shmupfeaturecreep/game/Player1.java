@@ -21,16 +21,16 @@ public class Player1 extends DynamicObject {
 	@Override
 	public void update(WorldMiddleman world) {
 		if (Keyboard.keyDown("left")) {
-			x -= 2;
+			x -= 4;
 		}
 		if (Keyboard.keyDown("right")) {
-			x += 2;
+			x += 4;
 		}
 		if (Keyboard.keyDown("down")) {
-			y += 2;
+			y += 4;
 		}
 		if (Keyboard.keyDown("up")) {
-			y -= 2;
+			y -= 4;
 		}
 		if (Keyboard.keyDown("z") && alarm[7] < 0) {
 			alarm[7] = 1;
@@ -39,11 +39,10 @@ public class Player1 extends DynamicObject {
 
 	@Override
 	public void alarm7(WorldMiddleman world) {
-		int bul = world.createInstance(Player1Bullet.class, x - 6, y - 4, depth);
-		world.setAlarm(bul, 0, 10);
+		world.createInstance(Player1Bullet.class, x - 6, y - 4, depth);
 		world.createInstance(Player1Bullet.class, x + 6, y - 4, depth);
 		if (Keyboard.keyDown("z")) {
-			alarm[7] = 7;
+			alarm[7] = 3;
 		}
 	}
 }

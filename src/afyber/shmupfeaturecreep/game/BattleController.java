@@ -21,5 +21,10 @@ public class BattleController extends DynamicObject {
 		if (Keyboard.keyJustDown("c")) {
 			world.createInstance(EnemyShip1L.class, 100, -50, 0);
 		}
+		if (Keyboard.keyJustDown("x")) {
+			for (int i = 0; i < 10; i++) {
+				world.createInstance(EnemyShipCannonFodder.class, 32 + i * 63, -50 - i * 20, 0);
+			}
+		}
 	}
 }

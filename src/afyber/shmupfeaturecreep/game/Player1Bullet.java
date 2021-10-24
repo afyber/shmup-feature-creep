@@ -15,16 +15,16 @@ public class Player1Bullet extends DynamicObject {
 		collisionIndex = "player_bullet";
 		imageXScale = 1;
 		imageYScale = 1;
-		alarm[0] = 60;
-	}
-
-	@Override
-	public void alarm0(WorldMiddleman world) {
-		world.instanceDestroy(instanceID);
 	}
 
 	@Override
 	public void update(WorldMiddleman world) {
 		y -= 11;
+		if (world.isColliding(this, EnemyShipParent.class)) {
+			world.instanceDestroy(instanceID);
+		}
+		if (y < -16) {
+			world.instanceDestroy(instanceID);
+		}
 	}
 }

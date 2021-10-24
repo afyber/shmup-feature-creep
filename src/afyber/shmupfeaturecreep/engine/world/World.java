@@ -1,8 +1,11 @@
 package afyber.shmupfeaturecreep.engine.world;
 
 import afyber.shmupfeaturecreep.MainClass;
+import afyber.shmupfeaturecreep.engine.GeneralUtil;
+import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
+import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
 import afyber.shmupfeaturecreep.game.BattleController;
 import afyber.shmupfeaturecreep.game.Player1;
 
@@ -209,6 +212,65 @@ public class World {
 
 	public boolean instanceExists(Class classRef) {
 		return !classRefToObjectList(classRef).isEmpty() || !classRefToObjectListInJustCreated(classRef).isEmpty();
+	}
+
+	public boolean isColliding(DynamicObject caller, int objRef) {
+		DynamicObject other = objRefToObject(objRef);
+		if (other == null) {
+			other = objRefToObjectInJustCreated(objRef);
+		}
+		if (other != null) {
+			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(caller.getCollisionIndex(), caller.getImageXScale(), caller.getImageYScale());
+			SpriteSheetRegion otherRegion = Screen.getSpriteScaled(other.getCollisionIndex(), other.getImageXScale(), other.getImageYScale());
+			int callerCorner1X = Math.round(caller.getX() - callerRegion.originX());
+			int callerCorner1Y = Math.round(caller.getY() - callerRegion.originY());
+			int callerCorner2X = callerCorner1X + callerRegion.dataWidth() / 4;
+			int callerCorner2Y = callerCorner1Y + callerRegion.dataHeight();
+			int otherCorner1X = Math.round(other.getX() - otherRegion.originX());
+			int otherCorner1Y = Math.round(other.getY() - otherRegion.originY());
+			int otherCorner2X = otherCorner1X + otherRegion.dataWidth() / 4;
+			int otherCorner2Y = otherCorner1Y + otherRegion.dataHeight();
+
+			if (GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
+					otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y)) {
+				byte[][] callerData = callerRegion.data();
+				byte[][] otherData = otherRegion.data();
+
+				for (int i1 = 0; i1 < callerRegion.dataHeight(); i1++) {
+					for (int c1 = 0; c1 < callerRegion.dataWidth() / 4; c1++) {
+						if (Byte.toUnsignedInt(callerData[i1][c1 * 4 + 3]) != 0x0) {
+
+							for (int i2 = 0; i2 < otherRegion.dataHeight(); i2++) {
+								for (int c2 = 0; c2 < otherRegion.dataWidth() / 4; c2++) {
+									if (Byte.toUnsignedInt(otherData[i2][c2 * 4 + 3]) != 0x0) {
+										if (callerCorner1X + c1 == otherCorner1X + c2 && callerCorner1Y + i1 == otherCorner1Y + i2) {
+											return true;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean isColliding(DynamicObject caller, Class classRef) {
+		ArrayList<DynamicObject> allObj = classRefToObjectList(classRef);
+		for (DynamicObject object: allObj) {
+			if (isColliding(caller, object.getInstanceID())) {
+				return true;
+			}
+		}
+		allObj = classRefToObjectListInJustCreated(classRef);
+		for (DynamicObject object: allObj) {
+			if (isColliding(caller, object.getInstanceID())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private int getNextAvailableGameObjectID() {
