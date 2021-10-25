@@ -245,7 +245,7 @@ public class World {
 							if (otherI < 0 || otherI >= otherRegion.dataHeight() || otherC < 0 || otherC >= otherRegion.dataWidth() / 4) {
 								continue;
 							}
-							if (Byte.toUnsignedInt(otherData[otherI][otherC]) != 0x0) {
+							if (Byte.toUnsignedInt(otherData[otherI][otherC * 4 + 3]) != 0x0) {
 								return true;
 							}
 						}
