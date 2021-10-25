@@ -240,14 +240,13 @@ public class World {
 					for (int c1 = 0; c1 < callerRegion.dataWidth() / 4; c1++) {
 						if (Byte.toUnsignedInt(callerData[i1][c1 * 4 + 3]) != 0x0) {
 
-							for (int i2 = 0; i2 < otherRegion.dataHeight(); i2++) {
-								for (int c2 = 0; c2 < otherRegion.dataWidth() / 4; c2++) {
-									if (Byte.toUnsignedInt(otherData[i2][c2 * 4 + 3]) != 0x0) {
-										if (callerCorner1X + c1 == otherCorner1X + c2 && callerCorner1Y + i1 == otherCorner1Y + i2) {
-											return true;
-										}
-									}
-								}
+							int otherI = callerCorner1X + c1 - otherCorner1X;
+							int otherC = callerCorner1Y + i1 - otherCorner1Y;
+							if (otherI < 0 || otherI >= otherRegion.dataHeight() || otherC < 0 || otherC >= otherRegion.dataWidth() / 4) {
+								continue;
+							}
+							if (Byte.toUnsignedInt(otherData[otherI][otherC]) != 0x0) {
+								return true;
 							}
 						}
 					}
