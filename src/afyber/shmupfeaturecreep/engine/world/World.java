@@ -5,6 +5,7 @@ import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
+import afyber.shmupfeaturecreep.engine.sprites.SpriteInformation;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
 import afyber.shmupfeaturecreep.game.BattleController;
 import afyber.shmupfeaturecreep.game.Player1;
@@ -25,7 +26,7 @@ public class World {
 	private ArrayList<ObjectDestructionReference> gameObjectsToRemove;
 	// this system (I think) even allows for create code to create objects
 	// note that these objects are NOT updated, alarmed, or drawn, they can ONLY have their fields changed
-	// they are added to the allGameObjects list and will start doing that stuff after 1 frame
+	// they are added to the allGameObjects list and will start doing that stuff on the next frame
 	private ArrayList<DynamicObject> gameObjectsCreatedThisFrame;
 
 	private int nextAvailableGameObjectID = 1;
@@ -221,19 +222,24 @@ public class World {
 			other = objRefToObjectInJustCreated(objRef);
 		}
 		if (other != null) {
-			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(caller.getCollisionIndex(), caller.getImageXScale(), caller.getImageYScale());
-			SpriteSheetRegion otherRegion = Screen.getSpriteScaled(other.getCollisionIndex(), other.getImageXScale(), other.getImageYScale());
-			int callerCorner1X = Math.round(caller.getX() - callerRegion.originX());
-			int callerCorner1Y = Math.round(caller.getY() - callerRegion.originY());
-			int callerCorner2X = callerCorner1X + callerRegion.dataWidth() / 4;
-			int callerCorner2Y = callerCorner1Y + callerRegion.dataHeight();
-			int otherCorner1X = Math.round(other.getX() - otherRegion.originX());
-			int otherCorner1Y = Math.round(other.getY() - otherRegion.originY());
-			int otherCorner2X = otherCorner1X + otherRegion.dataWidth() / 4;
-			int otherCorner2Y = otherCorner1Y + otherRegion.dataHeight();
+			SpriteInformation callerInfo = Screen.getScaledSpriteInfo(caller.getCollisionIndex(), caller.getImageXScale(), caller.getImageYScale());
+			SpriteInformation otherInfo = Screen.getScaledSpriteInfo(other.getCollisionIndex(), other.getImageXScale(), other.getImageYScale());
+			if (otherInfo == null || callerInfo == null) {
+				return false;
+			}
+			int callerCorner1X = Math.round(caller.getX() - callerInfo.originX());
+			int callerCorner1Y = Math.round(caller.getY() - callerInfo.originY());
+			int callerCorner2X = callerCorner1X + (callerInfo.dataWidth() / 4);
+			int callerCorner2Y = callerCorner1Y + callerInfo.dataHeight();
+			int otherCorner1X = Math.round(other.getX() - otherInfo.originX());
+			int otherCorner1Y = Math.round(other.getY() - otherInfo.originY());
+			int otherCorner2X = otherCorner1X + otherInfo.dataWidth() / 4;
+			int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight();
 
 			if (GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
 					otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y)) {
+				SpriteSheetRegion callerRegion = Screen.getSpriteScaled(caller.getCollisionIndex(), caller.getImageXScale(), caller.getImageYScale());
+				SpriteSheetRegion otherRegion = Screen.getSpriteScaled(other.getCollisionIndex(), other.getImageXScale(), other.getImageYScale());
 				byte[][] callerData = callerRegion.data();
 				byte[][] otherData = otherRegion.data();
 
@@ -258,6 +264,7 @@ public class World {
 	}
 
 	public boolean isColliding(DynamicObject caller, Class classRef) {
+		// TODO: this is optimizable
 		ArrayList<DynamicObject> allObj = classRefToObjectList(classRef);
 		for (DynamicObject object: allObj) {
 			if (isColliding(caller, object.getInstanceID())) {

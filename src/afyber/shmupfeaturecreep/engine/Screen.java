@@ -2,6 +2,7 @@ package afyber.shmupfeaturecreep.engine;
 
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.input.KeyboardHandler;
+import afyber.shmupfeaturecreep.engine.sprites.SpriteInformation;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheet;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
 
@@ -76,11 +77,12 @@ public class Screen {
 		clearAllPixelsToColor(color.getRGB());
 	}
 	public static void clearAllPixelsToColor(int rgbColor) {
-		for (int y = 0; y < image.getHeight(); y++) {
+		/*for (int y = 0; y < image.getHeight(); y++) {
 			for (int x = 0; x < image.getWidth(); x++) {
 				image.setRGB(x, y, rgbColor);
 			}
-		}
+		}*/
+		image.setRGB(0, 0, MainClass.WINDOW_HEIGHT - 1, MainClass.WINDOW_HEIGHT - 1, new int[MainClass.WINDOW_WIDTH * MainClass.WINDOW_HEIGHT], 0, MainClass.WINDOW_WIDTH);
 	}
 
 	public static void applyDrawRequestsAndPaint() {
@@ -249,6 +251,45 @@ public class Screen {
 		}
 		if (region != null) {
 			return scaleImageData(region.data(), xScale, yScale, region.originX(), region.originY());
+		}
+		return null;
+	}
+
+	public static SpriteInformation getSpriteInfo(String spriteName) {
+		SpriteInformation info = null;
+		for (SpriteSheet spriteSheet: allSpriteSheets) {
+			if (spriteSheet.hasSprite(spriteName)) {
+				info = spriteSheet.getSpriteInformation(spriteName);
+			}
+		}
+		return info;
+	}
+
+	// FIXME: check accuracy against getSpriteScaled
+	public static SpriteInformation getScaledSpriteInfo(String spriteName, float xScale, float yScale) {
+		SpriteInformation info = getSpriteInfo(spriteName);
+		if (info != null) {
+			int newOriginX;
+			int newOriginY;
+			int newDataWidth;
+			int newDataHeight;
+			if (xScale < 0) {
+				newOriginX = Math.round(info.dataWidth() / 4 - info.originX() * -xScale);
+				newDataWidth = Math.round(info.dataWidth() * -xScale);
+			}
+			else {
+				newOriginX = Math.round(info.originX() * xScale);
+				newDataWidth = Math.round(info.dataWidth() * xScale);
+			}
+			if (yScale < 0) {
+				newOriginY = Math.round(info.dataHeight() - info.originY() * -yScale);
+				newDataHeight = Math.round(info.dataHeight() * -yScale);
+			}
+			else {
+				newOriginY = Math.round(info.originY() * yScale);
+				newDataHeight = Math.round(info.dataHeight() * yScale);
+			}
+			return new SpriteInformation(0, 0, newDataWidth, newDataHeight, newOriginX, newOriginY);
 		}
 		return null;
 	}
