@@ -1,7 +1,6 @@
 package afyber.shmupfeaturecreep.engine.sprites;
 
 import ar.com.hjg.pngj.PngReaderByte;
-import jdk.jfr.Unsigned;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +16,6 @@ import java.util.HashMap;
  */
 public class SpriteSheet {
 
-	@Unsigned
 	private byte[][] imageData;
 
 	private HashMap<String, SpriteSheetRegion> allSprites;
@@ -25,7 +23,7 @@ public class SpriteSheet {
 	public SpriteSheet(String imageName) {
 		PngReaderByte imageReader = new PngReaderByte(new File(imageName + ".png"));
 		try {
-			setupSpriteSheet(imageReader);
+			setupSpriteSheetData(imageReader);
 			imageReader.end();
 		}
 		catch (Exception e) {
@@ -34,7 +32,7 @@ public class SpriteSheet {
 		}
 
 		try (InputStream infoStream = new FileInputStream(imageName + "_info.txt")) {
-			setupSpriteInfo(infoStream);
+			setupSprites(infoStream);
 		}
 		catch (IOException e) {
 			System.out.println("Attempting to load sprite-sheet caused IOException");
@@ -42,7 +40,7 @@ public class SpriteSheet {
 		}
 	}
 
-	private void setupSpriteSheet(PngReaderByte reader) {
+	private void setupSpriteSheetData(PngReaderByte reader) {
 		imageData = new byte[reader.imgInfo.rows][reader.imgInfo.cols * 4];
 
 		for (int i = 0; i < imageData.length; i++) {
@@ -50,7 +48,7 @@ public class SpriteSheet {
 		}
 	}
 
-	private void setupSpriteInfo(InputStream stream) throws IOException {
+	private void setupSprites(InputStream stream) throws IOException {
 		allSprites = new HashMap<>();
 
 		byte[] allInfoBytes = stream.readAllBytes();

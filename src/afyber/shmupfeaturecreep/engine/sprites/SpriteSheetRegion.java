@@ -25,6 +25,6 @@ public record SpriteSheetRegion(byte[][] data, int dataWidth, int dataHeight, in
 
 	@Override
 	public String toString() {
-		return "SpriteSheetRegion{" + "data=" + Arrays.toString(data) + ", dataWidth=" + dataWidth + ", dataHeight=" + dataHeight + "}";
+		return "SpriteSheetRegion{" + "data=" + Arrays.deepToString(data) + ", dataWidth=" + dataWidth + ", dataHeight=" + dataHeight + "}";
 	}
 }

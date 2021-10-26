@@ -305,7 +305,7 @@ public class Screen {
 		public void paint(Graphics g) {
 			Graphics2D g2d = (Graphics2D)g;
 
-			g2d.drawImage(image, 0, 0, MainClass.WINDOW_WIDTH, MainClass.WINDOW_HEIGHT, null);
+			g2d.drawImage(image, 0, 0, frame.getWidth(), frame.getHeight(), null);
 		}
 	}
 
