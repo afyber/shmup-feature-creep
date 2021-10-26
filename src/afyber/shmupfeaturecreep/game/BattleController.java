@@ -13,7 +13,7 @@ public class BattleController extends DynamicObject {
 
 	@Override
 	public void create(WorldMiddleman world) {
-		Global.setGlobal("wave", 1);
+		Global.setIntGlobal("wave", 1);
 	}
 
 	@Override

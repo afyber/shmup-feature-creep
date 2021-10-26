@@ -229,11 +229,11 @@ public class Screen {
 
 		if (xNegative && newDataY.length != 0) {
 			GeneralUtil.reverseBottomSpriteArrays(newDataY);
-			newXOrigin = newDataY[0].length / 4 - newXOrigin;
+			newXOrigin = newX - newXOrigin;
 		}
 		if (yNegative) {
 			GeneralUtil.reverseTopSpriteArray(newDataY);
-			newYOrigin = newDataY.length - newYOrigin;
+			newYOrigin = newY - newYOrigin;
 		}
 
 		return new SpriteSheetRegion(newDataY, newX * 4, newY, newXOrigin, newYOrigin);
@@ -269,6 +269,4 @@ public class Screen {
 	}
 
 	private record DrawRequest(String spriteName, int x, int y, float xScale, float yScale, int depth) {}
-
-	private record ScaledSpriteInfo(byte[][] data, int originX, int originY) {}
 }

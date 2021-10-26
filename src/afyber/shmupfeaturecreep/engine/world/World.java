@@ -109,6 +109,7 @@ public class World {
 							case 7 -> object.alarm7(worldMiddleman);
 							case 8 -> object.alarm8(worldMiddleman);
 							case 9 -> object.alarm9(worldMiddleman);
+							default -> System.out.println("What on earth happened this is impossible.");
 						}
 					}
 				}

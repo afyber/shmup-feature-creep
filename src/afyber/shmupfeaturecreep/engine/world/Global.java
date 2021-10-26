@@ -9,15 +9,15 @@ public class Global {
 	private static HashMap<String, Float> allFloatGlobals = new HashMap<>();
 	private static HashMap<String, String> allStringGlobals = new HashMap<>();
 
-	public static void setGlobal(String name, int value) {
+	public static void setIntGlobal(String name, int value) {
 		allIntGlobals.put(name, value);
 	}
 
-	public static void setGlobal(String name, float value) {
+	public static void setFloatGlobal(String name, float value) {
 		allFloatGlobals.put(name, value);
 	}
 
-	public static void setGlobal(String name, String value) {
+	public static void setStringGlobal(String name, String value) {
 		allStringGlobals.put(name, value);
 	}
 

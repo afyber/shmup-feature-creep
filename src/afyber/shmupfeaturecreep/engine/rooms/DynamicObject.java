@@ -156,7 +156,9 @@ public class DynamicObject {
 		this.spriteIndex = spriteIndex;
 	}
 
-	public final void setCollisionIndex(String collisionIndex) { this.collisionIndex = collisionIndex; }
+	public final void setCollisionIndex(String collisionIndex) {
+		this.collisionIndex = collisionIndex;
+	}
 
 	public final void setAlarm(int alarm, int value) {
 		this.alarm[alarm] = value;
@@ -190,7 +192,9 @@ public class DynamicObject {
 		return spriteIndex;
 	}
 
-	public final String getCollisionIndex() { return collisionIndex; }
+	public final String getCollisionIndex() {
+		return collisionIndex;
+	}
 
 	public final int getAlarm(int alarm) {
 		return this.alarm[alarm];
