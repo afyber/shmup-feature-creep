@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * This class handles the window and drawing to it, all of this is done statically because I am an insane person.
@@ -77,12 +78,9 @@ public class Screen {
 		clearAllPixelsToColor(color.getRGB());
 	}
 	public static void clearAllPixelsToColor(int rgbColor) {
-		/*for (int y = 0; y < image.getHeight(); y++) {
-			for (int x = 0; x < image.getWidth(); x++) {
-				image.setRGB(x, y, rgbColor);
-			}
-		}*/
-		image.setRGB(0, 0, MainClass.WINDOW_HEIGHT - 1, MainClass.WINDOW_HEIGHT - 1, new int[MainClass.WINDOW_WIDTH * MainClass.WINDOW_HEIGHT], 0, MainClass.WINDOW_WIDTH);
+		int[] colorArray = new int[MainClass.WINDOW_WIDTH * MainClass.WINDOW_HEIGHT];
+		Arrays.fill(colorArray, rgbColor);
+		image.setRGB(0, 0, MainClass.WINDOW_HEIGHT - 1, MainClass.WINDOW_HEIGHT - 1, colorArray, 0, MainClass.WINDOW_WIDTH);
 	}
 
 	public static void applyDrawRequestsAndPaint() {
