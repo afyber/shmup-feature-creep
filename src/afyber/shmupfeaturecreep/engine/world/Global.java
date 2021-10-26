@@ -5,9 +5,9 @@ import java.util.HashMap;
 public class Global {
 	private Global() {}
 
-	private static HashMap<String, Integer> allIntGlobals = new HashMap<>();
-	private static HashMap<String, Float> allFloatGlobals = new HashMap<>();
-	private static HashMap<String, String> allStringGlobals = new HashMap<>();
+	private static final HashMap<String, Integer> allIntGlobals = new HashMap<>();
+	private static final HashMap<String, Float> allFloatGlobals = new HashMap<>();
+	private static final HashMap<String, String> allStringGlobals = new HashMap<>();
 
 	public static void setIntGlobal(String name, int value) {
 		allIntGlobals.put(name, value);

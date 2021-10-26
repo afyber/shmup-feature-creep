@@ -289,7 +289,7 @@ public class Screen {
 				newOriginY = Math.round(info.originY() * yScale);
 				newDataHeight = Math.round(info.dataHeight() * yScale);
 			}
-			return new SpriteInformation(0, 0, newDataWidth, newDataHeight, newOriginX, newOriginY);
+			return new SpriteInformation(newDataWidth, newDataHeight, newOriginX, newOriginY);
 		}
 		return null;
 	}

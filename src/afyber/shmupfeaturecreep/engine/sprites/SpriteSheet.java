@@ -20,7 +20,7 @@ public class SpriteSheet {
 	@Unsigned
 	private byte[][] imageData;
 
-	private HashMap<String, SpriteInformation> allSprites;
+	private HashMap<String, SpriteSheetRegion> allSprites;
 
 	public SpriteSheet(String imageName) {
 		PngReaderByte imageReader = new PngReaderByte(new File(imageName + ".png"));
@@ -85,8 +85,12 @@ public class SpriteSheet {
 			originX = Integer.parseInt(splitEvenMore[4]);
 			originY = Integer.parseInt(splitEvenMore[5]);
 
-			SpriteInformation info = new SpriteInformation(x * 4, y, width * 4, height, originX, originY);
-			allSprites.put(name, info);
+			byte[][] newBytes = new byte[height][width * 4];
+			for (int i = 0; i < height; i++) {
+				System.arraycopy(imageData[i + y], x * 4, newBytes[i], 0, width * 4);
+			}
+			SpriteSheetRegion region = new SpriteSheetRegion(newBytes, width * 4, height, originX, originY);
+			allSprites.put(name, region);
 		}
 	}
 
@@ -95,17 +99,11 @@ public class SpriteSheet {
 	}
 
 	public SpriteSheetRegion getSprite(String name) {
-		SpriteInformation info = allSprites.get(name);
-
-		byte[][] newBytes = new byte[info.dataHeight()][info.dataWidth()];
-		for (int y = 0; y < info.dataHeight(); y++) {
-			System.arraycopy(imageData[y + info.dataBeginY()], info.dataBeginX(), newBytes[y], 0, info.dataWidth());
-		}
-
-		return new SpriteSheetRegion(newBytes, info.dataWidth(), info.dataHeight(), info.originX(), info.originY());
+		return allSprites.get(name);
 	}
 
 	public SpriteInformation getSpriteInformation(String spriteName) {
-		return allSprites.get(spriteName);
+		SpriteSheetRegion region = allSprites.get(spriteName);
+		return new SpriteInformation(region.dataWidth(), region.dataHeight(), region.originX(), region.originY());
 	}
 }
