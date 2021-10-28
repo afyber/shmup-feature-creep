@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * This class handles the window and drawing to it, all of this is done statically because I am an insane person.
@@ -29,7 +30,7 @@ public class Screen {
 
 	private static ArrayList<DrawRequest> drawRequests;
 
-	private static ArrayList<SpriteSheet> allSpriteSheets;
+	private static HashMap<String, SpriteSheetRegion> allSprites;
 
 	public static void setupScreen(String name, int width, int height) {
 		// Window setup
@@ -56,9 +57,9 @@ public class Screen {
 
 		drawRequests = new ArrayList<>();
 
-		allSpriteSheets = new ArrayList<>();
-		allSpriteSheets.add(new SpriteSheet("spritesheets/test6"));
-		allSpriteSheets.add(new SpriteSheet("spritesheets/spritesheet1"));
+		allSprites = new HashMap<>();
+		SpriteSheet.loadSpriteSheet("spritesheets/spritesheet1", allSprites);
+		SpriteSheet.loadSpriteSheet("spritesheets/test6", allSprites);
 	}
 
 	public static void draw(String spriteName, float x, float y, int depth) {
@@ -96,13 +97,10 @@ public class Screen {
 
 		// draw the things in order
 		for (DrawRequest request: drawRequests) {
-			for (SpriteSheet spriteSheet: allSpriteSheets) {
-				if (spriteSheet.hasSprite(request.spriteName())) {
-					SpriteSheetRegion region = spriteSheet.getSprite(request.spriteName());
+				if (allSprites.containsKey(request.spriteName())) {
+					SpriteSheetRegion region = allSprites.get(request.spriteName());
 					copySpriteRegionToImage(region, request);
-					break;
 				}
-			}
 		}
 		// get rid of them all (we processed them all anyways)
 		drawRequests.clear();
@@ -117,12 +115,12 @@ public class Screen {
 		int actualY = request.y() - Math.round(sprite.originY() * request.yScale());
 		int actualX2 = actualX + Math.round(sprite.dataWidth() * request.xScale());
 		int actualY2 = actualY + Math.round(sprite.dataHeight() * request.yScale());
-		if ((actualX < 0 || actualX >= image.getWidth() || actualY < 0 || actualY >= image.getHeight()) &&
-				(actualX2 < 0 || actualX2 >= image.getWidth() || actualY2 < 0 || actualY2 >= image.getHeight())) {
+		if (!GeneralUtil.areRectanglesIntersecting(actualX, actualY, actualX2, actualY2, 0, 0, MainClass.WINDOW_WIDTH - 1, MainClass.WINDOW_HEIGHT - 1)) {
 			return;
 		}
 
 		// the sprite is at least partially on-screen
+
 		SpriteSheetRegion scaledSprite = scaleImageData(sprite.data(), request.xScale(), request.yScale(), sprite.originX(), sprite.originY());
 		byte[][] spriteData = scaledSprite.data();
 		for (int y = 0; y < scaledSprite.dataHeight(); y++) {
@@ -146,7 +144,7 @@ public class Screen {
 	}
 
 	public static SpriteSheetRegion scaleImageData(byte[][] data, float xScale, float yScale, int originX, int originY) {
-		// TODO: properly figure out scaling to prevent annoying jerkiness when constantly changing scale
+		// TODO: properly figure out scaling to prevent annoying jerkiness when constantly changing scale with an origin not equal to 0,0
 		if (xScale == 1 && yScale == 1) {
 			return new SpriteSheetRegion(data, data[0].length, data.length, originX, originY);
 		}
@@ -171,7 +169,7 @@ public class Screen {
 		int newX = data[0].length / 4;
 		if (xScale != 1) {
 			newX = 0;
-			newDataX = new byte[data.length][Math.round(data[0].length / 4 * xScale) * 4];
+			newDataX = new byte[data.length][Math.round((data[0].length / 4) * xScale) * 4];
 			for (int oldX = 0; oldX < data[0].length; oldX += 4) {
 				if (oldX / 4 == originX) {
 					newXOrigin = newX;
@@ -241,11 +239,8 @@ public class Screen {
 
 	public static SpriteSheetRegion getSpriteScaled(String spriteName, float xScale, float yScale) {
 		SpriteSheetRegion region = null;
-		for (SpriteSheet spriteSheet: allSpriteSheets) {
-			if (spriteSheet.hasSprite(spriteName)) {
-				region = spriteSheet.getSprite(spriteName);
-				break;
-			}
+		if (allSprites.containsKey(spriteName)) {
+			region = allSprites.get(spriteName);
 		}
 		if (region != null) {
 			return scaleImageData(region.data(), xScale, yScale, region.originX(), region.originY());
@@ -255,10 +250,9 @@ public class Screen {
 
 	public static SpriteInformation getSpriteInfo(String spriteName) {
 		SpriteInformation info = null;
-		for (SpriteSheet spriteSheet: allSpriteSheets) {
-			if (spriteSheet.hasSprite(spriteName)) {
-				info = spriteSheet.getSpriteInformation(spriteName);
-			}
+		if (allSprites.containsKey(spriteName)) {
+			SpriteSheetRegion tmp = allSprites.get(spriteName);
+			info = new SpriteInformation(tmp.dataWidth(), tmp.dataHeight(), tmp.originX(), tmp.originY());
 		}
 		return info;
 	}

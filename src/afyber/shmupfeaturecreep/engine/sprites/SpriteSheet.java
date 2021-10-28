@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class does stuff.
@@ -15,12 +15,11 @@ import java.util.HashMap;
  * @author afyber
  */
 public class SpriteSheet {
+	private SpriteSheet() {}
 
-	private byte[][] imageData;
+	private static byte[][] imageData;
 
-	private HashMap<String, SpriteSheetRegion> allSprites;
-
-	public SpriteSheet(String imageName) {
+	public static void loadSpriteSheet(String imageName, Map<String, SpriteSheetRegion> out) {
 		PngReaderByte imageReader = new PngReaderByte(new File(imageName + ".png"));
 		try {
 			setupSpriteSheetData(imageReader);
@@ -32,7 +31,7 @@ public class SpriteSheet {
 		}
 
 		try (InputStream infoStream = new FileInputStream(imageName + "_info.txt")) {
-			setupSprites(infoStream);
+			setupSprites(infoStream, out);
 		}
 		catch (IOException e) {
 			System.out.println("Attempting to load sprite-sheet caused IOException");
@@ -40,7 +39,7 @@ public class SpriteSheet {
 		}
 	}
 
-	private void setupSpriteSheetData(PngReaderByte reader) {
+	private static void setupSpriteSheetData(PngReaderByte reader) {
 		imageData = new byte[reader.imgInfo.rows][reader.imgInfo.cols * 4];
 
 		for (int i = 0; i < imageData.length; i++) {
@@ -48,9 +47,7 @@ public class SpriteSheet {
 		}
 	}
 
-	private void setupSprites(InputStream stream) throws IOException {
-		allSprites = new HashMap<>();
-
+	private static void setupSprites(InputStream stream, Map<String, SpriteSheetRegion> map) throws IOException {
 		byte[] allInfoBytes = stream.readAllBytes();
 		stream.close();
 
@@ -88,20 +85,7 @@ public class SpriteSheet {
 				System.arraycopy(imageData[i + y], x * 4, newBytes[i], 0, width * 4);
 			}
 			SpriteSheetRegion region = new SpriteSheetRegion(newBytes, width * 4, height, originX, originY);
-			allSprites.put(name, region);
+			map.put(name, region);
 		}
-	}
-
-	public boolean hasSprite(String name) {
-		return allSprites.containsKey(name);
-	}
-
-	public SpriteSheetRegion getSprite(String name) {
-		return allSprites.get(name);
-	}
-
-	public SpriteInformation getSpriteInformation(String spriteName) {
-		SpriteSheetRegion region = allSprites.get(spriteName);
-		return new SpriteInformation(region.dataWidth(), region.dataHeight(), region.originX(), region.originY());
 	}
 }
