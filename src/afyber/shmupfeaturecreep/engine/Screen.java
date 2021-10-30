@@ -26,7 +26,7 @@ public class Screen {
 	private static CustomPanel panel;
 	private static BufferedImage image;
 
-	private static boolean closed;
+	private static boolean windowClosed;
 
 	private static ArrayList<DrawRequest> drawRequests;
 
@@ -41,17 +41,17 @@ public class Screen {
 				super.dispose();
 				if (MainClass.DEBUG)
 					System.out.println("Window exit");
-				closed = true;
+				windowClosed = true;
 			}
 		};
-		closed = false;
+		windowClosed = false;
 		panel = new CustomPanel();
 		panel.addKeyListener(new KeyboardHandler());
 		panel.setFocusable(true);
 		frame.add(panel);
 		frame.setResizable(false);
 		frame.setTitle(name);
-		frame.setSize(width, height);
+		frame.setSize(width + 16, height + 39);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
 
@@ -81,7 +81,7 @@ public class Screen {
 	public static void clearAllPixelsToColor(int rgbColor) {
 		int[] colorArray = new int[MainClass.WINDOW_WIDTH * MainClass.WINDOW_HEIGHT];
 		Arrays.fill(colorArray, rgbColor);
-		image.setRGB(0, 0, MainClass.WINDOW_HEIGHT - 1, MainClass.WINDOW_HEIGHT - 1, colorArray, 0, MainClass.WINDOW_WIDTH);
+		image.setRGB(0, 0, MainClass.WINDOW_WIDTH, MainClass.WINDOW_HEIGHT, colorArray, 0, MainClass.WINDOW_WIDTH);
 	}
 
 	public static void applyDrawRequestsAndPaint() {
@@ -257,7 +257,7 @@ public class Screen {
 		return info;
 	}
 
-	// FIXME: check accuracy against getSpriteScaled
+	// TODO: check accuracy against getSpriteScaled
 	public static SpriteInformation getScaledSpriteInfo(String spriteName, float xScale, float yScale) {
 		SpriteInformation info = getSpriteInfo(spriteName);
 		if (info != null) {
@@ -287,7 +287,7 @@ public class Screen {
 	}
 
 	public static boolean isWindowClosed() {
-		return closed;
+		return windowClosed;
 	}
 
 	// NOTE: private classes and records
@@ -297,7 +297,7 @@ public class Screen {
 		public void paint(Graphics g) {
 			Graphics2D g2d = (Graphics2D)g;
 
-			g2d.drawImage(image, 0, 0, frame.getWidth(), frame.getHeight(), null);
+			g2d.drawImage(image, 0, 0, MainClass.WINDOW_WIDTH, MainClass.WINDOW_HEIGHT, null);
 		}
 	}
 

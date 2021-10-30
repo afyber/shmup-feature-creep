@@ -1,3 +1,4 @@
 sprite_1:0,0,16,16,0,0
 sprite_2:16,0,16,16,8,8
-sprite_3:0,16,16,16,0,0
+vertical_test_pattern:0,16,16,16,0,0
+horizontal_test_pattern:16,16,16,16,0,0

@@ -11,8 +11,8 @@ public class TestInstanceClass3 extends DynamicObject {
 
 	@Override
 	public void create(WorldMiddleman world) {
-		spriteIndex = "sprite_3";
-		collisionIndex = "sprite_3";
+		spriteIndex = "vertical_test_pattern";
+		collisionIndex = "vertical_test_pattern";
 		imageXScale = 3;
 	}
 }
