@@ -9,6 +9,7 @@ import afyber.shmupfeaturecreep.engine.sprites.SpriteInformation;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
 import afyber.shmupfeaturecreep.game.BattleController;
 import afyber.shmupfeaturecreep.game.Player1;
+import afyber.shmupfeaturecreep.game.Scorecard1;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -21,17 +22,17 @@ import java.util.ArrayList;
  */
 public class World {
 
-	private ArrayList<StaticObject> allTiles;
-	private ArrayList<DynamicObject> allGameObjects;
-	private ArrayList<ObjectDestructionReference> gameObjectsToRemove;
+	private final ArrayList<StaticObject> allTiles;
+	private final ArrayList<DynamicObject> allGameObjects;
+	private final ArrayList<ObjectDestructionReference> gameObjectsToRemove;
 	// this system (I think) even allows for create code to create objects
 	// note that these objects are NOT updated, alarmed, or drawn, they can ONLY have their fields changed
 	// they are added to the allGameObjects list and will start doing that stuff on the next frame
-	private ArrayList<DynamicObject> gameObjectsCreatedThisFrame;
+	private final ArrayList<DynamicObject> gameObjectsCreatedThisFrame;
 
 	private int nextAvailableGameObjectID = 1;
 
-	private WorldMiddleman worldMiddleman;
+	private final WorldMiddleman worldMiddleman;
 
 	public World() {
 		allTiles = new ArrayList<>();
@@ -42,6 +43,7 @@ public class World {
 		// TODO: load room data here
 		createInstance(BattleController.class, 0, 0, 0);
 		createInstance(Player1.class, 320, 256, 100);
+		createInstance(Scorecard1.class, 0, 0, 1000);
 	}
 
 	public void destroyAll() {

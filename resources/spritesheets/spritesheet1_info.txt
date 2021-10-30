@@ -3,3 +3,4 @@ player_bullet:14,0,2,7,1,4
 enemy_ship_1_L:16,0,9,22,5,11
 enemy_ship_1_R:25,0,9,22,5,11
 enemy_ship_cannon_fodder:34,0,7,8,4,4
+vertical_border:41,0,3,1,1,0

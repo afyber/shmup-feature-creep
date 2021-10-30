@@ -11,7 +11,7 @@ public class MainClass {
 
 	public static final String GAME_NAME = "shmupfeaturecreep";
 	public static final String GAME_NAME_NICE = "Shmup: Feature Creep";
-	public static final int WINDOW_WIDTH = 460;
+	public static final int WINDOW_WIDTH = 640;
 	public static final int WINDOW_HEIGHT = 640;
 
 	private static final int IDEAL_FPS = 60;
