@@ -218,6 +218,8 @@ public class World {
 		return !classRefToObjectList(classRef).isEmpty() || !classRefToObjectListInJustCreated(classRef).isEmpty();
 	}
 
+	// FIXME: I have found one situation where this works differently for different callers with the same two objects
+	// This is likely to do with scaling inaccuracy
 	private boolean isColliding(DynamicObject caller, DynamicObject other) {
 		if (other == null || caller == null) {
 			return false;

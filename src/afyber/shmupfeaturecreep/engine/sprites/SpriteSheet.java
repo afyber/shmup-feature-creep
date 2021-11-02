@@ -15,6 +15,7 @@ import java.util.Map;
  * @author afyber
  */
 public class SpriteSheet {
+	// FIXME: REFACTOR ALL CODE TO USE ARGB INTS INSTEAD OF 4 BYTES
 	private SpriteSheet() {}
 
 	private static byte[][] imageData;

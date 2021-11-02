@@ -134,6 +134,7 @@ public class Screen {
 				}
 
 				if (Byte.toUnsignedInt(spriteData[y][x * 4 + 3]) == 0xFF) {
+					// FIXME: replace this with an array because calling this function takes a long time
 					image.setRGB(calculatedX, calculatedY, 0xFF000000 | Byte.toUnsignedInt(spriteData[y][x * 4]) << 16 | Byte.toUnsignedInt(spriteData[y][x * 4 + 1]) << 8 | Byte.toUnsignedInt(spriteData[y][x * 4 + 2]));
 				}
 				else if (Byte.toUnsignedInt(spriteData[y][x * 4 + 3]) != 0) {
