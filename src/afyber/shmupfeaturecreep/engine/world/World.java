@@ -218,45 +218,51 @@ public class World {
 		return !classRefToObjectList(classRef).isEmpty() || !classRefToObjectListInJustCreated(classRef).isEmpty();
 	}
 
-	public boolean isColliding(DynamicObject caller, int objRef) {
-		DynamicObject other = objRefToObject(objRef);
-		if (other == null) {
-			other = objRefToObjectInJustCreated(objRef);
+	private boolean isColliding(DynamicObject caller, DynamicObject other) {
+		if (other == null || caller == null) {
+			return false;
 		}
-		if (other != null) {
-			SpriteInformation callerInfo = Screen.getScaledSpriteInfo(caller.getCollisionIndex(), caller.getImageXScale(), caller.getImageYScale());
-			SpriteInformation otherInfo = Screen.getScaledSpriteInfo(other.getCollisionIndex(), other.getImageXScale(), other.getImageYScale());
-			if (otherInfo == null || callerInfo == null) {
+
+		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(caller.getCollisionIndex(), caller.getImageXScale(), caller.getImageYScale());
+		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(other.getCollisionIndex(), other.getImageXScale(), other.getImageYScale());
+
+		if (otherInfo == null || callerInfo == null) {
+			return false;
+		}
+
+		int callerCorner1X = Math.round(caller.getX() - callerInfo.originX());
+		int callerCorner1Y = Math.round(caller.getY() - callerInfo.originY());
+		int callerCorner2X = callerCorner1X + (callerInfo.dataWidth() / 4);
+		int callerCorner2Y = callerCorner1Y + callerInfo.dataHeight();
+		int otherCorner1X = Math.round(other.getX() - otherInfo.originX());
+		int otherCorner1Y = Math.round(other.getY() - otherInfo.originY());
+		int otherCorner2X = otherCorner1X + otherInfo.dataWidth() / 4;
+		int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight();
+
+		if (GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
+				otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y)) {
+			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(caller.getCollisionIndex(), caller.getImageXScale(), caller.getImageYScale());
+			SpriteSheetRegion otherRegion = Screen.getSpriteScaled(other.getCollisionIndex(), other.getImageXScale(), other.getImageYScale());
+
+			if (otherRegion == null || callerRegion == null) {
 				return false;
 			}
-			int callerCorner1X = Math.round(caller.getX() - callerInfo.originX());
-			int callerCorner1Y = Math.round(caller.getY() - callerInfo.originY());
-			int callerCorner2X = callerCorner1X + (callerInfo.dataWidth() / 4);
-			int callerCorner2Y = callerCorner1Y + callerInfo.dataHeight();
-			int otherCorner1X = Math.round(other.getX() - otherInfo.originX());
-			int otherCorner1Y = Math.round(other.getY() - otherInfo.originY());
-			int otherCorner2X = otherCorner1X + otherInfo.dataWidth() / 4;
-			int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight();
 
-			if (GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
-					otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y)) {
-				SpriteSheetRegion callerRegion = Screen.getSpriteScaled(caller.getCollisionIndex(), caller.getImageXScale(), caller.getImageYScale());
-				SpriteSheetRegion otherRegion = Screen.getSpriteScaled(other.getCollisionIndex(), other.getImageXScale(), other.getImageYScale());
-				byte[][] callerData = callerRegion.data();
-				byte[][] otherData = otherRegion.data();
+			byte[][] callerData = callerRegion.data();
+			byte[][] otherData = otherRegion.data();
 
-				for (int i1 = 0; i1 < callerRegion.dataHeight(); i1++) {
-					for (int c1 = 0; c1 < callerRegion.dataWidth() / 4; c1++) {
-						if (Byte.toUnsignedInt(callerData[i1][c1 * 4 + 3]) != 0x0) {
+			for (int i1 = 0; i1 < callerRegion.dataHeight(); i1++) {
+				for (int c1 = 0; c1 < callerRegion.dataWidth() / 4; c1++) {
+					if (Byte.toUnsignedInt(callerData[i1][c1 * 4 + 3]) != 0x0) {
+						int otherI = callerCorner1X + c1 - otherCorner1X;
+						int otherC = callerCorner1Y + i1 - otherCorner1Y;
 
-							int otherI = callerCorner1X + c1 - otherCorner1X;
-							int otherC = callerCorner1Y + i1 - otherCorner1Y;
-							if (otherI < 0 || otherI >= otherRegion.dataHeight() || otherC < 0 || otherC >= otherRegion.dataWidth() / 4) {
-								continue;
-							}
-							if (Byte.toUnsignedInt(otherData[otherI][otherC * 4 + 3]) != 0x0) {
-								return true;
-							}
+						if (otherI < 0 || otherI >= otherRegion.dataHeight() || otherC < 0 || otherC >= otherRegion.dataWidth() / 4) {
+							continue;
+						}
+
+						if (Byte.toUnsignedInt(otherData[otherI][otherC * 4 + 3]) != 0x0) {
+							return true;
 						}
 					}
 				}
@@ -265,17 +271,30 @@ public class World {
 		return false;
 	}
 
+	public boolean isColliding(DynamicObject caller, int objRef) {
+		for (DynamicObject object: allGameObjects) {
+			if (object.getInstanceID() == objRef) {
+				return isColliding(caller, object);
+			}
+		}
+		for (DynamicObject object: gameObjectsCreatedThisFrame) {
+			if (object.getInstanceID() == objRef) {
+				return isColliding(caller, object);
+			}
+		}
+		return false;
+	}
+
 	public boolean isColliding(DynamicObject caller, Class classRef) {
-		// TODO: this is optimizable
 		ArrayList<DynamicObject> allObj = classRefToObjectList(classRef);
 		for (DynamicObject object: allObj) {
-			if (isColliding(caller, object.getInstanceID())) {
+			if (isColliding(caller, object)) {
 				return true;
 			}
 		}
 		allObj = classRefToObjectListInJustCreated(classRef);
 		for (DynamicObject object: allObj) {
-			if (isColliding(caller, object.getInstanceID())) {
+			if (isColliding(caller, object)) {
 				return true;
 			}
 		}
