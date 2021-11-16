@@ -18,7 +18,7 @@ public class WorldMiddleman {
 		this.world = world;
 	}
 
-	public int createInstance(Class classRef, float x, float y, int depth) {
+	public DynamicObject createInstance(Class classRef, float x, float y, int depth) {
 		return world.createInstance(classRef, x, y, depth);
 	}
 
@@ -38,6 +38,7 @@ public class WorldMiddleman {
 		return world.instanceExists(classRef);
 	}
 
+	// This function is now in a weird situation of being slightly useless, but possibly useful
 	public DynamicObject getObject(int objRef) {
 		return world.objRefToObject(objRef);
 	}

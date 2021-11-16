@@ -14,21 +14,23 @@ import java.util.Arrays;
  */
 public class DynamicObject {
 
-	protected final int instanceID;
+	// NOTE: Accessors are not used BECAUSE it makes the code look more like GML
+	// That might sound silly, but this is basically a GameMaker clone anyways
+	public final int instanceID;
 
-	protected float x;
-	protected float y;
+	public float x;
+	public float y;
 
-	protected int depth;
-	protected boolean visible = true;
+	public int depth;
+	public boolean visible = true;
 
-	protected float imageXScale = 1;
-	protected float imageYScale = 1;
+	public float imageXScale = 1;
+	public float imageYScale = 1;
 
-	protected String spriteIndex = "";
-	protected String collisionIndex = "";
+	public String spriteIndex = "";
+	public String collisionIndex = "";
 
-	protected int[] alarm = new int[10];
+	public int[] alarm = new int[10];
 
 	public DynamicObject(float x, float y, int depth, int instanceID) {
 		this.x = x;
@@ -132,83 +134,5 @@ public class DynamicObject {
 		if (visible) {
 			Screen.draw(spriteIndex, x, y, xScale, yScale, depth);
 		}
-	}
-
-	// THE METHODS BELOW ARE TO BE USED (mostly) BY WORLD TO SET/GET IMPORTANT INFORMATION
-
-	public final void setX(float x) {
-		this.x = x;
-	}
-
-	public final void setY(float y) {
-		this.y = y;
-	}
-
-	public final void setDepth(int depth) {
-		this.depth = depth;
-	}
-
-	public final void setVisible(boolean visible) {
-		this.visible = visible;
-	}
-
-	public final void setSpriteIndex(String spriteIndex) {
-		this.spriteIndex = spriteIndex;
-	}
-
-	public final void setCollisionIndex(String collisionIndex) {
-		this.collisionIndex = collisionIndex;
-	}
-
-	public final void setAlarm(int alarm, int value) {
-		this.alarm[alarm] = value;
-	}
-
-	public final void setImageXScale(float imageXScale) {
-		this.imageXScale = imageXScale;
-	}
-
-	public final void setImageYScale(float imageYScale) {
-		this.imageYScale = imageYScale;
-	}
-
-	public final float getX() {
-		return x;
-	}
-
-	public final float getY() {
-		return y;
-	}
-
-	public final int getDepth() {
-		return depth;
-	}
-
-	public final boolean isVisible() {
-		return visible;
-	}
-
-	public final String getSpriteIndex() {
-		return spriteIndex;
-	}
-
-	public final String getCollisionIndex() {
-		return collisionIndex;
-	}
-
-	public final int getAlarm(int alarm) {
-		return this.alarm[alarm];
-	}
-
-	public final float getImageXScale() {
-		return imageXScale;
-	}
-
-	public final float getImageYScale() {
-		return imageYScale;
-	}
-
-	public final int getInstanceID() {
-		return instanceID;
 	}
 }

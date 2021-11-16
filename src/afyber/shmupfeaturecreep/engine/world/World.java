@@ -96,13 +96,13 @@ public class World {
 		for (DynamicObject object: allGameObjects) {
 			for (int i = 0; i < 10; i++) {
 				// NOTE: here, if the alarm is > 0, subtract 1
-				int value = object.getAlarm(i);
+				int value = object.alarm[i];
 				if (value > 0) {
-					object.setAlarm(i, value - 1);
+					object.alarm[i] = value - 1;
 
 					// here, if it has just become 0 from that subtraction, trigger the alarm
-					if (object.getAlarm(i) == 0) {
-						object.setAlarm(i, -1);
+					if (object.alarm[i] == 0) {
+						object.alarm[i] = -1;
 						switch (i) {
 							case 0 -> object.alarm0(worldMiddleman);
 							case 1 -> object.alarm1(worldMiddleman);
@@ -130,14 +130,13 @@ public class World {
 		gameObjectsToRemove.add(new ObjectDestructionReference(false, -1, classRef));
 	}
 
-	public int createInstance(Class classRef, float x, float y, int depth) {
+	public DynamicObject createInstance(Class classRef, float x, float y, int depth) {
 		try {
 			Constructor con = classRef.getConstructor(Float.TYPE, Float.TYPE, Integer.TYPE, Integer.TYPE);
-			int id = getNextAvailableGameObjectID();
-			DynamicObject newObject = (DynamicObject)(con.newInstance(x, y, depth, id));
+			DynamicObject newObject = (DynamicObject)(con.newInstance(x, y, depth, getNextAvailableGameObjectID()));
 			newObject.create(worldMiddleman);
 			gameObjectsCreatedThisFrame.add(newObject);
-			return id;
+			return newObject;
 		}
 		catch (NoSuchMethodException e) {
 			if (MainClass.DEBUG)
@@ -159,8 +158,7 @@ public class World {
 				System.out.println("Attempt to create DynamicObject resulted in IllegalAccessException.");
 			e.printStackTrace();
 		}
-		// -1 is not a valid instance ID, so nothing will happen if you try to do something to it
-		return -1;
+		return null;
 	}
 
 	public void instanceDestroy(int objRef) {
@@ -193,26 +191,26 @@ public class World {
 			return false;
 		}
 
-		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(caller.getCollisionIndex(), caller.getImageXScale(), caller.getImageYScale());
-		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(other.getCollisionIndex(), other.getImageXScale(), other.getImageYScale());
+		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(caller.collisionIndex, caller.imageXScale, caller.imageYScale);
+		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(other.collisionIndex, other.imageXScale, other.imageYScale);
 
 		if (otherInfo == null || callerInfo == null) {
 			return false;
 		}
 
-		int callerCorner1X = Math.round(caller.getX() - callerInfo.originX());
-		int callerCorner1Y = Math.round(caller.getY() - callerInfo.originY());
+		int callerCorner1X = Math.round(caller.x - callerInfo.originX());
+		int callerCorner1Y = Math.round(caller.y - callerInfo.originY());
 		int callerCorner2X = callerCorner1X + (callerInfo.dataWidth() / 4);
 		int callerCorner2Y = callerCorner1Y + callerInfo.dataHeight();
-		int otherCorner1X = Math.round(other.getX() - otherInfo.originX());
-		int otherCorner1Y = Math.round(other.getY() - otherInfo.originY());
+		int otherCorner1X = Math.round(other.x - otherInfo.originX());
+		int otherCorner1Y = Math.round(other.y - otherInfo.originY());
 		int otherCorner2X = otherCorner1X + otherInfo.dataWidth() / 4;
 		int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight();
 
 		if (GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
 				otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y)) {
-			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(caller.getCollisionIndex(), caller.getImageXScale(), caller.getImageYScale());
-			SpriteSheetRegion otherRegion = Screen.getSpriteScaled(other.getCollisionIndex(), other.getImageXScale(), other.getImageYScale());
+			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(caller.collisionIndex, caller.imageXScale, caller.imageYScale);
+			SpriteSheetRegion otherRegion = Screen.getSpriteScaled(other.collisionIndex, other.imageXScale, other.imageYScale);
 
 			if (otherRegion == null || callerRegion == null) {
 				return false;
@@ -264,12 +262,12 @@ public class World {
 	public DynamicObject objRefToObject(int objRef) {
 		if (objRef != -1) {
 			for (DynamicObject object: allGameObjects) {
-				if (object.getInstanceID() == objRef) {
+				if (object.instanceID == objRef) {
 					return object;
 				}
 			}
 			for (DynamicObject object: gameObjectsCreatedThisFrame) {
-				if (object.getInstanceID() == objRef) {
+				if (object.instanceID == objRef) {
 					return object;
 				}
 			}
