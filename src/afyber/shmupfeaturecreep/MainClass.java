@@ -41,7 +41,7 @@ public class MainClass {
 
 			world.destroyAll();
 
-			world.moveAll();
+			world.moveAllNewlyAdded();
 
 			// BUG: alarms from create code set at room start will apply one frame early
 			world.alarmAll();

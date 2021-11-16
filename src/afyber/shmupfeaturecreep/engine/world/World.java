@@ -14,6 +14,7 @@ import afyber.shmupfeaturecreep.game.Scorecard1;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is very important because it does a lot of things, like holding the list of all objects and tiles.
@@ -39,6 +40,7 @@ public class World {
 		allGameObjects = new ArrayList<>();
 		gameObjectsToRemove = new ArrayList<>();
 		gameObjectsCreatedThisFrame = new ArrayList<>();
+
 		worldMiddleman = new WorldMiddleman(this);
 		// TODO: load room data here
 		createInstance(BattleController.class, 0, 0, 0);
@@ -58,7 +60,7 @@ public class World {
 		gameObjectsToRemove.clear();
 	}
 
-	public void moveAll() {
+	public void moveAllNewlyAdded() {
 		allGameObjects.addAll(gameObjectsCreatedThisFrame);
 		gameObjectsCreatedThisFrame.clear();
 	}
@@ -128,30 +130,6 @@ public class World {
 		gameObjectsToRemove.add(new ObjectDestructionReference(false, -1, classRef));
 	}
 
-	public void setAlarm(int objRef, int alarm, int value) {
-		DynamicObject object = objRefToObject(objRef);
-		if (object != null) {
-			object.setAlarm(alarm, value);
-			return;
-		}
-		object = objRefToObjectInJustCreated(objRef);
-		if (object != null) {
-			object.setAlarm(alarm, value);
-		}
-	}
-
-	public int getAlarm(int objRef, int alarm) {
-		DynamicObject object = objRefToObject(objRef);
-		if (object != null) {
-			return object.getAlarm(alarm);
-		}
-		object = objRefToObjectInJustCreated(objRef);
-		if (object != null) {
-			return object.getAlarm(alarm);
-		}
-		return -1;
-	}
-
 	public int createInstance(Class classRef, float x, float y, int depth) {
 		try {
 			Constructor con = classRef.getConstructor(Float.TYPE, Float.TYPE, Integer.TYPE, Integer.TYPE);
@@ -190,12 +168,6 @@ public class World {
 		if (object != null) {
 			object.destroy(worldMiddleman);
 			allGameObjects.remove(object);
-			return;
-		}
-		object = objRefToObjectInJustCreated(objRef);
-		if (object != null) {
-			object.destroy(worldMiddleman);
-			gameObjectsCreatedThisFrame.remove(object);
 		}
 	}
 
@@ -204,18 +176,14 @@ public class World {
 			object.destroy(worldMiddleman);
 			allGameObjects.remove(object);
 		}
-		for (DynamicObject object: classRefToObjectListInJustCreated(classRef)) {
-			object.destroy(worldMiddleman);
-			gameObjectsCreatedThisFrame.remove(object);
-		}
 	}
 
 	public boolean instanceExists(int objRef) {
-		return objRefToObject(objRef) != null || objRefToObjectInJustCreated(objRef) != null;
+		return objRefToObject(objRef) != null;
 	}
 
 	public boolean instanceExists(Class classRef) {
-		return !classRefToObjectList(classRef).isEmpty() || !classRefToObjectListInJustCreated(classRef).isEmpty();
+		return !classRefToObjectList(classRef).isEmpty();
 	}
 
 	// FIXME: I have found one situation where this works differently for different callers with the same two objects
@@ -274,27 +242,11 @@ public class World {
 	}
 
 	public boolean isColliding(DynamicObject caller, int objRef) {
-		for (DynamicObject object: allGameObjects) {
-			if (object.getInstanceID() == objRef) {
-				return isColliding(caller, object);
-			}
-		}
-		for (DynamicObject object: gameObjectsCreatedThisFrame) {
-			if (object.getInstanceID() == objRef) {
-				return isColliding(caller, object);
-			}
-		}
-		return false;
+		return isColliding(caller, objRefToObject(objRef));
 	}
 
 	public boolean isColliding(DynamicObject caller, Class classRef) {
-		ArrayList<DynamicObject> allObj = classRefToObjectList(classRef);
-		for (DynamicObject object: allObj) {
-			if (isColliding(caller, object)) {
-				return true;
-			}
-		}
-		allObj = classRefToObjectListInJustCreated(classRef);
+		ArrayList<DynamicObject> allObj = (ArrayList<DynamicObject>)classRefToObjectList(classRef);
 		for (DynamicObject object: allObj) {
 			if (isColliding(caller, object)) {
 				return true;
@@ -309,19 +261,13 @@ public class World {
 		return toReturn;
 	}
 
-	private DynamicObject objRefToObject(int objRef) {
+	public DynamicObject objRefToObject(int objRef) {
 		if (objRef != -1) {
 			for (DynamicObject object: allGameObjects) {
 				if (object.getInstanceID() == objRef) {
 					return object;
 				}
 			}
-		}
-		return null;
-	}
-
-	private DynamicObject objRefToObjectInJustCreated(int objRef) {
-		if (objRef != -1) {
 			for (DynamicObject object: gameObjectsCreatedThisFrame) {
 				if (object.getInstanceID() == objRef) {
 					return object;
@@ -331,18 +277,13 @@ public class World {
 		return null;
 	}
 
-	private ArrayList<DynamicObject> classRefToObjectList(Class classRef) {
+	public List<DynamicObject> classRefToObjectList(Class classRef) {
 		ArrayList<DynamicObject> list = new ArrayList<>();
 		for (DynamicObject object: allGameObjects) {
 			if (classRef.isInstance(object)) {
 				list.add(object);
 			}
 		}
-		return list;
-	}
-
-	private ArrayList<DynamicObject> classRefToObjectListInJustCreated(Class classRef) {
-		ArrayList<DynamicObject> list = new ArrayList<>();
 		for (DynamicObject object: gameObjectsCreatedThisFrame) {
 			if (classRef.isInstance(object)) {
 				list.add(object);

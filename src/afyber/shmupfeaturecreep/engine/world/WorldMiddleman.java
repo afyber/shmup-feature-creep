@@ -2,6 +2,8 @@ package afyber.shmupfeaturecreep.engine.world;
 
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 
+import java.util.List;
+
 /**
  * This is shown to DynamicObjects so that they have a way to access world, yes this requires maintaining the same
  * methods twice, too bad.
@@ -36,12 +38,12 @@ public class WorldMiddleman {
 		return world.instanceExists(classRef);
 	}
 
-	public void setAlarm(int objRef, int alarm, int value) {
-		world.setAlarm(objRef, alarm, value);
+	public DynamicObject getObject(int objRef) {
+		return world.objRefToObject(objRef);
 	}
 
-	public int getAlarm(int objRef, int alarm) {
-		return world.getAlarm(objRef, alarm);
+	public List<DynamicObject> getObjectList(Class classRef) {
+		return world.classRefToObjectList(classRef);
 	}
 
 	public boolean isColliding(DynamicObject caller, int objRef) {
