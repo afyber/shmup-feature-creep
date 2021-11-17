@@ -1,12 +1,11 @@
 package afyber.shmupfeaturecreep.engine.sprites;
 
-import ar.com.hjg.pngj.PngReaderByte;
+import ar.com.hjg.pngj.PngReaderInt;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -15,13 +14,12 @@ import java.util.Map;
  * @author afyber
  */
 public class SpriteSheet {
-	// FIXME: REFACTOR ALL CODE TO USE ARGB INTS INSTEAD OF 4 BYTES
 	private SpriteSheet() {}
 
-	private static byte[][] imageData;
+	private static int[][] imageData;
 
 	public static void loadSpriteSheet(String imageName, Map<String, SpriteSheetRegion> out) {
-		PngReaderByte imageReader = new PngReaderByte(new File(imageName + ".png"));
+		PngReaderInt imageReader = new PngReaderInt(new File(imageName + ".png"));
 		try {
 			setupSpriteSheetData(imageReader);
 			imageReader.end();
@@ -40,11 +38,16 @@ public class SpriteSheet {
 		}
 	}
 
-	private static void setupSpriteSheetData(PngReaderByte reader) {
-		imageData = new byte[reader.imgInfo.rows][reader.imgInfo.cols * 4];
+	private static void setupSpriteSheetData(PngReaderInt reader) {
+		imageData = new int[reader.imgInfo.rows][reader.imgInfo.cols];
 
 		for (int i = 0; i < imageData.length; i++) {
-				imageData[i] = Arrays.copyOf(reader.readRowByte().getScanline(), imageData[0].length);
+			int[] scanline = reader.readRowInt().getScanline();
+			int[] aRGBScanline = new int[reader.imgInfo.cols];
+			for (int n = 0; n < reader.imgInfo.cols; n++) {
+				aRGBScanline[n] = scanline[n * 4 + 3] << 24 | scanline[n * 4] << 16 | scanline[n * 4 + 1] << 8 | scanline[n * 4 + 2];
+			}
+			imageData[i] = aRGBScanline;
 		}
 	}
 
@@ -81,11 +84,11 @@ public class SpriteSheet {
 			originX = Integer.parseInt(splitEvenMore[4]);
 			originY = Integer.parseInt(splitEvenMore[5]);
 
-			byte[][] newBytes = new byte[height][width * 4];
+			int[][] newData = new int[height][width];
 			for (int i = 0; i < height; i++) {
-				System.arraycopy(imageData[i + y], x * 4, newBytes[i], 0, width * 4);
+				System.arraycopy(imageData[i + y], x, newData[i], 0, width);
 			}
-			SpriteSheetRegion region = new SpriteSheetRegion(newBytes, width * 4, height, originX, originY);
+			SpriteSheetRegion region = new SpriteSheetRegion(newData, width, height, originX, originY);
 			map.put(name, region);
 		}
 	}

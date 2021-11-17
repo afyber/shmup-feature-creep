@@ -122,9 +122,9 @@ public class Screen {
 		// the sprite is at least partially on-screen
 
 		SpriteSheetRegion scaledSprite = scaleImageData(sprite.data(), request.xScale(), request.yScale(), sprite.originX(), sprite.originY());
-		byte[][] spriteData = scaledSprite.data();
+		int[][] spriteData = scaledSprite.data();
 		for (int y = 0; y < scaledSprite.dataHeight(); y++) {
-			for (int x = 0; x < scaledSprite.dataWidth() / 4; x++) {
+			for (int x = 0; x < scaledSprite.dataWidth(); x++) {
 				int calculatedX = request.x() + x - scaledSprite.originX();
 				int calculatedY = request.y() + y - scaledSprite.originY();
 				if (calculatedX < 0 || calculatedX >= image.getWidth() ||
@@ -133,24 +133,24 @@ public class Screen {
 					continue;
 				}
 
-				if (Byte.toUnsignedInt(spriteData[y][x * 4 + 3]) == 0xFF) {
+				if ((spriteData[y][x] >> 24 & 0xFF) == 0xFF) {
 					// FIXME: replace this with an array because calling this function takes a long time
-					image.setRGB(calculatedX, calculatedY, 0xFF000000 | Byte.toUnsignedInt(spriteData[y][x * 4]) << 16 | Byte.toUnsignedInt(spriteData[y][x * 4 + 1]) << 8 | Byte.toUnsignedInt(spriteData[y][x * 4 + 2]));
+					image.setRGB(calculatedX, calculatedY, spriteData[y][x]);
 				}
-				else if (Byte.toUnsignedInt(spriteData[y][x * 4 + 3]) != 0) {
+				else if ((spriteData[y][x] >> 24 & 0xFF) != 0x0) {
 					// TODO: apply transparency
 				}
 			}
 		}
 	}
 
-	public static SpriteSheetRegion scaleImageData(byte[][] data, float xScale, float yScale, int originX, int originY) {
+	public static SpriteSheetRegion scaleImageData(int[][] data, float xScale, float yScale, int originX, int originY) {
 		// TODO: properly figure out scaling to prevent annoying jerkiness when constantly changing scale with an origin not equal to 0,0
 		if (xScale == 1 && yScale == 1) {
 			return new SpriteSheetRegion(data, data[0].length, data.length, originX, originY);
 		}
 		else if (xScale == 0 || yScale == 0) {
-			return new SpriteSheetRegion(new byte[1][4], 4, 1, 0, 0);
+			return new SpriteSheetRegion(new int[1][1], 1, 1, 0, 0);
 		}
 
 		boolean xNegative = xScale < 0;
@@ -162,17 +162,17 @@ public class Screen {
 			yScale = -yScale;
 		}
 
-		byte[][] newDataX;
+		int[][] newDataX;
 
 		float runningTally = 0;
 		int intTally;
 		int newXOrigin = 0;
-		int newX = data[0].length / 4;
+		int newX = data[0].length;
 		if (xScale != 1) {
 			newX = 0;
-			newDataX = new byte[data.length][Math.round((data[0].length / 4) * xScale) * 4];
-			for (int oldX = 0; oldX < data[0].length; oldX += 4) {
-				if (oldX / 4 == originX) {
+			newDataX = new int[data.length][Math.round(data[0].length * xScale)];
+			for (int oldX = 0; oldX < data[0].length; oldX++) {
+				if (oldX == originX) {
 					newXOrigin = newX;
 				}
 				runningTally += xScale;
@@ -180,10 +180,7 @@ public class Screen {
 				if (intTally > 0) {
 					for (int y = 0; y < data.length; y++) {
 						for (int i = 0; i < intTally; i++) {
-							newDataX[y][newX * 4 + i * 4] = data[y][oldX];
-							newDataX[y][newX * 4 + i * 4 + 1] = data[y][oldX + 1];
-							newDataX[y][newX * 4 + i * 4 + 2] = data[y][oldX + 2];
-							newDataX[y][newX * 4 + i * 4 + 3] = data[y][oldX + 3];
+							newDataX[y][newX + i] = data[y][oldX];
 						}
 					}
 					runningTally -= intTally;
@@ -196,13 +193,13 @@ public class Screen {
 			newXOrigin = originX;
 		}
 
-		byte[][] newDataY;
+		int[][] newDataY;
 
 		int newYOrigin = 0;
 		int newY = data.length;
 		if (yScale != 1) {
 			newY = 0;
-			newDataY = new byte[Math.round(data.length * yScale)][newDataX[0].length];
+			newDataY = new int[Math.round(data.length * yScale)][newDataX[0].length];
 			runningTally = 0;
 			for (int oldY = 0; oldY < data.length; oldY++) {
 				if (oldY == originY) {
@@ -235,7 +232,7 @@ public class Screen {
 			newYOrigin = newY - newYOrigin;
 		}
 
-		return new SpriteSheetRegion(newDataY, newX * 4, newY, newXOrigin, newYOrigin);
+		return new SpriteSheetRegion(newDataY, newX, newY, newXOrigin, newYOrigin);
 	}
 
 	public static SpriteSheetRegion getSpriteScaled(String spriteName, float xScale, float yScale) {
@@ -267,7 +264,7 @@ public class Screen {
 			int newDataWidth;
 			int newDataHeight;
 			if (xScale < 0) {
-				newOriginX = Math.round(info.dataWidth() / 4 - info.originX() * -xScale);
+				newOriginX = Math.round(info.dataWidth() - info.originX() * -xScale);
 				newDataWidth = Math.round(info.dataWidth() * -xScale);
 			}
 			else {

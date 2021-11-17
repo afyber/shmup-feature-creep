@@ -8,8 +8,8 @@ package afyber.shmupfeaturecreep.engine;
 public class GeneralUtil {
 	private GeneralUtil() {}
 
-	public static void reverseTopSpriteArray(byte[][] byteArray) {
-		byte[] tmp;
+	public static void reverseTopSpriteArray(int[][] byteArray) {
+		int[] tmp;
 		for (int i = 0; i < byteArray.length / 2; i++) {
 			tmp = byteArray[i];
 			byteArray[i] = byteArray[byteArray.length - i - 1];
@@ -17,26 +17,13 @@ public class GeneralUtil {
 		}
 	}
 
-	public static void reverseBottomSpriteArrays(byte[][] byteArray) {
-		byte tmp1;
-		byte tmp2;
-		byte tmp3;
-		byte tmp4;
-		for (byte[] row: byteArray) {
+	public static void reverseBottomSpriteArrays(int[][] byteArray) {
+		int tmp1;
+		for (int[] row: byteArray) {
 			for (int i = 0; i < row.length / 2; i += 4) {
-				// TODO: Someday I'll refactor the code to not require this
 				tmp1 = row[i];
-				tmp2 = row[i + 1];
-				tmp3 = row[i + 2];
-				tmp4 = row[i + 3];
-				row[i] = row[row.length - i - 4];
-				row[i + 1] = row[row.length - i - 3];
-				row[i + 2] = row[row.length - i - 2];
-				row[i + 3] = row[row.length - i - 1];
-				row[row.length - i - 4] = tmp1;
-				row[row.length - i - 3] = tmp2;
-				row[row.length - i - 2] = tmp3;
-				row[row.length - i - 1] = tmp4;
+				row[i] = row[row.length - i - 1];
+				row[row.length - i - 1] = tmp1;
 			}
 		}
 	}

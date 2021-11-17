@@ -200,11 +200,11 @@ public class World {
 
 		int callerCorner1X = Math.round(caller.x - callerInfo.originX());
 		int callerCorner1Y = Math.round(caller.y - callerInfo.originY());
-		int callerCorner2X = callerCorner1X + (callerInfo.dataWidth() / 4);
+		int callerCorner2X = callerCorner1X + callerInfo.dataWidth();
 		int callerCorner2Y = callerCorner1Y + callerInfo.dataHeight();
 		int otherCorner1X = Math.round(other.x - otherInfo.originX());
 		int otherCorner1Y = Math.round(other.y - otherInfo.originY());
-		int otherCorner2X = otherCorner1X + otherInfo.dataWidth() / 4;
+		int otherCorner2X = otherCorner1X + otherInfo.dataWidth();
 		int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight();
 
 		if (GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
@@ -216,20 +216,20 @@ public class World {
 				return false;
 			}
 
-			byte[][] callerData = callerRegion.data();
-			byte[][] otherData = otherRegion.data();
+			int[][] callerData = callerRegion.data();
+			int[][] otherData = otherRegion.data();
 
 			for (int i1 = 0; i1 < callerRegion.dataHeight(); i1++) {
-				for (int c1 = 0; c1 < callerRegion.dataWidth() / 4; c1++) {
-					if (Byte.toUnsignedInt(callerData[i1][c1 * 4 + 3]) != 0x0) {
+				for (int c1 = 0; c1 < callerRegion.dataWidth(); c1++) {
+					if ((callerData[i1][c1] >> 24 & 0xFF) != 0x0) {
 						int otherI = callerCorner1X + c1 - otherCorner1X;
 						int otherC = callerCorner1Y + i1 - otherCorner1Y;
 
-						if (otherI < 0 || otherI >= otherRegion.dataHeight() || otherC < 0 || otherC >= otherRegion.dataWidth() / 4) {
+						if (otherI < 0 || otherI >= otherRegion.dataHeight() || otherC < 0 || otherC >= otherRegion.dataWidth()) {
 							continue;
 						}
 
-						if (Byte.toUnsignedInt(otherData[otherI][otherC * 4 + 3]) != 0x0) {
+						if ((otherData[otherI][otherC] >> 24 & 0xFF) != 0x0) {
 							return true;
 						}
 					}

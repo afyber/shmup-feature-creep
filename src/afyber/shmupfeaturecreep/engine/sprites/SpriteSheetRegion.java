@@ -8,7 +8,7 @@ import java.util.Objects;
  *
  * @author afyber
  */
-public record SpriteSheetRegion(byte[][] data, int dataWidth, int dataHeight, int originX, int originY) {
+public record SpriteSheetRegion(int[][] data, int dataWidth, int dataHeight, int originX, int originY) {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
