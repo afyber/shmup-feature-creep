@@ -10,7 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -25,6 +24,8 @@ public class Screen {
 	private static JFrame frame;
 	private static CustomPanel panel;
 	private static BufferedImage image;
+
+	private static int[][] currentFrame;
 
 	private static boolean windowClosed;
 
@@ -55,6 +56,8 @@ public class Screen {
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
 
+		currentFrame = new int[height][width];
+
 		drawRequests = new ArrayList<>();
 
 		allSprites = new HashMap<>();
@@ -79,9 +82,11 @@ public class Screen {
 		clearAllPixelsToColor(color.getRGB());
 	}
 	public static void clearAllPixelsToColor(int rgbColor) {
-		int[] colorArray = new int[MainClass.WINDOW_WIDTH * MainClass.WINDOW_HEIGHT];
-		Arrays.fill(colorArray, rgbColor);
-		image.setRGB(0, 0, MainClass.WINDOW_WIDTH, MainClass.WINDOW_HEIGHT, colorArray, 0, MainClass.WINDOW_WIDTH);
+		for (int i = 0; i < currentFrame.length; i++) {
+			for (int c = 0; c < currentFrame[0].length; c++) {
+				currentFrame[i][c] = rgbColor;
+			}
+		}
 	}
 
 	public static void applyDrawRequestsAndPaint() {
@@ -99,17 +104,20 @@ public class Screen {
 		for (DrawRequest request: drawRequests) {
 				if (allSprites.containsKey(request.spriteName())) {
 					SpriteSheetRegion region = allSprites.get(request.spriteName());
-					copySpriteRegionToImage(region, request);
+					copySpriteRegionToFrame(region, request);
 				}
 		}
 		// get rid of them all (we processed them all anyways)
 		drawRequests.clear();
 
+		// move the frame data to the image
+		copyFrameToImage();
+
 		// draw to the window
 		panel.repaint();
 	}
 
-	private static void copySpriteRegionToImage(SpriteSheetRegion sprite, DrawRequest request) {
+	private static void copySpriteRegionToFrame(SpriteSheetRegion sprite, DrawRequest request) {
 		// all this to say, if the sprite does not overlap the image, do not draw it
 		int actualX = request.x() - Math.round(sprite.originX() * request.xScale());
 		int actualY = request.y() - Math.round(sprite.originY() * request.yScale());
@@ -134,14 +142,18 @@ public class Screen {
 				}
 
 				if ((spriteData[y][x] >> 24 & 0xFF) == 0xFF) {
-					// FIXME: replace this with an array because calling this function takes a long time
-					image.setRGB(calculatedX, calculatedY, spriteData[y][x]);
+					currentFrame[calculatedY][calculatedX] = spriteData[y][x];
 				}
 				else if ((spriteData[y][x] >> 24 & 0xFF) != 0x0) {
 					// TODO: apply transparency
 				}
 			}
 		}
+	}
+
+	private static void copyFrameToImage() {
+		CompactFrameArray singleArray = GeneralUtil.arrayOfArraysToSingleArray(currentFrame);
+		image.setRGB(0, 0, MainClass.WINDOW_WIDTH, MainClass.WINDOW_HEIGHT, singleArray.a(), 0, singleArray.dataWidth());
 	}
 
 	public static SpriteSheetRegion scaleImageData(int[][] data, float xScale, float yScale, int originX, int originY) {

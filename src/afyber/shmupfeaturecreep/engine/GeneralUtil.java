@@ -33,4 +33,13 @@ public class GeneralUtil {
 		// if that ever becomes not true this function will no longer work
 		return !(o1X > c2X || o1Y > c2Y || o2X < c1X || o2Y < c1Y);
 	}
+
+	public static CompactFrameArray arrayOfArraysToSingleArray(int[][] a) {
+		int[] newArray = new int[a.length * a[0].length];
+		int dataWidth = a[0].length;
+		for (int i = 0; i < a.length; i++) {
+			System.arraycopy(a[i], 0, newArray, dataWidth * i, dataWidth);
+		}
+		return new CompactFrameArray(newArray, dataWidth);
+	}
 }
