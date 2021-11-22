@@ -39,6 +39,7 @@ public class MainClass {
 
 			Keyboard.applyKeyQueue();
 
+			// deal with objects that were added and removed last frame
 			world.destroyAll();
 
 			world.moveAllNewlyAdded();

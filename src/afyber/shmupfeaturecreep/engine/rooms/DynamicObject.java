@@ -135,4 +135,10 @@ public class DynamicObject {
 			Screen.draw(spriteIndex, x, y, xScale, yScale, depth);
 		}
 	}
+
+	protected final void drawExtended(String spriteIndex, float x, float y, float xScale, float yScale, float alpha) {
+		if (visible) {
+			Screen.draw(spriteIndex, x, y, xScale, yScale, depth, alpha);
+		}
+	}
 }

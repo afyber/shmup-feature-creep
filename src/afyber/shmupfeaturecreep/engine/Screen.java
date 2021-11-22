@@ -69,8 +69,11 @@ public class Screen {
 		draw(spriteName, x, y, 1, 1, depth);
 	}
 	public static void draw(String spriteName, float x, float y, float xScale, float yScale, int depth) {
+		draw(spriteName, x, y, xScale, yScale, depth, 1);
+	}
+	public static void draw(String spriteName, float x, float y, float xScale, float yScale, int depth, float alpha) {
 		try {
-			drawRequests.add(new DrawRequest(spriteName, Math.round(x), Math.round(y), xScale, yScale, depth));
+			drawRequests.add(new DrawRequest(spriteName, Math.round(x), Math.round(y), xScale, yScale, depth, alpha));
 		}
 		catch (NullPointerException e) {
 			System.out.println("Draw attempted before 'drawRequests' initialized");
@@ -102,10 +105,10 @@ public class Screen {
 
 		// draw the things in order
 		for (DrawRequest request: drawRequests) {
-				if (allSprites.containsKey(request.spriteName())) {
-					SpriteSheetRegion region = allSprites.get(request.spriteName());
-					copySpriteRegionToFrame(region, request);
-				}
+			if (allSprites.containsKey(request.spriteName())) {
+				SpriteSheetRegion region = allSprites.get(request.spriteName());
+				copySpriteRegionToFrame(region, request);
+			}
 		}
 		// get rid of them all (we processed them all anyways)
 		drawRequests.clear();
@@ -131,6 +134,7 @@ public class Screen {
 
 		SpriteSheetRegion scaledSprite = scaleImageData(sprite.data(), request.xScale(), request.yScale(), sprite.originX(), sprite.originY());
 		int[][] spriteData = scaledSprite.data();
+		float alphaPercent = Math.min(1, request.alpha());
 		for (int y = 0; y < scaledSprite.dataHeight(); y++) {
 			for (int x = 0; x < scaledSprite.dataWidth(); x++) {
 				int calculatedX = request.x() + x - scaledSprite.originX();
@@ -141,11 +145,15 @@ public class Screen {
 					continue;
 				}
 
-				if ((spriteData[y][x] >> 24 & 0xFF) == 0xFF) {
+				if ((spriteData[y][x] >> 24 & 0xFF) == 0xFF && alphaPercent == 1) {
 					currentFrame[calculatedY][calculatedX] = spriteData[y][x];
 				}
-				else if ((spriteData[y][x] >> 24 & 0xFF) != 0x0) {
-					// TODO: apply transparency
+				else if ((spriteData[y][x] >> 24 & 0xFF) != 0x0 && alphaPercent > 0) {
+					float percentage = ((float)(spriteData[y][x] >> 24 & 0xFF) / 0xFF) * alphaPercent;
+					int newR = Math.min(0xFF, (int)((currentFrame[calculatedY][calculatedX] >> 16 & 0xFF) * (1 - percentage) + (spriteData[y][x] >> 16 & 0xFF) * percentage));
+					int newG = Math.min(0xFF, (int)((currentFrame[calculatedY][calculatedX] >> 8 & 0xFF) * (1 - percentage) + (spriteData[y][x] >> 8 & 0xFF) * percentage));
+					int newB = Math.min(0xFF, (int)((currentFrame[calculatedY][calculatedX] & 0xFF) * (1 - percentage) + (spriteData[y][x] & 0xFF) * percentage));
+					currentFrame[calculatedY][calculatedX] = 0xFF000000 | newR << 16 | newG << 8 | newB;
 				}
 			}
 		}
@@ -247,6 +255,14 @@ public class Screen {
 		return new SpriteSheetRegion(newDataY, newX, newY, newXOrigin, newYOrigin);
 	}
 
+	public static SpriteSheetRegion getSprite(String spriteName) {
+		SpriteSheetRegion region = null;
+		if (allSprites.containsKey(spriteName)) {
+			region = allSprites.get(spriteName);
+		}
+		return region;
+	}
+
 	public static SpriteSheetRegion getSpriteScaled(String spriteName, float xScale, float yScale) {
 		SpriteSheetRegion region = null;
 		if (allSprites.containsKey(spriteName)) {
@@ -311,5 +327,5 @@ public class Screen {
 		}
 	}
 
-	private record DrawRequest(String spriteName, int x, int y, float xScale, float yScale, int depth) {}
+	private record DrawRequest(String spriteName, int x, int y, float xScale, float yScale, int depth, float alpha) {}
 }
