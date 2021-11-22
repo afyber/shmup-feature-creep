@@ -24,10 +24,6 @@ public class Timing {
 		if (lastMeasuredEndMillis - lastMeasuredStartMillis < idealFrameTimeMillis) {
 			Thread.sleep(idealFrameTimeMillis - (lastMeasuredEndMillis - lastMeasuredStartMillis));
 		}
-		else {
-			// TODO: find out why you have to wait at least one millisecond or there's weird stuff on-screen
-			Thread.sleep(1);
-		}
 		return (lastMeasuredEndMillis - lastMeasuredStartMillis);
 	}
 

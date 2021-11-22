@@ -44,7 +44,7 @@ public class MainClass {
 
 			world.moveAllNewlyAdded();
 
-			// BUG: alarms from create code set at room start will apply one frame early
+			// NOTE: setting alarm[0] = 1 in create code will apply on the first frame of execution
 			world.alarmAll();
 
 			// update all the stuff

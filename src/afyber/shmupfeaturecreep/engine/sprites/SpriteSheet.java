@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
- * This class does stuff.
+ * This class serves as a buffer between the actual image data and Screen which loads the sprite information and the sprites themselves.
  *
  * @author afyber
  */

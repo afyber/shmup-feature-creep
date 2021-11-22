@@ -25,6 +25,7 @@ public class World {
 
 	private final ArrayList<StaticObject> allTiles;
 	private final ArrayList<DynamicObject> allGameObjects;
+	// These objects will be removed the frame after the call to instanceDestroy()
 	private final ArrayList<ObjectDestructionReference> gameObjectsToRemove;
 	// this system (I think) even allows for create code to create objects
 	// note that these objects are NOT updated, alarmed, or drawn, they can ONLY have their fields changed

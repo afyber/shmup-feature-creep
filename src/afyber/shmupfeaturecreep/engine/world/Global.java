@@ -2,6 +2,11 @@ package afyber.shmupfeaturecreep.engine.world;
 
 import java.util.HashMap;
 
+/**
+ * Stores global variables for more GML-like code
+ *
+ * @author afyber
+ */
 public class Global {
 	private Global() {}
 

@@ -27,4 +27,8 @@ public class RandomUtil {
 	public static void setSeed(long seed) {
 		random.setSeed(seed);
 	}
+
+	public static void randomize() {
+		random.setSeed(System.currentTimeMillis());
+	}
 }

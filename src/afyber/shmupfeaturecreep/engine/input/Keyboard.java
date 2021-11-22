@@ -14,10 +14,10 @@ public class Keyboard {
 
 	// The string is the key code name, the int is 0 if the key is not pressed, 1 if it has just been pressed this frame
 	// and 2 if it is being held down
-	private static HashMap<String, Integer> allKeys = new HashMap<>();
+	private static final HashMap<String, Integer> allKeys = new HashMap<>();
 
 	// FIXME: learn how to synchronize lists and do it to this one
-	private static ArrayList<KeyStateChange> keyStateQueue = new ArrayList<>();
+	private static final ArrayList<KeyStateChange> keyStateQueue = new ArrayList<>();
 
 	// NOTE: PACKAGE-PRIVATE
 	static void queueKeyDown(String keyName) {
