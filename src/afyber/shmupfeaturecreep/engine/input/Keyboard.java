@@ -16,19 +16,18 @@ public class Keyboard {
 	// and 2 if it is being held down
 	private static final HashMap<String, Integer> allKeys = new HashMap<>();
 
-	// FIXME: learn how to synchronize lists and do it to this one
 	private static final ArrayList<KeyStateChange> keyStateQueue = new ArrayList<>();
 
 	// NOTE: PACKAGE-PRIVATE
-	static void queueKeyDown(String keyName) {
+	static synchronized void queueKeyDown(String keyName) {
 		keyStateQueue.add(new KeyStateChange(keyName, 1));
 	}
 
-	static void queueKeyUp(String keyName) {
+	static synchronized void queueKeyUp(String keyName) {
 		keyStateQueue.add(new KeyStateChange(keyName, 0));
 	}
 
-	public static void applyKeyQueue() {
+	public static synchronized void applyKeyQueue() {
 		for (KeyStateChange change: keyStateQueue) {
 			if (change.key() == null || (change.newState() == 1 && allKeys.get(change.key()) > 0)) {
 				continue;
