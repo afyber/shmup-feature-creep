@@ -52,6 +52,7 @@ public class Screen {
 		frame.add(panel);
 		frame.setResizable(false);
 		frame.setTitle(name);
+		// these numbers are so that the drawable area is actually the size specified
 		frame.setSize(width + 16, height + 39);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
@@ -135,6 +136,7 @@ public class Screen {
 		SpriteSheetRegion scaledSprite = scaleImageData(sprite.data(), request.xScale(), request.yScale(), sprite.originX(), sprite.originY());
 		int[][] spriteData = scaledSprite.data();
 		float alphaPercent = Math.min(1, request.alpha());
+
 		for (int y = 0; y < scaledSprite.dataHeight(); y++) {
 			for (int x = 0; x < scaledSprite.dataWidth(); x++) {
 				int calculatedX = request.x() + x - scaledSprite.originX();

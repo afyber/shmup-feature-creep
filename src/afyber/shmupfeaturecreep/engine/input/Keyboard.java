@@ -59,9 +59,14 @@ public class Keyboard {
 		allKeys.put("down", 0);
 		allKeys.put("left", 0);
 		allKeys.put("right", 0);
+		allKeys.put("escape", 0);
 		allKeys.put("z", 0);
 		allKeys.put("x", 0);
 		allKeys.put("c", 0);
+		allKeys.put("v", 0);
+		allKeys.put("b", 0);
+		allKeys.put("n", 0);
+		allKeys.put("m", 0);
 	}
 
 	private record KeyStateChange(String key, int newState) {}

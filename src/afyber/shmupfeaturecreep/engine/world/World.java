@@ -66,6 +66,13 @@ public class World {
 		gameObjectsCreatedThisFrame.clear();
 	}
 
+	public void physicsUpdateAll() {
+		for (DynamicObject object: allGameObjects) {
+			object.x += object.xSpeed;
+			object.y += object.ySpeed;
+		}
+	}
+
 	public void drawAll() {
 		for (StaticObject tile: allTiles) {
 			tile.draw();

@@ -30,12 +30,20 @@ public class DynamicObject {
 	public String spriteIndex = "";
 	public String collisionIndex = "";
 
+	public float xSpeed = 0;
+	public float ySpeed = 0;
+
 	public int[] alarm = new int[10];
 
 	public DynamicObject(float x, float y, int depth, int instanceID) {
+		this(x, y, depth, 1, 1, instanceID);
+	}
+	public DynamicObject(float x, float y, int depth, float xScale, float yScale, int instanceID) {
 		this.x = x;
 		this.y = y;
 		this.depth = depth;
+		this.imageXScale = xScale;
+		this.imageYScale = yScale;
 		this.instanceID = instanceID;
 		Arrays.fill(alarm, -1);
 	}

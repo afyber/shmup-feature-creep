@@ -35,9 +35,14 @@ public class KeyboardHandler implements KeyListener {
 			case KeyEvent.VK_DOWN: yield "down";
 			case KeyEvent.VK_LEFT: yield "left";
 			case KeyEvent.VK_RIGHT: yield "right";
+			case KeyEvent.VK_ESCAPE: yield "escape";
 			case KeyEvent.VK_Z: yield "z";
 			case KeyEvent.VK_X: yield "x";
 			case KeyEvent.VK_C: yield "c";
+			case KeyEvent.VK_V: yield "v";
+			case KeyEvent.VK_B: yield "b";
+			case KeyEvent.VK_N: yield "n";
+			case KeyEvent.VK_M: yield "m";
 			default: yield null;
 		};
 	}

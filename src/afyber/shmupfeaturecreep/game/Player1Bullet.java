@@ -13,13 +13,11 @@ public class Player1Bullet extends DynamicObject {
 	public void create(WorldMiddleman world) {
 		spriteIndex = "player_bullet";
 		collisionIndex = "player_bullet";
-		imageXScale = 1;
-		imageYScale = 1;
+		ySpeed = -11;
 	}
 
 	@Override
 	public void update(WorldMiddleman world) {
-		y -= 11;
 		if (world.isColliding(this, EnemyShipParent.class)) {
 			world.instanceDestroy(instanceID);
 		}

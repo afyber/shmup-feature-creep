@@ -57,6 +57,9 @@ public class MainClass {
 
 			Screen.applyDrawRequestsAndPaint();
 
+			// perform physics
+			world.physicsUpdateAll();
+
 			// tell Keyboard that a frame has passed
 			Keyboard.frameDone();
 
