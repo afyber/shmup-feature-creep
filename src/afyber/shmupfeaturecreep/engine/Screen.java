@@ -2,6 +2,7 @@ package afyber.shmupfeaturecreep.engine;
 
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.input.KeyboardHandler;
+import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteInformation;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheet;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
@@ -40,8 +41,7 @@ public class Screen {
 			@Override
 			public void dispose() {
 				super.dispose();
-				if (MainClass.DEBUG)
-					System.out.println("Window exit");
+				MainClass.LOGGER.log(LoggingLevel.DEBUG, "Window dispose called");
 				windowClosed = true;
 			}
 		};
@@ -77,8 +77,7 @@ public class Screen {
 			drawRequests.add(new DrawRequest(spriteName, Math.round(x), Math.round(y), xScale, yScale, depth, alpha));
 		}
 		catch (NullPointerException e) {
-			System.out.println("Draw attempted before 'drawRequests' initialized");
-			e.printStackTrace();
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 		}
 	}
 

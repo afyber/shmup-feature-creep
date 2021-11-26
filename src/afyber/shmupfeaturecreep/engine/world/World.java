@@ -3,6 +3,7 @@ package afyber.shmupfeaturecreep.engine.world;
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.Screen;
+import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteInformation;
@@ -122,7 +123,7 @@ public class World {
 							case 7 -> object.alarm7(worldMiddleman);
 							case 8 -> object.alarm8(worldMiddleman);
 							case 9 -> object.alarm9(worldMiddleman);
-							default -> System.out.println("What on earth happened this is impossible.");
+							default -> MainClass.LOGGER.log(LoggingLevel.WARNING, "Something has gone very wrong in the alarm code");
 						}
 					}
 				}
@@ -147,24 +148,16 @@ public class World {
 			return newObject;
 		}
 		catch (NoSuchMethodException e) {
-			if (MainClass.DEBUG)
-				System.out.println("Attempt to create DynamicObject resulted in NoSuchMethodException.");
-			e.printStackTrace();
+			MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in NoSuchMethodException.", e);
 		}
 		catch (InvocationTargetException e) {
-			if (MainClass.DEBUG)
-				System.out.println("Attempt to create DynamicObject resulted in InvocationTargetException.");
-			e.printStackTrace();
+			MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in InvocationTargetException.", e);
 		}
 		catch (InstantiationException e) {
-			if (MainClass.DEBUG)
-				System.out.println("Attempt to create DynamicObject resulted in InstantiationException.");
-			e.printStackTrace();
+			MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in InstantiationException.", e);
 		}
 		catch (IllegalAccessException e) {
-			if (MainClass.DEBUG)
-				System.out.println("Attempt to create DynamicObject resulted in IllegalAccessException.");
-			e.printStackTrace();
+			MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in IllegalAccessException.", e);
 		}
 		return null;
 	}

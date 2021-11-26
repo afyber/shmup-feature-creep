@@ -1,5 +1,7 @@
 package afyber.shmupfeaturecreep.engine.sprites;
 
+import afyber.shmupfeaturecreep.MainClass;
+import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 import ar.com.hjg.pngj.PngReaderInt;
 
 import java.io.File;
@@ -26,15 +28,14 @@ public class SpriteSheet {
 		}
 		catch (Exception e) {
 			imageReader.close();
-			e.printStackTrace();
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sprite-sheet image", e);
 		}
 
 		try (InputStream infoStream = new FileInputStream(imageName + "_info.txt")) {
 			setupSprites(infoStream, out);
 		}
 		catch (IOException e) {
-			System.out.println("Attempting to load sprite-sheet caused IOException");
-			e.printStackTrace();
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load sprite-sheet caused IOException", e);
 		}
 	}
 

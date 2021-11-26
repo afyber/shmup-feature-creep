@@ -3,6 +3,8 @@ package afyber.shmupfeaturecreep;
 import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.Timing;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
+import afyber.shmupfeaturecreep.engine.output.EngineLogger;
+import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 import afyber.shmupfeaturecreep.engine.world.World;
 
 import java.awt.*;
@@ -18,10 +20,10 @@ public class MainClass {
 
 	public static final boolean DEBUG = true;
 
+	public static final EngineLogger LOGGER = new EngineLogger(System.currentTimeMillis() + ".txt");
+
 	public static void main(String[] args) {
-		// TODO: use a logger
-		if (DEBUG)
-			System.out.println("Program start");
+		LOGGER.log(LoggingLevel.DEBUG, "Program start");
 
 		Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -31,8 +33,7 @@ public class MainClass {
 
 		World world = new World();
 
-		if (DEBUG)
-			System.out.println("Main Loop Start");
+		LOGGER.log(LoggingLevel.DEBUG, "Main loop start");
 
 		while (!Screen.isWindowClosed()) {
 			Timing.mainLoopBodyStarted();
@@ -68,18 +69,15 @@ public class MainClass {
 				Timing.calculateTimeAndWaitThread();
 			}
 			catch (InterruptedException e) {
-				System.out.println("For some reason an InterruptedException happened while waiting the main thread.");
-				e.printStackTrace();
+				LOGGER.log(LoggingLevel.ERROR, "For some reason an InterruptedException happened while waiting the main thread.", e);
 				Thread.currentThread().interrupt();
 			}
 		}
 
-		if (DEBUG)
-			System.out.println("Main loop end");
+		LOGGER.log(LoggingLevel.DEBUG, "Main loop end");
 
 		// save important information and whatnot here
 
-		if (DEBUG)
-			System.out.println("Program end");
+		LOGGER.log(LoggingLevel.DEBUG, "Program end");
 	}
 }
