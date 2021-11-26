@@ -12,7 +12,7 @@ public class EngineLogger {
 
 	public EngineLogger(String filename) {
 		this.filename = filename;
-		this.lowestAllowedLevel = LoggingLevel.DEBUG;
+		this.lowestAllowedLevel = LoggingLevel.WARNING;
 		try {
 			Files.createFile(Path.of(filename));
 		}

@@ -1,5 +1,6 @@
 package afyber.shmupfeaturecreep;
 
+import afyber.shmupfeaturecreep.engine.Registry;
 import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.Timing;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
@@ -23,7 +24,12 @@ public class MainClass {
 	public static final EngineLogger LOGGER = new EngineLogger(System.currentTimeMillis() + ".txt");
 
 	public static void main(String[] args) {
+		if (DEBUG) {
+			LOGGER.setLoggingLevel(LoggingLevel.DEBUG);
+		}
 		LOGGER.log(LoggingLevel.DEBUG, "Program start");
+
+		Game.registerRooms();
 
 		Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -31,12 +37,21 @@ public class MainClass {
 
 		Keyboard.clearKeys();
 
-		World world = new World();
+		World world;
+		if (Registry.hasRoom("roomStart")) {
+			 world = new World(Registry.getRoom("roomStart"));
+		}
+		else {
+			throw new IllegalStateException("The room registry does not contain \"roomStart\"");
+		}
 
 		LOGGER.log(LoggingLevel.DEBUG, "Main loop start");
 
 		while (!Screen.isWindowClosed()) {
 			Timing.mainLoopBodyStarted();
+			if (world.getIsRoomChange() && Registry.hasRoom(world.getRoomChangeRoomName())) {
+				world = new World(Registry.getRoom(world.getRoomChangeRoomName()));
+			}
 
 			Keyboard.applyKeyQueue();
 

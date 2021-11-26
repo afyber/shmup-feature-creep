@@ -5,12 +5,11 @@ import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
+import afyber.shmupfeaturecreep.engine.rooms.ObjectCreationReference;
+import afyber.shmupfeaturecreep.engine.rooms.Room;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteInformation;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
-import afyber.shmupfeaturecreep.game.BattleController;
-import afyber.shmupfeaturecreep.game.Player1;
-import afyber.shmupfeaturecreep.game.Scorecard1;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -23,6 +22,8 @@ import java.util.List;
  * @author afyber
  */
 public class World {
+
+	private String roomChange = "";
 
 	private final ArrayList<StaticObject> allTiles;
 	private final ArrayList<DynamicObject> allGameObjects;
@@ -37,17 +38,26 @@ public class World {
 
 	private final WorldMiddleman worldMiddleman;
 
-	public World() {
+	public World(Room room) {
 		allTiles = new ArrayList<>();
 		allGameObjects = new ArrayList<>();
 		gameObjectsToRemove = new ArrayList<>();
 		gameObjectsCreatedThisFrame = new ArrayList<>();
 
 		worldMiddleman = new WorldMiddleman(this);
-		// TODO: load room data here
-		createInstance(BattleController.class, 0, 0, 0);
-		createInstance(Player1.class, 320, 256, 100);
-		createInstance(Scorecard1.class, 0, 0, 1000);
+
+		loadRoomData(room);
+	}
+
+	public void loadRoomData(Room room) {
+		allTiles.addAll(room.tiles());
+		for (ObjectCreationReference ref: room.objects()) {
+			createInstance(ref.classOfObject(), ref.x(), ref.y(), ref.imageXScale(), ref.imageYScale(), ref.depth());
+		}
+	}
+
+	public void changeRoom(String roomName) {
+		roomChange = roomName;
 	}
 
 	public void destroyAll() {
@@ -140,9 +150,14 @@ public class World {
 	}
 
 	public DynamicObject createInstance(Class classRef, float x, float y, int depth) {
+		return createInstance(classRef, x, y, 1, 1, depth);
+	}
+	public DynamicObject createInstance(Class classRef, float x, float y, float imageXScale, float imageYScale, int depth) {
 		try {
 			Constructor con = classRef.getConstructor(Float.TYPE, Float.TYPE, Integer.TYPE, Integer.TYPE);
 			DynamicObject newObject = (DynamicObject)(con.newInstance(x, y, depth, getNextAvailableGameObjectID()));
+			newObject.imageXScale = imageXScale;
+			newObject.imageYScale = imageYScale;
 			newObject.create(worldMiddleman);
 			gameObjectsCreatedThisFrame.add(newObject);
 			return newObject;
@@ -289,5 +304,13 @@ public class World {
 			}
 		}
 		return list;
+	}
+
+	public boolean getIsRoomChange() {
+		return !roomChange.equals("");
+	}
+
+	public String getRoomChangeRoomName() {
+		return roomChange;
 	}
 }
