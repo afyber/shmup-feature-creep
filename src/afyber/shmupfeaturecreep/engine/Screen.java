@@ -78,7 +78,7 @@ public class Screen {
 			}
 			String[] allData = builder.toString().split("\r\n");
 			for (String str: allData) {
-				SpriteSheet.loadSpriteSheet("spriteseets/" + str, allSprites);
+				SpriteSheet.loadSpriteSheet("spritesheets/" + str, allSprites);
 			}
 		}
 		catch (IOException e) {
