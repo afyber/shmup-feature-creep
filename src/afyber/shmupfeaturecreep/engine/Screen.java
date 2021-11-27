@@ -30,6 +30,7 @@ public class Screen {
 	private static BufferedImage image;
 
 	private static int[][] currentFrame;
+	private static boolean isDrawing;
 
 	private static boolean windowClosed;
 
@@ -61,6 +62,7 @@ public class Screen {
 		frame.setVisible(true);
 
 		currentFrame = new int[height][width];
+		isDrawing = false;
 
 		drawRequests = new ArrayList<>();
 
@@ -93,11 +95,12 @@ public class Screen {
 		draw(spriteName, x, y, xScale, yScale, depth, 1);
 	}
 	public static void draw(String spriteName, float x, float y, float xScale, float yScale, int depth, float alpha) {
-		try {
-			drawRequests.add(new DrawRequest(spriteName, Math.round(x), Math.round(y), xScale, yScale, depth, alpha));
-		}
-		catch (NullPointerException e) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
+		if (isDrawing) {
+			try {
+				drawRequests.add(new DrawRequest(spriteName, Math.round(x), Math.round(y), xScale, yScale, depth, alpha));
+			} catch (NullPointerException e) {
+				MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
+			}
 		}
 	}
 
@@ -333,6 +336,14 @@ public class Screen {
 
 	public static boolean isWindowClosed() {
 		return windowClosed;
+	}
+
+	public static void setIsDrawing(boolean val) {
+		isDrawing = val;
+	}
+
+	public static boolean getIsDrawing() {
+		return isDrawing;
 	}
 
 	// NOTE: private classes and records

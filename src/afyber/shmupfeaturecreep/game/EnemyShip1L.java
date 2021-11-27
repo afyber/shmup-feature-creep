@@ -12,6 +12,7 @@ public class EnemyShip1L extends EnemyShipParent {
 	public EnemyShip1L(float x, float y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "enemy_ship_1_L";
+		health = 40;
 	}
 
 	@Override

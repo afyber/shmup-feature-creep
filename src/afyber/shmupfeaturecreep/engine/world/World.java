@@ -87,6 +87,7 @@ public class World {
 	}
 
 	public void drawAll() {
+		Screen.setIsDrawing(true);
 		for (StaticObject tile: allTiles) {
 			tile.draw();
 		}
@@ -99,6 +100,7 @@ public class World {
 		for (DynamicObject object: allGameObjects) {
 			object.postDraw(worldMiddleman);
 		}
+		Screen.setIsDrawing(false);
 	}
 
 	public void updateAll() {
@@ -330,7 +332,7 @@ public class World {
 			}
 			else if (hasChildren) {
 				for (String child: children) {
-					if (classRef.equals(child)) {
+					if (child.equals(object.objectName)) {
 						list.add(object);
 					}
 				}
