@@ -1,5 +1,6 @@
 package afyber.shmupfeaturecreep.engine;
 
+import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.rooms.Room;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ public class Registry {
 	private Registry() {}
 
 	private static final HashMap<String, Room> roomRegistry = new HashMap<>();
-	private static final HashMap<String, Class> dynamicObjectRegistry = new HashMap<>();
+	private static final HashMap<String, Class<? extends DynamicObject>> dynamicObjectRegistry = new HashMap<>();
 	private static final HashMap<String, ArrayList<String>> dynamicObjectChildRegistry = new HashMap<>();
 
 	public static void registerRoom(String roomName, Room room) {
@@ -25,11 +26,11 @@ public class Registry {
 		return roomRegistry.containsKey(roomName);
 	}
 
-	public static void registerObject(String objectName, Class classRef) {
+	public static void registerObject(String objectName, Class<? extends DynamicObject> classRef) {
 		dynamicObjectRegistry.put(objectName, classRef);
 	}
 
-	public static Class getObject(String objectName) {
+	public static Class<? extends DynamicObject> getObject(String objectName) {
 		return dynamicObjectRegistry.get(objectName);
 	}
 

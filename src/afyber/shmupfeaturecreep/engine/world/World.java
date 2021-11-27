@@ -156,10 +156,10 @@ public class World {
 	}
 	public DynamicObject createInstance(String classRef, float x, float y, float imageXScale, float imageYScale, int depth) {
 		if (Registry.hasObject(classRef)) {
-			Class objectClass = Registry.getObject(classRef);
+			Class<? extends DynamicObject> objectClass = Registry.getObject(classRef);
 			try {
-				Constructor con = objectClass.getConstructor(Float.TYPE, Float.TYPE, Integer.TYPE, Integer.TYPE);
-				DynamicObject newObject = (DynamicObject)(con.newInstance(x, y, depth, getNextAvailableGameObjectID()));
+				Constructor<? extends DynamicObject> con = objectClass.getConstructor(Float.TYPE, Float.TYPE, Integer.TYPE, Integer.TYPE);
+				DynamicObject newObject = con.newInstance(x, y, depth, getNextAvailableGameObjectID());
 				newObject.imageXScale = imageXScale;
 				newObject.imageYScale = imageYScale;
 				newObject.create(worldMiddleman);
@@ -176,7 +176,7 @@ public class World {
 			}
 		}
 		else {
-			MainClass.LOGGER.log(LoggingLevel.WARNING, "Object name \"" + classRef + "\" is not defined, unable to create");
+			MainClass.LOGGER.log(LoggingLevel.WARNING, "Object name \"" + classRef + "\" is not registered, unable to create");
 			throw new ObjectNotDefinedError();
 		}
 		return null;
