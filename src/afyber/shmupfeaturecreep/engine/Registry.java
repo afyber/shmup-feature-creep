@@ -2,13 +2,16 @@ package afyber.shmupfeaturecreep.engine;
 
 import afyber.shmupfeaturecreep.engine.rooms.Room;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Registry {
 	private Registry() {}
 
 	private static final HashMap<String, Room> roomRegistry = new HashMap<>();
-	// TODO: finally make it so you can reference a dynamic object via string instead of via class
+	private static final HashMap<String, Class> dynamicObjectRegistry = new HashMap<>();
+	private static final HashMap<String, ArrayList<String>> dynamicObjectChildRegistry = new HashMap<>();
 
 	public static void registerRoom(String roomName, Room room) {
 		roomRegistry.put(roomName, room);
@@ -20,5 +23,32 @@ public class Registry {
 
 	public static boolean hasRoom(String roomName) {
 		return roomRegistry.containsKey(roomName);
+	}
+
+	public static void registerObject(String objectName, Class classRef) {
+		dynamicObjectRegistry.put(objectName, classRef);
+	}
+
+	public static Class getObject(String objectName) {
+		return dynamicObjectRegistry.get(objectName);
+	}
+
+	public static boolean hasObject(String objectName) {
+		return dynamicObjectRegistry.containsKey(objectName);
+	}
+
+	public static void registerObjectAsChildOf(String objectName, String objectParentName) {
+		if (!dynamicObjectChildRegistry.containsKey(objectParentName)) {
+			dynamicObjectChildRegistry.put(objectParentName, new ArrayList<>());
+		}
+		dynamicObjectChildRegistry.get(objectParentName).add(objectName);
+	}
+
+	public static List<String> getChildrenOfObject(String objectName) {
+		return dynamicObjectChildRegistry.get(objectName);
+	}
+
+	public static boolean hasChildrenForObject(String objectName) {
+		return dynamicObjectChildRegistry.containsKey(objectName);
 	}
 }

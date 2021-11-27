@@ -3,6 +3,7 @@ package afyber.shmupfeaturecreep;
 import afyber.shmupfeaturecreep.engine.Registry;
 import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.Timing;
+import afyber.shmupfeaturecreep.engine.errors.RoomNotDefinedError;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
@@ -29,6 +30,8 @@ public class MainClass {
 		}
 		LOGGER.log(LoggingLevel.DEBUG, "Program start");
 
+		Game.registerObjects();
+
 		Game.registerRooms();
 
 		Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -42,15 +45,22 @@ public class MainClass {
 			 world = new World(Registry.getRoom("roomStart"));
 		}
 		else {
-			throw new IllegalStateException("The room registry does not contain \"roomStart\"");
+			LOGGER.log(LoggingLevel.ERROR, "The room registry does not contain \"roomStart\"");
+			throw new RoomNotDefinedError();
 		}
 
 		LOGGER.log(LoggingLevel.DEBUG, "Main loop start");
 
 		while (!Screen.isWindowClosed()) {
 			Timing.mainLoopBodyStarted();
-			if (world.getIsRoomChange() && Registry.hasRoom(world.getRoomChangeRoomName())) {
-				world = new World(Registry.getRoom(world.getRoomChangeRoomName()));
+			if (world.getIsRoomChange()) {
+				if (Registry.hasRoom(world.getRoomChangeRoomName())) {
+					world = new World(Registry.getRoom(world.getRoomChangeRoomName()));
+				}
+				else {
+					LOGGER.log(LoggingLevel.ERROR, "Couldn't load room " + world.getRoomChangeRoomName() + " after call to changeRoom");
+					throw new RoomNotDefinedError();
+				}
 			}
 
 			Keyboard.applyKeyQueue();

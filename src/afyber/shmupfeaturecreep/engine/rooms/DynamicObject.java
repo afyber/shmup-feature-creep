@@ -16,6 +16,8 @@ public class DynamicObject {
 
 	// NOTE: Accessors are not used BECAUSE it makes the code look more like GML
 	// That might sound silly, but this is basically a GameMaker clone anyways
+	public String objectName = "";
+
 	public final int instanceID;
 
 	public float x;

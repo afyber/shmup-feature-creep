@@ -8,6 +8,7 @@ public class Scorecard1 extends DynamicObject {
 
 	public Scorecard1(float x, float y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
+		objectName = "scorecard";
 	}
 
 	@Override

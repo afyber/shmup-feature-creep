@@ -18,7 +18,7 @@ public class WorldMiddleman {
 		this.world = world;
 	}
 
-	public DynamicObject createInstance(Class classRef, float x, float y, int depth) {
+	public DynamicObject createInstance(String classRef, float x, float y, int depth) {
 		return world.createInstance(classRef, x, y, depth);
 	}
 
@@ -26,7 +26,7 @@ public class WorldMiddleman {
 		world.queueObjectDestruction(objRef);
 	}
 
-	public void instanceDestroy(Class classRef) {
+	public void instanceDestroy(String classRef) {
 		world.queueObjectDestruction(classRef);
 	}
 
@@ -34,7 +34,7 @@ public class WorldMiddleman {
 		return world.instanceExists(objRef);
 	}
 
-	public boolean instanceExists(Class classRef) {
+	public boolean instanceExists(String classRef) {
 		return world.instanceExists(classRef);
 	}
 
@@ -43,15 +43,20 @@ public class WorldMiddleman {
 		return world.objRefToObject(objRef);
 	}
 
-	public List<DynamicObject> getObjectList(Class classRef) {
-		return world.classRefToObjectList(classRef);
+	public List<DynamicObject> getObjectList(String classRef, boolean includingChildren) {
+		if (includingChildren) {
+			return world.classRefToObjectListInclChildren(classRef);
+		}
+		else {
+			return world.classRefToObjectList(classRef);
+		}
 	}
 
 	public boolean isColliding(DynamicObject caller, int objRef) {
 		return world.isColliding(caller, objRef);
 	}
 
-	public boolean isColliding(DynamicObject caller, Class classRef) {
-		return world.isColliding(caller, classRef);
+	public boolean isColliding(DynamicObject caller, String classRef, boolean includingChildren) {
+		return world.isColliding(caller, classRef, includingChildren);
 	}
 }

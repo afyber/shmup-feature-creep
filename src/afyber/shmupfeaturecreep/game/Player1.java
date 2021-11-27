@@ -10,6 +10,7 @@ public class Player1 extends DynamicObject {
 
 	public Player1(float x, float y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
+		objectName = "player_object";
 	}
 
 	@Override
@@ -57,17 +58,17 @@ public class Player1 extends DynamicObject {
 		int newAlarm = -1;
 		switch (Global.getIntGlobal("playerLevel")) {
 			case 0 -> {
-				world.createInstance(Player1Bullet.class, x, y - 8, depth);
+				world.createInstance("player_bullet", x, y - 8, depth);
 				newAlarm = 6;
 			}
 			case 1 -> {
-				world.createInstance(Player1Bullet.class, x - 6, y - 4, depth);
-				world.createInstance(Player1Bullet.class, x + 6, y - 4, depth);
+				world.createInstance("player_bullet", x - 6, y - 4, depth);
+				world.createInstance("player_bullet", x + 6, y - 4, depth);
 				newAlarm = 6;
 			}
 			case 2 -> {
-				world.createInstance(Player1Bullet.class, x - 6, y - 4, depth);
-				world.createInstance(Player1Bullet.class, x + 6, y - 4, depth);
+				world.createInstance("player_bullet", x - 6, y - 4, depth);
+				world.createInstance("player_bullet", x + 6, y - 4, depth);
 				newAlarm = 3;
 			}
 			default -> {

@@ -7,6 +7,7 @@ public class EnemyShipCannonFodder extends EnemyShipParent {
 
 	public EnemyShipCannonFodder(float x, float y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
+		objectName = "enemy_ship_cannon_fodder";
 	}
 
 	@Override

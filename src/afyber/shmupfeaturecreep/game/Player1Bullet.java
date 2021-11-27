@@ -7,6 +7,7 @@ public class Player1Bullet extends DynamicObject {
 
 	public Player1Bullet(float x, float y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
+		objectName = "player_bullet";
 	}
 
 	@Override
@@ -18,7 +19,7 @@ public class Player1Bullet extends DynamicObject {
 
 	@Override
 	public void update(WorldMiddleman world) {
-		if (world.isColliding(this, EnemyShipParent.class)) {
+		if (world.isColliding(this, "enemy_ship_parent", true)) {
 			world.instanceDestroy(instanceID);
 		}
 		if (y < -16) {

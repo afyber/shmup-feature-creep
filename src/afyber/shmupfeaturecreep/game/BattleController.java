@@ -9,6 +9,7 @@ public class BattleController extends DynamicObject {
 
 	public BattleController(float x, float y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
+		objectName = "battle_controller";
 	}
 
 	@Override
@@ -20,11 +21,11 @@ public class BattleController extends DynamicObject {
 	@Override
 	public void update(WorldMiddleman world) {
 		if (Keyboard.keyJustDown("c")) {
-			world.createInstance(EnemyShip1L.class, 100, -50, 0);
+			world.createInstance("enemy_ship_1_L", 100, -50, 0);
 		}
 		if (Keyboard.keyJustDown("x")) {
 			for (int i = 0; i < 10; i++) {
-				world.createInstance(EnemyShipCannonFodder.class, 32 + i * 63, -50 - i * 20, 0);
+				world.createInstance("enemy_ship_cannon_fodder", 32 + i * 63, -50 - i * 20, 0);
 			}
 		}
 	}

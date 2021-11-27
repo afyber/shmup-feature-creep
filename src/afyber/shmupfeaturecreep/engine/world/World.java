@@ -2,7 +2,9 @@ package afyber.shmupfeaturecreep.engine.world;
 
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
+import afyber.shmupfeaturecreep.engine.Registry;
 import afyber.shmupfeaturecreep.engine.Screen;
+import afyber.shmupfeaturecreep.engine.errors.ObjectNotDefinedError;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.rooms.ObjectCreationReference;
@@ -145,34 +147,37 @@ public class World {
 		gameObjectsToRemove.add(new ObjectDestructionReference(true, objRef, null));
 	}
 
-	public void queueObjectDestruction(Class classRef) {
+	public void queueObjectDestruction(String classRef) {
 		gameObjectsToRemove.add(new ObjectDestructionReference(false, -1, classRef));
 	}
 
-	public DynamicObject createInstance(Class classRef, float x, float y, int depth) {
+	public DynamicObject createInstance(String classRef, float x, float y, int depth) {
 		return createInstance(classRef, x, y, 1, 1, depth);
 	}
-	public DynamicObject createInstance(Class classRef, float x, float y, float imageXScale, float imageYScale, int depth) {
-		try {
-			Constructor con = classRef.getConstructor(Float.TYPE, Float.TYPE, Integer.TYPE, Integer.TYPE);
-			DynamicObject newObject = (DynamicObject)(con.newInstance(x, y, depth, getNextAvailableGameObjectID()));
-			newObject.imageXScale = imageXScale;
-			newObject.imageYScale = imageYScale;
-			newObject.create(worldMiddleman);
-			gameObjectsCreatedThisFrame.add(newObject);
-			return newObject;
+	public DynamicObject createInstance(String classRef, float x, float y, float imageXScale, float imageYScale, int depth) {
+		if (Registry.hasObject(classRef)) {
+			Class objectClass = Registry.getObject(classRef);
+			try {
+				Constructor con = objectClass.getConstructor(Float.TYPE, Float.TYPE, Integer.TYPE, Integer.TYPE);
+				DynamicObject newObject = (DynamicObject)(con.newInstance(x, y, depth, getNextAvailableGameObjectID()));
+				newObject.imageXScale = imageXScale;
+				newObject.imageYScale = imageYScale;
+				newObject.create(worldMiddleman);
+				gameObjectsCreatedThisFrame.add(newObject);
+				return newObject;
+			} catch (NoSuchMethodException e) {
+				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in NoSuchMethodException.", e);
+			} catch (InvocationTargetException e) {
+				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in InvocationTargetException.", e);
+			} catch (InstantiationException e) {
+				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in InstantiationException.", e);
+			} catch (IllegalAccessException e) {
+				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in IllegalAccessException.", e);
+			}
 		}
-		catch (NoSuchMethodException e) {
-			MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in NoSuchMethodException.", e);
-		}
-		catch (InvocationTargetException e) {
-			MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in InvocationTargetException.", e);
-		}
-		catch (InstantiationException e) {
-			MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in InstantiationException.", e);
-		}
-		catch (IllegalAccessException e) {
-			MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in IllegalAccessException.", e);
+		else {
+			MainClass.LOGGER.log(LoggingLevel.WARNING, "Object name \"" + classRef + "\" is not defined, unable to create");
+			throw new ObjectNotDefinedError();
 		}
 		return null;
 	}
@@ -185,7 +190,7 @@ public class World {
 		}
 	}
 
-	public void instanceDestroy(Class classRef) {
+	public void instanceDestroy(String classRef) {
 		for (DynamicObject object: classRefToObjectList(classRef)) {
 			object.destroy(worldMiddleman);
 			allGameObjects.remove(object);
@@ -196,7 +201,7 @@ public class World {
 		return objRefToObject(objRef) != null;
 	}
 
-	public boolean instanceExists(Class classRef) {
+	public boolean instanceExists(String classRef) {
 		return !classRefToObjectList(classRef).isEmpty();
 	}
 
@@ -259,8 +264,14 @@ public class World {
 		return isColliding(caller, objRefToObject(objRef));
 	}
 
-	public boolean isColliding(DynamicObject caller, Class classRef) {
-		ArrayList<DynamicObject> allObj = (ArrayList<DynamicObject>)classRefToObjectList(classRef);
+	public boolean isColliding(DynamicObject caller, String classRef, boolean includingChildren) {
+		ArrayList<DynamicObject> allObj;
+		if (includingChildren) {
+			allObj = (ArrayList<DynamicObject>)classRefToObjectListInclChildren(classRef);
+		}
+		else {
+			 allObj = (ArrayList<DynamicObject>)classRefToObjectList(classRef);
+		}
 		for (DynamicObject object: allObj) {
 			if (isColliding(caller, object)) {
 				return true;
@@ -291,16 +302,51 @@ public class World {
 		return null;
 	}
 
-	public List<DynamicObject> classRefToObjectList(Class classRef) {
+	public List<DynamicObject> classRefToObjectList(String classRef) {
 		ArrayList<DynamicObject> list = new ArrayList<>();
 		for (DynamicObject object: allGameObjects) {
-			if (classRef.isInstance(object)) {
+			if (classRef.equals(object.objectName)) {
 				list.add(object);
 			}
 		}
 		for (DynamicObject object: gameObjectsCreatedThisFrame) {
-			if (classRef.isInstance(object)) {
+			if (classRef.equals(object.objectName)) {
 				list.add(object);
+			}
+		}
+		return list;
+	}
+
+	public List<DynamicObject> classRefToObjectListInclChildren(String classRef) {
+		ArrayList<DynamicObject> list = new ArrayList<>();
+		boolean hasChildren = false;
+		ArrayList<String> children = new ArrayList<>();
+		if (Registry.hasChildrenForObject(classRef)) {
+			children.addAll(Registry.getChildrenOfObject(classRef));
+			hasChildren = true;
+		}
+		for (DynamicObject object: allGameObjects) {
+			if (classRef.equals(object.objectName)) {
+				list.add(object);
+			}
+			else if (hasChildren) {
+				for (String child: children) {
+					if (classRef.equals(child)) {
+						list.add(object);
+					}
+				}
+			}
+		}
+		for (DynamicObject object: gameObjectsCreatedThisFrame) {
+			if (classRef.equals(object.objectName)) {
+				list.add(object);
+			}
+			else if (hasChildren) {
+				for (String child: children) {
+					if (classRef.equals(child)) {
+						list.add(object);
+					}
+				}
 			}
 		}
 		return list;
