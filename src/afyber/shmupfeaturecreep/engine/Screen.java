@@ -1,6 +1,7 @@
 package afyber.shmupfeaturecreep.engine;
 
 import afyber.shmupfeaturecreep.MainClass;
+import afyber.shmupfeaturecreep.engine.errors.SpriteSheetsNotDefinedError;
 import afyber.shmupfeaturecreep.engine.input.KeyboardHandler;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteInformation;
@@ -10,6 +11,8 @@ import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -62,8 +65,25 @@ public class Screen {
 		drawRequests = new ArrayList<>();
 
 		allSprites = new HashMap<>();
-		SpriteSheet.loadSpriteSheet("spritesheets/spritesheet1", allSprites);
-		SpriteSheet.loadSpriteSheet("spritesheets/test6", allSprites);
+
+		loadSpriteSheets();
+	}
+
+	private static void loadSpriteSheets() {
+		try (FileInputStream stream = new FileInputStream("spritesheets.txt")) {
+			byte[] bytes = stream.readAllBytes();
+			StringBuilder builder = new StringBuilder();
+			for (byte byt: bytes) {
+				builder.append((char)byt);
+			}
+			String[] allData = builder.toString().split("\r\n");
+			for (String str: allData) {
+				SpriteSheet.loadSpriteSheet("spriteseets/" + str, allSprites);
+			}
+		}
+		catch (IOException e) {
+			throw new SpriteSheetsNotDefinedError();
+		}
 	}
 
 	public static void draw(String spriteName, float x, float y, int depth) {

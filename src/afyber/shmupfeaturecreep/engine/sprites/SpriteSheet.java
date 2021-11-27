@@ -1,6 +1,7 @@
 package afyber.shmupfeaturecreep.engine.sprites;
 
 import afyber.shmupfeaturecreep.MainClass;
+import afyber.shmupfeaturecreep.engine.errors.SpriteSheetNotDefinedError;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 import ar.com.hjg.pngj.PngReaderInt;
 
@@ -21,14 +22,23 @@ public class SpriteSheet {
 	private static int[][] imageData;
 
 	public static void loadSpriteSheet(String imageName, Map<String, SpriteSheetRegion> out) {
-		PngReaderInt imageReader = new PngReaderInt(new File(imageName + ".png"));
+		PngReaderInt imageReader;
+		try {
+			imageReader = new PngReaderInt(new File(imageName + ".png"));
+		}
+		catch (Exception e) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sprite-sheet image:", e);
+			throw new SpriteSheetNotDefinedError();
+		}
+
 		try {
 			setupSpriteSheetData(imageReader);
 			imageReader.end();
 		}
 		catch (Exception e) {
 			imageReader.close();
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sprite-sheet image", e);
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sprite-sheet image:", e);
+			throw new SpriteSheetNotDefinedError();
 		}
 
 		try (InputStream infoStream = new FileInputStream(imageName + "_info.txt")) {
@@ -36,6 +46,7 @@ public class SpriteSheet {
 		}
 		catch (IOException e) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load sprite-sheet caused IOException", e);
+			throw new SpriteSheetNotDefinedError();
 		}
 	}
 
