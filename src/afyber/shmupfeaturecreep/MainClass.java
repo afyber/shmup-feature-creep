@@ -54,12 +54,13 @@ public class MainClass {
 
 		while (!Screen.isWindowClosed()) {
 			Timing.mainLoopBodyStarted();
+
 			if (world.getIsRoomChange()) {
 				if (Registry.hasRoom(world.getRoomChangeRoomName())) {
 					world = new World(Registry.getRoom(world.getRoomChangeRoomName()));
 				}
 				else {
-					LOGGER.log(LoggingLevel.ERROR, "Couldn't load room " + world.getRoomChangeRoomName() + " after call to changeRoom");
+					LOGGER.log(LoggingLevel.ERROR, "Couldn't load room \"" + world.getRoomChangeRoomName() + "\" after call to changeRoom");
 					throw new RoomNotDefinedError();
 				}
 			}
@@ -70,9 +71,6 @@ public class MainClass {
 			world.destroyAll();
 
 			world.moveAllNewlyAdded();
-
-			// NOTE: setting alarm[0] = 1 in create code will apply on the first frame of execution
-			world.alarmAll();
 
 			// update all the stuff
 			world.updateAll();
@@ -86,6 +84,9 @@ public class MainClass {
 
 			// perform physics
 			world.physicsUpdateAll();
+
+			// alarm code
+			world.alarmAll();
 
 			// tell Keyboard that a frame has passed
 			Keyboard.frameDone();

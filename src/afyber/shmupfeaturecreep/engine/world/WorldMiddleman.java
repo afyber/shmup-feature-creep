@@ -18,6 +18,10 @@ public class WorldMiddleman {
 		this.world = world;
 	}
 
+	public void changeRoom(String roomName) {
+		world.changeRoom(roomName);
+	}
+
 	public DynamicObject createInstance(String classRef, float x, float y, int depth) {
 		return world.createInstance(classRef, x, y, depth);
 	}
