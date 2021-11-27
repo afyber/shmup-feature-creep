@@ -117,9 +117,8 @@ public class World {
 		for (DynamicObject object: allGameObjects) {
 			for (int i = 0; i < 10; i++) {
 				// NOTE: here, if the alarm is > 0, subtract 1
-				int value = object.alarm[i];
-				if (value > 0) {
-					object.alarm[i] = value - 1;
+				if (object.alarm[i] > 0) {
+					object.alarm[i] -= 1;
 
 					// here, if it has just become 0 from that subtraction, trigger the alarm
 					if (object.alarm[i] == 0) {
@@ -166,13 +165,13 @@ public class World {
 				gameObjectsCreatedThisFrame.add(newObject);
 				return newObject;
 			} catch (NoSuchMethodException e) {
-				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in NoSuchMethodException.", e);
+				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in NoSuchMethodException:", e);
 			} catch (InvocationTargetException e) {
-				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in InvocationTargetException.", e);
+				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in InvocationTargetException:", e);
 			} catch (InstantiationException e) {
-				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in InstantiationException.", e);
+				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in InstantiationException:", e);
 			} catch (IllegalAccessException e) {
-				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in IllegalAccessException.", e);
+				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in IllegalAccessException:", e);
 			}
 		}
 		else {

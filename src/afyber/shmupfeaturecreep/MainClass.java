@@ -28,6 +28,7 @@ public class MainClass {
 		if (DEBUG) {
 			LOGGER.setLoggingLevel(LoggingLevel.DEBUG);
 		}
+		LOGGER.setWriteToFile(false);
 		LOGGER.log(LoggingLevel.DEBUG, "Program start");
 
 		Game.registerObjects();

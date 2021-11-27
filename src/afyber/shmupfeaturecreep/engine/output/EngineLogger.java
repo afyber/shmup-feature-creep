@@ -9,10 +9,12 @@ public class EngineLogger {
 
 	private final String filename;
 	private LoggingLevel lowestAllowedLevel;
+	private boolean writeToFile;
 
 	public EngineLogger(String filename) {
 		this.filename = filename;
 		this.lowestAllowedLevel = LoggingLevel.WARNING;
+		this.writeToFile = true;
 		try {
 			Files.createFile(Path.of(filename));
 		}
@@ -24,7 +26,7 @@ public class EngineLogger {
 
 	public void log(LoggingLevel level, String msg) {
 		try {
-			if (level.getValue() >= lowestAllowedLevel.getValue()) {
+			if (writeToFile && level.getValue() >= lowestAllowedLevel.getValue()) {
 				Files.writeString(Path.of(filename), "[" + level.name() + "] " + msg + "\n", StandardOpenOption.APPEND);
 			}
 			System.out.print("[" + level.name() + "] " + msg + "\n");
@@ -37,7 +39,7 @@ public class EngineLogger {
 
 	public void log(LoggingLevel level, String msg, Throwable e) {
 		try {
-			if (level.getValue() >= lowestAllowedLevel.getValue()) {
+			if (writeToFile && level.getValue() >= lowestAllowedLevel.getValue()) {
 				Files.writeString(Path.of(filename), "[" + level.name() + "] " + msg + "\n" + e.getMessage() + "\n", StandardOpenOption.APPEND);
 			}
 			System.out.print("[" + level.name() + "] " + msg +"\n" + e.getMessage() + "\n");
@@ -54,5 +56,13 @@ public class EngineLogger {
 
 	public LoggingLevel getLoggingLevel() {
 		return this.lowestAllowedLevel;
+	}
+
+	public void setWriteToFile(boolean val) {
+		this.writeToFile = val;
+	}
+
+	public boolean getWriteToFile() {
+		return this.writeToFile;
 	}
 }
