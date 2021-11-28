@@ -7,6 +7,7 @@ import afyber.shmupfeaturecreep.engine.errors.RoomNotDefinedError;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
+import afyber.shmupfeaturecreep.engine.sound.Sounds;
 import afyber.shmupfeaturecreep.engine.world.World;
 
 import java.awt.*;
@@ -22,14 +23,17 @@ public class MainClass {
 
 	public static final boolean DEBUG = true;
 
-	public static final EngineLogger LOGGER = new EngineLogger(System.currentTimeMillis() + ".txt");
+	public static final EngineLogger LOGGER = new EngineLogger(System.currentTimeMillis() + ".txt", false);
 
 	public static void main(String[] args) {
 		if (DEBUG) {
 			LOGGER.setLoggingLevel(LoggingLevel.DEBUG);
 		}
-		LOGGER.setWriteToFile(false);
 		LOGGER.log(LoggingLevel.DEBUG, "Program start");
+
+		Sounds.setupSound();
+
+		Sounds.loadSounds();
 
 		Game.registerObjects();
 
@@ -96,14 +100,14 @@ public class MainClass {
 				Timing.calculateTimeAndWaitThread();
 			}
 			catch (InterruptedException e) {
-				LOGGER.log(LoggingLevel.ERROR, "For some reason an InterruptedException happened while waiting the main thread.", e);
+				LOGGER.log(LoggingLevel.ERROR, "For some reason an InterruptedException happened while waiting the main thread:", e);
 				Thread.currentThread().interrupt();
 			}
 		}
 
 		LOGGER.log(LoggingLevel.DEBUG, "Main loop end");
 
-		// save important information and whatnot here
+		Sounds.closeSound();
 
 		LOGGER.log(LoggingLevel.DEBUG, "Program end");
 	}

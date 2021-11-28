@@ -11,16 +11,17 @@ public class EngineLogger {
 	private LoggingLevel lowestAllowedLevel;
 	private boolean writeToFile;
 
-	public EngineLogger(String filename) {
+	public EngineLogger(String filename, boolean writeToFile) {
 		this.filename = filename;
 		this.lowestAllowedLevel = LoggingLevel.WARNING;
-		this.writeToFile = true;
-		try {
-			Files.createFile(Path.of(filename));
-		}
-		catch (IOException e) {
-			System.out.println("Either the log file already exists or the program doesn't have the ability to create a file");
-			e.printStackTrace();
+		this.writeToFile = writeToFile;
+		if (writeToFile) {
+			try {
+				Files.createFile(Path.of(filename));
+			} catch (IOException e) {
+				System.out.println("Either the log file already exists or the program doesn't have the ability to create a file");
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -56,13 +57,5 @@ public class EngineLogger {
 
 	public LoggingLevel getLoggingLevel() {
 		return this.lowestAllowedLevel;
-	}
-
-	public void setWriteToFile(boolean val) {
-		this.writeToFile = val;
-	}
-
-	public boolean getWriteToFile() {
-		return this.writeToFile;
 	}
 }

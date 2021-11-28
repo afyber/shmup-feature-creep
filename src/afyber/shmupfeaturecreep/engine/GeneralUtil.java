@@ -1,5 +1,10 @@
 package afyber.shmupfeaturecreep.engine;
 
+import afyber.shmupfeaturecreep.MainClass;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * A few things that wanted their own class
  *
@@ -41,5 +46,30 @@ public class GeneralUtil {
 			System.arraycopy(a[i], 0, newArray, dataWidth * i, dataWidth);
 		}
 		return new CompactFrameArray(newArray, dataWidth);
+	}
+
+	public static String readResourceToString(String fileName) throws IOException {
+		try (InputStream stream = MainClass.class.getResourceAsStream(fileName)) {
+			if (stream == null) {
+				return null;
+			}
+			return readInputStreamToString(stream);
+		}
+	}
+
+	public static String readInputStreamToString(InputStream stream) throws IOException {
+		if (stream == null) {
+			throw new IOException();
+		}
+		byte[] allBytes = stream.readAllBytes();
+
+		stream.close();
+
+		StringBuilder builder = new StringBuilder();
+		for (byte byt: allBytes) {
+			builder.append((char)byt);
+		}
+
+		return builder.toString();
 	}
 }

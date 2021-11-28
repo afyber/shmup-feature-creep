@@ -1,14 +1,12 @@
 package afyber.shmupfeaturecreep.engine.sprites;
 
 import afyber.shmupfeaturecreep.MainClass;
+import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.errors.SpriteSheetNotDefinedError;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 import ar.com.hjg.pngj.PngReaderInt;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -24,7 +22,7 @@ public class SpriteSheet {
 	public static void loadSpriteSheet(String imageName, Map<String, SpriteSheetRegion> out) {
 		PngReaderInt imageReader;
 		try {
-			imageReader = new PngReaderInt(new File(imageName + ".png"));
+			imageReader = new PngReaderInt(MainClass.class.getResourceAsStream(imageName + ".png"));
 		}
 		catch (Exception e) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sprite-sheet image:", e);
@@ -41,8 +39,8 @@ public class SpriteSheet {
 			throw new SpriteSheetNotDefinedError();
 		}
 
-		try (InputStream infoStream = new FileInputStream(imageName + "_info.txt")) {
-			setupSprites(infoStream, out);
+		try {
+			setupSprites(GeneralUtil.readResourceToString(imageName + "_info.txt"), out);
 		}
 		catch (IOException e) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load sprite-sheet caused IOException", e);
@@ -63,10 +61,7 @@ public class SpriteSheet {
 		}
 	}
 
-	private static void setupSprites(InputStream stream, Map<String, SpriteSheetRegion> map) throws IOException {
-		byte[] allInfoBytes = stream.readAllBytes();
-		stream.close();
-
+	private static void setupSprites(String dataString, Map<String, SpriteSheetRegion> map) throws IOException {
 		String name;
 		int x;
 		int y;
@@ -75,13 +70,7 @@ public class SpriteSheet {
 		int originX;
 		int originY;
 
-		StringBuilder allInfoBuilder = new StringBuilder();
-		for (byte charByte: allInfoBytes) {
-			allInfoBuilder.append(Character.toString(charByte));
-		}
-		String allInfo = allInfoBuilder.toString();
-
-		String[] allInfoSplit = allInfo.split("\r\n");
+		String[] allInfoSplit = dataString.split("\r\n");
 
 
 		for (String section: allInfoSplit) {

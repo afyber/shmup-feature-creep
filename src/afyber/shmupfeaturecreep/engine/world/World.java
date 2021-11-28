@@ -244,6 +244,7 @@ public class World {
 			for (int i1 = 0; i1 < callerRegion.dataHeight(); i1++) {
 				for (int c1 = 0; c1 < callerRegion.dataWidth(); c1++) {
 					if ((callerData[i1][c1] >> 24 & 0xFF) != 0x0) {
+						// these coordinates are relative to the top-left corner of the other sprite
 						int otherI = callerCorner1X + c1 - otherCorner1X;
 						int otherC = callerCorner1Y + i1 - otherCorner1Y;
 
