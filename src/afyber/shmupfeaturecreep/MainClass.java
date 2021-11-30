@@ -31,6 +31,8 @@ public class MainClass {
 		}
 		LOGGER.log(LoggingLevel.DEBUG, "Program start");
 
+		Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT, true);
+
 		Sounds.setupSound();
 
 		Sounds.loadSounds();
@@ -38,8 +40,6 @@ public class MainClass {
 		Game.registerObjects();
 
 		Game.registerRooms();
-
-		Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		Timing.setIdealFrameTimeMillis((long)Math.ceil(1000f/IDEAL_FPS));
 

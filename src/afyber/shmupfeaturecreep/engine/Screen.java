@@ -11,7 +11,6 @@ import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +38,9 @@ public class Screen {
 	private static HashMap<String, SpriteSheetRegion> allSprites;
 
 	public static void setupScreen(String name, int width, int height) {
+		setupScreen(name, width, height, false);
+	}
+	public static void setupScreen(String name, int width, int height, boolean splashScreen) {
 		// Window setup
 		image = new BufferedImage(width, height, Image.SCALE_DEFAULT);
 		frame = new JFrame() {
@@ -64,6 +66,15 @@ public class Screen {
 		currentFrame = new int[height][width];
 		isDrawing = false;
 
+		if (splashScreen) {
+			SpriteSheetRegion splashScreenData = SpriteSheet.loadSingleImage("/splashscreen.png");
+			SpriteSheetRegion splashScreenScaled = scaleImageData(splashScreenData.data(), (float)width / splashScreenData.dataWidth(), (float)height / splashScreenData.dataHeight(), 0, 0);
+
+			image.setRGB(0, 0, width, height, GeneralUtil.arrayOfArraysToSingleArray(splashScreenScaled.data()).a(), 0, width);
+
+			panel.repaint();
+		}
+
 		drawRequests = new ArrayList<>();
 
 		allSprites = new HashMap<>();
@@ -72,13 +83,9 @@ public class Screen {
 	}
 
 	private static void loadSpriteSheets() {
-		try (FileInputStream stream = new FileInputStream("spritesheets.txt")) {
-			byte[] bytes = stream.readAllBytes();
-			StringBuilder builder = new StringBuilder();
-			for (byte byt: bytes) {
-				builder.append((char)byt);
-			}
-			String[] allData = builder.toString().split("\r\n");
+		try {
+			String[] allData = GeneralUtil.readResourceToString("/spritesheets.txt").split("\r\n");
+
 			for (String str: allData) {
 				SpriteSheet.loadSpriteSheet("/spritesheets/" + str, allSprites);
 			}

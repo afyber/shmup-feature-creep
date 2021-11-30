@@ -48,6 +48,22 @@ public class SpriteSheet {
 		}
 	}
 
+	public static SpriteSheetRegion loadSingleImage(String imageName) {
+		PngReaderInt imageReader = new PngReaderInt(MainClass.class.getResourceAsStream(imageName));
+		imageData = new int[imageReader.imgInfo.rows][imageReader.imgInfo.cols];
+
+		for (int i = 0; i < imageData.length; i++) {
+			int[] scanline = imageReader.readRowInt().getScanline();
+			int[] aRGBScanline = new int[imageReader.imgInfo.cols];
+			for (int n = 0; n < imageReader.imgInfo.cols; n++) {
+				aRGBScanline[n] = scanline[n * 4 + 3] << 24 | scanline[n * 4] << 16 | scanline[n * 4 + 1] << 8 | scanline[n * 4 + 2];
+			}
+			imageData[i] = aRGBScanline;
+		}
+
+		return new SpriteSheetRegion(imageData, imageReader.imgInfo.cols, imageReader.imgInfo.rows, 0, 0);
+	}
+
 	private static void setupSpriteSheetData(PngReaderInt reader) {
 		imageData = new int[reader.imgInfo.rows][reader.imgInfo.cols];
 
