@@ -21,6 +21,7 @@ public class Sounds {
 
 	private static final AL al = ALFactory.getAL();
 
+	// the integer here is sort of a pointer, as it is the index of the sound in the source and buffer arrays
 	private static final HashMap<String, Integer> allSounds = new HashMap<>();
 
 	private static int[] buffer;
@@ -28,6 +29,17 @@ public class Sounds {
 
 	public static void playSound(String soundName) {
 		if (allSounds.containsKey(soundName)) {
+			soundSetLoop(soundName, false);
+			al.alSourcePlay(source[allSounds.get(soundName)]);
+		}
+		else {
+			throw new SoundNotDefinedError();
+		}
+	}
+
+	public static void loopSound(String soundName) {
+		if (allSounds.containsKey(soundName)) {
+			soundSetLoop(soundName, true);
 			al.alSourcePlay(source[allSounds.get(soundName)]);
 		}
 		else {
@@ -87,6 +99,15 @@ public class Sounds {
 		}
 	}
 
+	private static void soundSetLoop(String soundName, boolean val) {
+		if (allSounds.containsKey(soundName)) {
+			al.alSourcei(source[allSounds.get(soundName)], AL.AL_LOOPING, val ? AL.AL_TRUE : AL.AL_FALSE);
+		}
+		else {
+			throw new SoundNotDefinedError();
+		}
+	}
+
 	public static void setupSound() {
 		ALut.alutInit();
 		al.alGetError();
@@ -132,11 +153,11 @@ public class Sounds {
 		}
 
 		for (Map.Entry<String, Integer> entry: allSounds.entrySet()) {
-			makeBufferAndSource("/sounds/" + entry.getKey(), entry.getValue());
+			makeLinkedBufferAndSource("/sounds/" + entry.getKey(), entry.getValue());
 		}
 	}
 
-	private static void makeBufferAndSource(String fileName, int num) {
+	private static void makeLinkedBufferAndSource(String fileName, int num) {
 		try (InputStream stream = Sounds.class.getResourceAsStream(fileName)) {
 			int[] format = new int[1];
 			int[] size = new int[1];
@@ -153,10 +174,45 @@ public class Sounds {
 			al.alSourcef(source[num], AL.AL_GAIN, 1.0f);
 			al.alSourcefv(source[num], AL.AL_POSITION, new float[]{ 0.0f, 0.0f, 1.0f }, 0);
 			al.alSourcefv(source[num], AL.AL_VELOCITY, new float[]{ 0.0f, 0.0f, 0.0f }, 0);
-			al.alSourcei(source[num], AL.AL_LOOPING, loop[0]);
+			al.alSourcei(source[num], AL.AL_LOOPING, AL.AL_FALSE);
 		}
-		catch (IOException e ) {
+		catch (IOException e) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Could not load audio file \"" + fileName + "\"");
+			throw new SoundNotDefinedError();
+		}
+	}
+
+	private static void makeLinkedIntroAndLoopBuffersAndSource(String fileName1, String fileName2, int numOfFirst) {
+		try (InputStream stream1 = Sounds.class.getResourceAsStream(fileName1)) {
+			try (InputStream stream2 = Sounds.class.getResourceAsStream(fileName2)) {
+				int[] format = new int[1];
+				int[] size = new int[1];
+				ByteBuffer[] data = new ByteBuffer[1];
+				int[] freq = new int[1];
+				int[] loop = new int[1];
+
+				ALut.alutLoadWAVFile(stream1, format, data, size, freq, loop);
+
+				al.alBufferData(buffer[numOfFirst], format[0], data[0], size[0], freq[0]);
+
+				format = new int[1];
+				size = new int[1];
+				data = new ByteBuffer[1];
+				freq = new int[1];
+				loop = new int[1];
+
+				ALut.alutLoadWAVFile(stream2, format, data, size, freq, loop);
+
+				al.alBufferData(buffer[numOfFirst + 1], format[0], data[0], size[0], freq[0]);
+
+			}
+			catch (IOException e) {
+				MainClass.LOGGER.log(LoggingLevel.ERROR, "Could not load audio file \"" + fileName2 + "\"");
+				throw new SoundNotDefinedError();
+			}
+		}
+		catch (IOException e) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Could not load audio file \"" + fileName1 + "\"");
 			throw new SoundNotDefinedError();
 		}
 	}
