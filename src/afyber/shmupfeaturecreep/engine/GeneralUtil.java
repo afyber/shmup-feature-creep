@@ -1,6 +1,7 @@
 package afyber.shmupfeaturecreep.engine;
 
 import afyber.shmupfeaturecreep.MainClass;
+import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,18 +14,18 @@ import java.io.InputStream;
 public class GeneralUtil {
 	private GeneralUtil() {}
 
-	public static void reverseTopSpriteArray(int[][] byteArray) {
+	public static void reverseTopSpriteArray(int[][] frameArray) {
 		int[] tmp;
-		for (int i = 0; i < byteArray.length / 2; i++) {
-			tmp = byteArray[i];
-			byteArray[i] = byteArray[byteArray.length - i - 1];
-			byteArray[byteArray.length - i - 1] = tmp;
+		for (int i = 0; i < frameArray.length / 2; i++) {
+			tmp = frameArray[i];
+			frameArray[i] = frameArray[frameArray.length - i - 1];
+			frameArray[frameArray.length - i - 1] = tmp;
 		}
 	}
 
-	public static void reverseBottomSpriteArrays(int[][] byteArray) {
+	public static void reverseBottomSpriteArrays(int[][] frameArray) {
 		int tmp1;
-		for (int[] row: byteArray) {
+		for (int[] row: frameArray) {
 			for (int i = 0; i < row.length / 2; i++) {
 				tmp1 = row[i];
 				row[i] = row[row.length - i - 1];
@@ -51,7 +52,8 @@ public class GeneralUtil {
 	public static String readResourceToString(String fileName) throws IOException {
 		try (InputStream stream = MainClass.class.getResourceAsStream(fileName)) {
 			if (stream == null) {
-				return null;
+				MainClass.LOGGER.log(LoggingLevel.ERROR, "No such internal resource: \"" + fileName + "\"");
+				throw new IOException();
 			}
 			return readInputStreamToString(stream);
 		}
@@ -59,6 +61,7 @@ public class GeneralUtil {
 
 	public static String readInputStreamToString(InputStream stream) throws IOException {
 		if (stream == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempt to read string from null stream");
 			throw new IOException();
 		}
 		byte[] allBytes = stream.readAllBytes();
