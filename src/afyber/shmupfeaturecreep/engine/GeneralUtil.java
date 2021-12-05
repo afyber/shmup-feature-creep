@@ -25,7 +25,7 @@ public class GeneralUtil {
 	public static void reverseBottomSpriteArrays(int[][] byteArray) {
 		int tmp1;
 		for (int[] row: byteArray) {
-			for (int i = 0; i < row.length / 2; i += 4) {
+			for (int i = 0; i < row.length / 2; i++) {
 				tmp1 = row[i];
 				row[i] = row[row.length - i - 1];
 				row[row.length - i - 1] = tmp1;

@@ -87,7 +87,9 @@ public class Screen {
 			String[] allData = GeneralUtil.readResourceToString("/spritesheets.txt").split("\r\n");
 
 			for (String str: allData) {
-				SpriteSheet.loadSpriteSheet("/spritesheets/" + str, allSprites);
+				if (!str.startsWith("//")) {
+					SpriteSheet.loadSpriteSheet("/spritesheets/" + str, allSprites);
+				}
 			}
 		}
 		catch (IOException e) {
@@ -109,6 +111,13 @@ public class Screen {
 				MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
 		}
+	}
+
+	public static void drawRect(float x1, float y1, float x2, float y2, Color color, int depth) {
+		drawRect(x1, y1, x2, y2, color.getRGB(), depth);
+	}
+	public static void drawRect(float x1, float y1, float x2, float y2, int rgbColor, int depth) {
+		// TODO
 	}
 
 	public static void clearAllPixelsToColor(Color color) {
@@ -195,6 +204,7 @@ public class Screen {
 
 	public static SpriteSheetRegion scaleImageData(int[][] data, float xScale, float yScale, int originX, int originY) {
 		// TODO: properly figure out scaling to prevent annoying jerkiness when constantly changing scale with an origin not equal to 0,0
+		// TODO: when the new width/height should be exactly equal to an int, it probably won't actually be because of a floating point precision problem
 		if (xScale == 1 && yScale == 1) {
 			return new SpriteSheetRegion(data, data[0].length, data.length, originX, originY);
 		}
@@ -219,7 +229,7 @@ public class Screen {
 		int newX = data[0].length;
 		if (xScale != 1) {
 			newX = 0;
-			newDataX = new int[data.length][Math.round(data[0].length * xScale)];
+			newDataX = new int[data.length][(int)Math.floor(data[0].length * xScale)];
 			for (int oldX = 0; oldX < data[0].length; oldX++) {
 				if (oldX == originX) {
 					newXOrigin = newX;
@@ -248,7 +258,7 @@ public class Screen {
 		int newY = data.length;
 		if (yScale != 1) {
 			newY = 0;
-			newDataY = new int[Math.round(data.length * yScale)][newDataX[0].length];
+			newDataY = new int[(int)Math.floor(data.length * yScale)][newDataX[0].length];
 			runningTally = 0;
 			for (int oldY = 0; oldY < data.length; oldY++) {
 				if (oldY == originY) {
@@ -321,20 +331,20 @@ public class Screen {
 			int newDataWidth;
 			int newDataHeight;
 			if (xScale < 0) {
-				newOriginX = Math.round(info.dataWidth() - info.originX() * -xScale);
-				newDataWidth = Math.round(info.dataWidth() * -xScale);
+				newDataWidth = (int)Math.floor(info.dataWidth() * -xScale);
+				newOriginX = (int)Math.ceil(newDataWidth - info.originX() * -xScale);
 			}
 			else {
-				newOriginX = Math.round(info.originX() * xScale);
-				newDataWidth = Math.round(info.dataWidth() * xScale);
+				newDataWidth = (int)Math.floor(info.dataWidth() * xScale);
+				newOriginX = (int)Math.floor(info.originX() * xScale);
 			}
 			if (yScale < 0) {
-				newOriginY = Math.round(info.dataHeight() - info.originY() * -yScale);
-				newDataHeight = Math.round(info.dataHeight() * -yScale);
+				newDataHeight = (int)Math.floor(info.dataHeight() * -yScale);
+				newOriginY = (int)Math.ceil(newDataHeight - info.originY() * -yScale);
 			}
 			else {
-				newOriginY = Math.round(info.originY() * yScale);
-				newDataHeight = Math.round(info.dataHeight() * yScale);
+				newDataHeight = (int)Math.floor(info.dataHeight() * yScale);
+				newOriginY = (int)Math.floor(info.originY() * yScale);
 			}
 			return new SpriteInformation(newDataWidth, newDataHeight, newOriginX, newOriginY);
 		}
