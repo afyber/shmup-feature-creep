@@ -206,8 +206,6 @@ public class World {
 		return !classRefToObjectList(classRef).isEmpty();
 	}
 
-	// FIXME: I have found one situation where this works differently for different callers with the same two objects
-	// This is likely to do with scaling inaccuracy
 	private boolean isColliding(DynamicObject caller, DynamicObject other) {
 		if (other == null || caller == null) {
 			return false;
@@ -245,8 +243,8 @@ public class World {
 				for (int c1 = 0; c1 < callerRegion.dataWidth(); c1++) {
 					if ((callerData[i1][c1] >> 24 & 0xFF) != 0x0) {
 						// these coordinates are relative to the top-left corner of the other sprite
-						int otherI = callerCorner1X + c1 - otherCorner1X;
-						int otherC = callerCorner1Y + i1 - otherCorner1Y;
+						int otherI = callerCorner1Y + i1 - otherCorner1Y;
+						int otherC = callerCorner1X + c1 - otherCorner1X;
 
 						if (otherI < 0 || otherI >= otherRegion.dataHeight() || otherC < 0 || otherC >= otherRegion.dataWidth()) {
 							continue;
