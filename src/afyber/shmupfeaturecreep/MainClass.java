@@ -7,7 +7,6 @@ import afyber.shmupfeaturecreep.engine.errors.RoomNotDefinedError;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
-import afyber.shmupfeaturecreep.engine.sound.Sounds;
 import afyber.shmupfeaturecreep.engine.world.World;
 
 import java.awt.*;
@@ -32,10 +31,6 @@ public class MainClass {
 		LOGGER.log(LoggingLevel.DEBUG, "Program start");
 
 		Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT, true);
-
-		Sounds.setupSound();
-
-		Sounds.loadSounds();
 
 		Game.registerObjects();
 
@@ -106,8 +101,6 @@ public class MainClass {
 		}
 
 		LOGGER.log(LoggingLevel.DEBUG, "Main loop end");
-
-		Sounds.closeSound();
 
 		LOGGER.log(LoggingLevel.DEBUG, "Program end");
 	}

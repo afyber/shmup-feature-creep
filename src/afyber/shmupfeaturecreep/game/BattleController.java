@@ -2,7 +2,6 @@ package afyber.shmupfeaturecreep.game;
 
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
-import afyber.shmupfeaturecreep.engine.sound.Sounds;
 import afyber.shmupfeaturecreep.engine.world.Global;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
@@ -17,7 +16,6 @@ public class BattleController extends DynamicObject {
 	public void create(WorldMiddleman world) {
 		Global.setIntGlobal("wave", 1);
 		Global.setIntGlobal("playerLevel", 2);
-		Sounds.loopSound("alarm_titlescreen.wav");
 	}
 
 	@Override
