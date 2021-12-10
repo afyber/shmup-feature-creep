@@ -14,15 +14,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Sounds {
 	private Sounds() {}
 
 	private static final AL al = ALFactory.getAL();
 
-	// the integer here is sort of a pointer, as it is the index of the sound in the source and buffer arrays
-	private static final HashMap<String, Integer> allSounds = new HashMap<>();
+	private static final HashMap<String, AudioEntry> allSounds = new HashMap<>();
 
 	private static int[] buffer;
 	private static int[] source;
@@ -30,7 +28,7 @@ public class Sounds {
 	public static void playSound(String soundName) {
 		if (allSounds.containsKey(soundName)) {
 			soundSetLoop(soundName, false);
-			al.alSourcePlay(source[allSounds.get(soundName)]);
+			al.alSourcePlay(source[allSounds.get(soundName).getSourceToPlay()]);
 		}
 		else {
 			throw new SoundNotDefinedError();
@@ -40,7 +38,7 @@ public class Sounds {
 	public static void loopSound(String soundName) {
 		if (allSounds.containsKey(soundName)) {
 			soundSetLoop(soundName, true);
-			al.alSourcePlay(source[allSounds.get(soundName)]);
+			al.alSourcePlay(source[allSounds.get(soundName).getSourceToPlay()]);
 		}
 		else {
 			throw new SoundNotDefinedError();
@@ -49,7 +47,7 @@ public class Sounds {
 
 	public static void pauseSound(String soundName) {
 		if (allSounds.containsKey(soundName)) {
-			al.alSourcePause(source[allSounds.get(soundName)]);
+			al.alSourcePause(source[allSounds.get(soundName).getSourceToPlay()]);
 		}
 		else {
 			throw new SoundNotDefinedError();
@@ -58,7 +56,7 @@ public class Sounds {
 
 	public static void stopSound(String soundName) {
 		if (allSounds.containsKey(soundName)) {
-			al.alSourceStop(source[allSounds.get(soundName)]);
+			al.alSourceStop(source[allSounds.get(soundName).getSourceToPlay()]);
 		}
 		else {
 			throw new SoundNotDefinedError();
@@ -67,7 +65,7 @@ public class Sounds {
 
 	public static void soundSetGain(String soundName, float gain) {
 		if (allSounds.containsKey(soundName)) {
-			al.alSourcef(source[allSounds.get(soundName)], AL.AL_GAIN, gain);
+			al.alSourcef(source[allSounds.get(soundName).getSourceToPlay()], AL.AL_GAIN, gain);
 		}
 		else {
 			throw new SoundNotDefinedError();
@@ -76,7 +74,7 @@ public class Sounds {
 
 	public static void soundSetPitch(String soundName, float pitch) {
 		if (allSounds.containsKey(soundName)) {
-			al.alSourcef(source[allSounds.get(soundName)], AL.AL_PITCH, pitch);
+			al.alSourcef(source[allSounds.get(soundName).getSourceToPlay()], AL.AL_PITCH, pitch);
 		}
 		else {
 			throw new SoundNotDefinedError();
@@ -92,7 +90,7 @@ public class Sounds {
 				panning = 1;
 			}
 			// TODO: use circular instead of triangular
-			al.alSourcefv(source[allSounds.get(soundName)], AL.AL_POSITION, new float[]{ panning, 0.0f, 1.0f - Math.abs(panning) }, 0);
+			al.alSourcefv(source[allSounds.get(soundName).getSourceToPlay()], AL.AL_POSITION, new float[]{ panning, 0.0f, 1.0f - Math.abs(panning) }, 0);
 		}
 		else {
 			throw new SoundNotDefinedError();
@@ -100,12 +98,7 @@ public class Sounds {
 	}
 
 	private static void soundSetLoop(String soundName, boolean val) {
-		if (allSounds.containsKey(soundName)) {
-			al.alSourcei(source[allSounds.get(soundName)], AL.AL_LOOPING, val ? AL.AL_TRUE : AL.AL_FALSE);
-		}
-		else {
-			throw new SoundNotDefinedError();
-		}
+		al.alSourcei(source[allSounds.get(soundName).getSourceToPlay()], AL.AL_LOOPING, val ? AL.AL_TRUE : AL.AL_FALSE);
 	}
 
 	public static void setupSound() {
@@ -129,35 +122,65 @@ public class Sounds {
 			throw new SoundsNotDefinedError();
 		}
 
-		int i = 0;
+		int requiredBuffers = 0;
+		int requiredSources = 0;
 
-		for (String sound: soundsData) {
-			allSounds.put(sound, i);
-			i++;
+		for (String line: soundsData) {
+			if (!line.startsWith("//")) {
+				if (line.equals("intro/loop")) {
+					requiredSources--;
+				} else {
+					requiredBuffers++;
+					requiredSources++;
+				}
+			}
 		}
 
-		buffer = new int[i];
+		buffer = new int[requiredBuffers];
 
-		al.alGenBuffers(i, buffer, 0);
+		al.alGenBuffers(requiredBuffers, buffer, 0);
 		if (al.alGetError() != AL.AL_NO_ERROR) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Could not generate JOAL audio buffers");
 			throw new JavaOpenALError();
 		}
 
-		source = new int[i];
+		source = new int[requiredSources];
 
-		al.alGenSources(i, source, 0);
+		al.alGenSources(requiredSources, source, 0);
 		if (al.alGetError() != AL.AL_NO_ERROR) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Could not generate JOAL audio sources");
 			throw new JavaOpenALError();
 		}
 
-		for (Map.Entry<String, Integer> entry: allSounds.entrySet()) {
-			makeLinkedBufferAndSource("/sounds/" + entry.getKey(), entry.getValue());
+		int buffer = 0;
+		int source = 0;
+		for (String sound: soundsData) {
+			if (!sound.startsWith("//")) {
+				String[] split = sound.split(",");
+				switch (Integer.parseInt(split[1])) {
+					case 0 -> {
+						BasicAudioEntry entry = new BasicAudioEntry(buffer, source);
+						allSounds.put(split[0], entry);
+
+						bufferData("/sounds/" + split[0], entry.getBufferToPlay());
+
+						initSource(source);
+
+						linkSourceToBuffer(source, buffer);
+
+						buffer++;
+						source++;
+					}
+					default -> {
+						MainClass.LOGGER.log(LoggingLevel.ERROR, "Invalid audioEntry type in sounds.txt");
+						throw new SoundsNotDefinedError();
+					}
+				}
+			}
 		}
 	}
 
-	private static void makeLinkedBufferAndSource(String fileName, int num) {
+	private static void bufferData(String fileName, int num) {
 		try (InputStream stream = Sounds.class.getResourceAsStream(fileName)) {
 			int[] format = new int[1];
 			int[] size = new int[1];
@@ -168,17 +191,50 @@ public class Sounds {
 			ALut.alutLoadWAVFile(stream, format, data, size, freq, loop);
 
 			al.alBufferData(buffer[num], format[0], data[0], size[0], freq[0]);
-
-			al.alSourcei(source[num], AL.AL_BUFFER, buffer[num]);
-			al.alSourcef(source[num], AL.AL_PITCH, 1.0f);
-			al.alSourcef(source[num], AL.AL_GAIN, 1.0f);
-			al.alSourcefv(source[num], AL.AL_POSITION, new float[]{ 0.0f, 0.0f, 1.0f }, 0);
-			al.alSourcefv(source[num], AL.AL_VELOCITY, new float[]{ 0.0f, 0.0f, 0.0f }, 0);
-			al.alSourcei(source[num], AL.AL_LOOPING, AL.AL_FALSE);
 		}
 		catch (IOException e) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Could not load audio file \"" + fileName + "\"");
 			throw new SoundNotDefinedError();
+		}
+	}
+
+	private static void linkSourceToBuffer(int sourceNum, int bufferNum) {
+		al.alSourcei(source[sourceNum], AL.AL_BUFFER, buffer[bufferNum]);
+	}
+
+	private static void initSource(int num) {
+		al.alSourcef(source[num], AL.AL_PITCH, 1.0f);
+		al.alSourcef(source[num], AL.AL_GAIN, 1.0f);
+		al.alSourcefv(source[num], AL.AL_POSITION, new float[]{ 0.0f, 0.0f, 1.0f }, 0);
+		al.alSourcefv(source[num], AL.AL_VELOCITY, new float[]{ 0.0f, 0.0f, 0.0f }, 0);
+		al.alSourcei(source[num], AL.AL_LOOPING, AL.AL_FALSE);
+	}
+
+	private static int parseFormat(String bits, String channels) {
+		if (bits.equals("16")) {
+			if (channels.equals("M")) {
+				return AL.AL_FORMAT_MONO16;
+			}
+			else if (channels.equals("S")) {
+				return AL.AL_FORMAT_STEREO16;
+			}
+			else {
+				throw new IllegalArgumentException();
+			}
+		}
+		else if (bits.equals("8")) {
+			if (channels.equals("M")) {
+				return AL.AL_FORMAT_MONO8;
+			}
+			else if (channels.equals("S")) {
+				return AL.AL_FORMAT_STEREO8;
+			}
+			else {
+				throw new IllegalArgumentException();
+			}
+		}
+		else {
+			throw new IllegalArgumentException();
 		}
 	}
 

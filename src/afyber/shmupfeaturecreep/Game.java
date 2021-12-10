@@ -22,6 +22,8 @@ public class Game {
 		Registry.registerObjectAsChildOf("enemy_ship_1_L", "enemy_ship_parent");
 		Registry.registerObject("enemy_ship_cannon_fodder", EnemyShipCannonFodder.class);
 		Registry.registerObjectAsChildOf("enemy_ship_cannon_fodder", "enemy_ship_parent");
+
+		Registry.registerObject("test_1", TestInstanceClass.class);
 	}
 
 	public static void registerRooms() {
@@ -30,6 +32,7 @@ public class Game {
 		roomObjects.add(new ObjectCreationReference("player_object", 300, 300, 1, 1, 0));
 		roomObjects.add(new ObjectCreationReference("battle_controller", 0, 0, 0, 0, 0));
 		roomObjects.add(new ObjectCreationReference("scorecard", 0, 0, 1, 1, 100));
+		roomObjects.add(new ObjectCreationReference("test_1", 100, 100, 1, 1, 0));
 		Registry.registerRoom("roomStart", new Room(roomTiles, roomObjects));
 	}
 }

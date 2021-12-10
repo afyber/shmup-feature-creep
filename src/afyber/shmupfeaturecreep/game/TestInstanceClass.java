@@ -9,6 +9,7 @@ public class TestInstanceClass extends DynamicObject {
 
 	public TestInstanceClass(float x, float y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
+		objectName = "test_1";
 	}
 
 	@Override

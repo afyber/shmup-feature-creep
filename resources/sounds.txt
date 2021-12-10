@@ -1,1 +1,3 @@
-test.wav
+// the format is like so: filename, type (0 or 1 for now), number of bits (8 or 16), M for mono and S for stereo
+test.wav,0,16,M
+alarm_titlescreen.wav,0,16,S

@@ -1,2 +1,3 @@
+// each line contains a spritesheet name, this name will connect to the files "name.png" and "name_info.txt"
 spritesheet1
 test6
