@@ -1,21 +1,24 @@
 package afyber.shmupfeaturecreep.engine.sound;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public abstract class SoundParent {
 
 	protected int bytePos;
 
-	protected boolean loop;
+	protected AtomicBoolean loop;
 	protected int loopPos;
 
-	protected boolean playing;
+	protected AtomicBoolean playing;
 
 	protected double volume;
 
 	protected SoundParent(boolean loop, int loopPos) {
 		this.bytePos = 0;
-		this.loop = loop;
+		this.loop = new AtomicBoolean();
+		this.loop.set(loop);
 		this.loopPos = loopPos;
-		this.playing = false;
+		this.playing = new AtomicBoolean();
 		this.volume = 1.0;
 	}
 
@@ -27,21 +30,21 @@ public abstract class SoundParent {
 
 	public void play() {
 		bytePos = 0;
-		playing = true;
+		playing.set(true);
 	}
 
 	public void pause() {
-		playing = false;
+		playing.set(false);
 	}
 
 	public void resume() {
-		playing = true;
+		playing.set(true);
 	}
 
 	public void loop() {
 		bytePos = 0;
-		loop = true;
-		playing = true;
+		loop.set(true);
+		playing.set(true);
 	}
 
 	public void setGain(double gain) {
@@ -49,11 +52,11 @@ public abstract class SoundParent {
 	}
 
 	public void setLooping(boolean loop) {
-		this.loop = loop;
+		this.loop.set(loop);
 	}
 
 	public boolean isPlaying() {
-		return playing;
+		return playing.get();
 	}
 
 	public int getBytePos() {

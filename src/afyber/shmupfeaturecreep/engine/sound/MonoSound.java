@@ -21,11 +21,11 @@ public class MonoSound extends SoundParent {
 		bytePos += 2;
 
 		if (bytePos >= data.length) {
-			if (loop) {
+			if (loop.get()) {
 				bytePos = loopPos;
 			}
 			else {
-				playing = false;
+				playing.set(false);
 			}
 		}
 
@@ -36,11 +36,11 @@ public class MonoSound extends SoundParent {
 	public void skipFrames(int frames) {
 		bytePos += frames * 2;
 		if (bytePos >= data.length) {
-			if (loop) {
+			if (loop.get()) {
 				bytePos -= data.length;
 			}
 			else {
-				playing = false;
+				playing.set(false);
 			}
 		}
 	}
