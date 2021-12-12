@@ -56,11 +56,11 @@ public class WorldMiddleman {
 		}
 	}
 
-	public boolean isColliding(DynamicObject caller, int objRef) {
+	public int isColliding(DynamicObject caller, int objRef) {
 		return world.isColliding(caller, objRef);
 	}
 
-	public boolean isColliding(DynamicObject caller, String classRef, boolean includingChildren) {
+	public int isColliding(DynamicObject caller, String classRef, boolean includingChildren) {
 		return world.isColliding(caller, classRef, includingChildren);
 	}
 }

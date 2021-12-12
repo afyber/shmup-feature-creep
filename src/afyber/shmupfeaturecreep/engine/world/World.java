@@ -260,11 +260,15 @@ public class World {
 		return false;
 	}
 
-	public boolean isColliding(DynamicObject caller, int objRef) {
-		return isColliding(caller, objRefToObject(objRef));
+	public int isColliding(DynamicObject caller, int objRef) {
+		DynamicObject other = objRefToObject(objRef);
+		if (isColliding(caller, other)) {
+			return other.instanceID;
+		}
+		return -1;
 	}
 
-	public boolean isColliding(DynamicObject caller, String classRef, boolean includingChildren) {
+	public int isColliding(DynamicObject caller, String classRef, boolean includingChildren) {
 		ArrayList<DynamicObject> allObj;
 		if (includingChildren) {
 			allObj = (ArrayList<DynamicObject>)classRefToObjectListInclChildren(classRef);
@@ -274,10 +278,10 @@ public class World {
 		}
 		for (DynamicObject object: allObj) {
 			if (isColliding(caller, object)) {
-				return true;
+				return object.instanceID;
 			}
 		}
-		return false;
+		return -1;
 	}
 
 	private int getNextAvailableGameObjectID() {

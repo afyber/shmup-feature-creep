@@ -19,9 +19,6 @@ public class Player1Bullet extends DynamicObject {
 
 	@Override
 	public void update(WorldMiddleman world) {
-		if (world.isColliding(this, "enemy_ship_parent", true)) {
-			world.instanceDestroy(instanceID);
-		}
 		if (y < -16) {
 			world.instanceDestroy(instanceID);
 		}
