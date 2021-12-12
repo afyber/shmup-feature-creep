@@ -1,6 +1,7 @@
 package afyber.shmupfeaturecreep.game;
 
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
+import afyber.shmupfeaturecreep.engine.sound.Sound;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class EnemyShipParent extends DynamicObject {
@@ -14,7 +15,8 @@ public class EnemyShipParent extends DynamicObject {
 	@Override
 	public void postUpdate(WorldMiddleman world) {
 		if (world.isColliding(this, "player_bullet", false) && health != -100 && --health <= 0) {
-				world.instanceDestroy(instanceID);
+			world.instanceDestroy(instanceID);
+			Sound.playSound("test");
 		}
 	}
 }
