@@ -26,7 +26,8 @@ public class SoundUpdateRunner implements Runnable {
 		int bufferSize = (int)Sound.FORMAT.getFrameRate() * Sound.FORMAT.getFrameSize();
 		byte[] audioBuffer = new byte[bufferSize];
 
-		int maxFramesPerUpdate = (int)((Sound.FORMAT.getFrameRate() / 1000) * 25);
+		// 20 milliseconds worth
+		int maxFramesPerUpdate = (int)((Sound.FORMAT.getFrameRate() / 1000) * 20);
 		int numBytesRead = 0;
 		double framesAccrued = 0;
 		long lastUpdate = System.nanoTime();

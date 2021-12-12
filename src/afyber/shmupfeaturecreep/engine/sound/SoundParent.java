@@ -30,6 +30,14 @@ public abstract class SoundParent {
 		playing = true;
 	}
 
+	public void pause() {
+		playing = false;
+	}
+
+	public void resume() {
+		playing = true;
+	}
+
 	public void loop() {
 		bytePos = 0;
 		loop = true;
