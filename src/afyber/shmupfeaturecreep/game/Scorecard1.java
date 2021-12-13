@@ -6,7 +6,7 @@ import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class Scorecard1 extends DynamicObject {
 
-	public Scorecard1(float x, float y, int depth, int instanceID) {
+	public Scorecard1(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "scorecard";
 	}

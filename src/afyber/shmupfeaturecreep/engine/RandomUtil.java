@@ -16,11 +16,11 @@ public class RandomUtil {
 		return random.nextInt(boundInclusive + 1);
 	}
 
-	public static float random() {
-		return random.nextFloat();
+	public static double random() {
+		return random.nextDouble();
 	}
 
-	public static float randFloat(float bound) {
+	public static double randDouble(float bound) {
 		return random() * bound;
 	}
 

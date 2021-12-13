@@ -97,16 +97,16 @@ public class Screen {
 		}
 	}
 
-	public static void draw(String spriteName, float x, float y, int depth) {
+	public static void draw(String spriteName, double x, double y, int depth) {
 		draw(spriteName, x, y, 1, 1, depth);
 	}
-	public static void draw(String spriteName, float x, float y, float xScale, float yScale, int depth) {
+	public static void draw(String spriteName, double x, double y, double xScale, double yScale, int depth) {
 		draw(spriteName, x, y, xScale, yScale, depth, 1);
 	}
-	public static void draw(String spriteName, float x, float y, float xScale, float yScale, int depth, float alpha) {
+	public static void draw(String spriteName, double x, double y, double xScale, double yScale, int depth, double alpha) {
 		if (isDrawing) {
 			try {
-				drawRequests.add(new DrawRequest(spriteName, Math.round(x), Math.round(y), xScale, yScale, depth, alpha));
+				drawRequests.add(new DrawRequest(spriteName, (int)Math.round(x), (int)Math.round(y), xScale, yScale, depth, alpha));
 			} catch (NullPointerException e) {
 				MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
@@ -161,10 +161,10 @@ public class Screen {
 
 	private static void copySpriteRegionToFrame(SpriteSheetRegion sprite, DrawRequest request) {
 		// all this to say, if the sprite does not overlap the image, do not draw it
-		int actualX = request.x() - Math.round(sprite.originX() * request.xScale());
-		int actualY = request.y() - Math.round(sprite.originY() * request.yScale());
-		int actualX2 = actualX + Math.round(sprite.dataWidth() * request.xScale());
-		int actualY2 = actualY + Math.round(sprite.dataHeight() * request.yScale());
+		int actualX = request.x() - (int)Math.round(sprite.originX() * request.xScale());
+		int actualY = request.y() - (int)Math.round(sprite.originY() * request.yScale());
+		int actualX2 = actualX + (int)Math.round(sprite.dataWidth() * request.xScale());
+		int actualY2 = actualY + (int)Math.round(sprite.dataHeight() * request.yScale());
 		if (!GeneralUtil.areRectanglesIntersecting(actualX, actualY, actualX2, actualY2, 0, 0, MainClass.WINDOW_WIDTH - 1, MainClass.WINDOW_HEIGHT - 1)) {
 			return;
 		}
@@ -173,7 +173,7 @@ public class Screen {
 
 		SpriteSheetRegion scaledSprite = scaleImageData(sprite.data(), request.xScale(), request.yScale(), sprite.originX(), sprite.originY());
 		int[][] spriteData = scaledSprite.data();
-		float alphaPercent = Math.min(1, request.alpha());
+		double alphaPercent = Math.min(1, request.alpha());
 
 		for (int y = 0; y < scaledSprite.dataHeight(); y++) {
 			for (int x = 0; x < scaledSprite.dataWidth(); x++) {
@@ -190,7 +190,7 @@ public class Screen {
 				}
 				else if ((spriteData[y][x] >> 24 & 0xFF) != 0x0 && alphaPercent > 0) {
 					// basically takes a weighted average of the R, G, and B components of the sprite and the current frame, with the weight being the alpha of the sprite being drawn
-					float percentage = ((float)(spriteData[y][x] >> 24 & 0xFF) / 0xFF) * alphaPercent;
+					double percentage = ((float)(spriteData[y][x] >> 24 & 0xFF) / 0xFF) * alphaPercent;
 					currentFrame[calculatedY][calculatedX] = 0xFF000000 | Math.min(0xFF, (int)((currentFrame[calculatedY][calculatedX] >> 16 & 0xFF) * (1 - percentage) + (spriteData[y][x] >> 16 & 0xFF) * percentage)) << 16 | Math.min(0xFF, (int)((currentFrame[calculatedY][calculatedX] >> 8 & 0xFF) * (1 - percentage) + (spriteData[y][x] >> 8 & 0xFF) * percentage)) << 8 | Math.min(0xFF, (int)((currentFrame[calculatedY][calculatedX] & 0xFF) * (1 - percentage) + (spriteData[y][x] & 0xFF) * percentage));
 				}
 			}
@@ -373,5 +373,5 @@ public class Screen {
 		}
 	}
 
-	private record DrawRequest(String spriteName, int x, int y, float xScale, float yScale, int depth, float alpha) {}
+	private record DrawRequest(String spriteName, int x, int y, double xScale, double yScale, int depth, double alpha) {}
 }

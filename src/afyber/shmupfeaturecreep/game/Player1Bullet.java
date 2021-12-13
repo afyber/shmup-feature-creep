@@ -5,7 +5,7 @@ import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class Player1Bullet extends DynamicObject {
 
-	public Player1Bullet(float x, float y, int depth, int instanceID) {
+	public Player1Bullet(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "player_bullet";
 	}

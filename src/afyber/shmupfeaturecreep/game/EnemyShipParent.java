@@ -8,7 +8,7 @@ public class EnemyShipParent extends DynamicObject {
 
 	protected int health = -100;
 
-	public EnemyShipParent(float x, float y, int depth, int instanceID) {
+	public EnemyShipParent(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 	}
 

@@ -9,7 +9,7 @@ public class EnemyShip1L extends EnemyShipParent {
 	private float speed;
 	private boolean endOfPath;
 
-	public EnemyShip1L(float x, float y, int depth, int instanceID) {
+	public EnemyShip1L(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "enemy_ship_1_L";
 		health = 40;

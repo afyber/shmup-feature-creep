@@ -8,7 +8,7 @@ import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class BattleController extends DynamicObject {
 
-	public BattleController(float x, float y, int depth, int instanceID) {
+	public BattleController(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "battle_controller";
 	}

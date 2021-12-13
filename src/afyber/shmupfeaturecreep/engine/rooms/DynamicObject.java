@@ -20,14 +20,14 @@ public class DynamicObject {
 
 	public final int instanceID;
 
-	public float x;
-	public float y;
+	public double x;
+	public double y;
 
 	public int depth;
 	public boolean visible = true;
 
-	public float imageXScale = 1;
-	public float imageYScale = 1;
+	public double imageXScale = 1;
+	public double imageYScale = 1;
 
 	public String spriteIndex = "";
 	public String collisionIndex = "";
@@ -37,10 +37,10 @@ public class DynamicObject {
 
 	public int[] alarm = new int[10];
 
-	public DynamicObject(float x, float y, int depth, int instanceID) {
+	public DynamicObject(double x, double y, int depth, int instanceID) {
 		this(x, y, depth, 1, 1, instanceID);
 	}
-	public DynamicObject(float x, float y, int depth, float xScale, float yScale, int instanceID) {
+	public DynamicObject(double x, double y, int depth, double xScale, double yScale, int instanceID) {
 		this.x = x;
 		this.y = y;
 		this.depth = depth;
@@ -134,13 +134,13 @@ public class DynamicObject {
 		}
 	}
 
-	protected final void drawSimple(String spriteIndex, float x, float y) {
+	protected final void drawSimple(String spriteIndex, double x, double y) {
 		if (visible) {
 			Screen.draw(spriteIndex, x, y, depth);
 		}
 	}
 
-	protected final void draw(String spriteIndex, float x, float y, float xScale, float yScale) {
+	protected final void draw(String spriteIndex, double x, double y, double xScale, double yScale) {
 		if (visible) {
 			Screen.draw(spriteIndex, x, y, xScale, yScale, depth);
 		}

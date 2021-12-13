@@ -22,7 +22,7 @@ public class WorldMiddleman {
 		world.changeRoom(roomName);
 	}
 
-	public DynamicObject createInstance(String classRef, float x, float y, int depth) {
+	public DynamicObject createInstance(String classRef, double x, double y, int depth) {
 		return world.createInstance(classRef, x, y, depth);
 	}
 

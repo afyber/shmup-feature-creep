@@ -7,7 +7,7 @@ public class TestInstanceClass extends DynamicObject {
 
 	private int siner;
 
-	public TestInstanceClass(float x, float y, int depth, int instanceID) {
+	public TestInstanceClass(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "test_1";
 	}

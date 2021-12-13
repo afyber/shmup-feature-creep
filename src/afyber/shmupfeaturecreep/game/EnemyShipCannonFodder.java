@@ -5,7 +5,7 @@ import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class EnemyShipCannonFodder extends EnemyShipParent {
 
-	public EnemyShipCannonFodder(float x, float y, int depth, int instanceID) {
+	public EnemyShipCannonFodder(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "enemy_ship_cannon_fodder";
 	}
