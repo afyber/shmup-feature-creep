@@ -202,9 +202,8 @@ public class Screen {
 		image.setRGB(0, 0, MainClass.WINDOW_WIDTH, MainClass.WINDOW_HEIGHT, singleArray.a(), 0, singleArray.dataWidth());
 	}
 
-	public static SpriteSheetRegion scaleImageData(int[][] data, float xScale, float yScale, int originX, int originY) {
+	public static SpriteSheetRegion scaleImageData(int[][] data, double xScale, double yScale, int originX, int originY) {
 		// TODO: properly figure out scaling to prevent annoying jerkiness when constantly changing scale with an origin not equal to 0,0
-		// TODO: when the new width/height should be exactly equal to an int, it probably won't actually be because of a floating point precision problem
 		if (xScale == 1 && yScale == 1) {
 			return new SpriteSheetRegion(data, data[0].length, data.length, originX, originY);
 		}
@@ -223,7 +222,7 @@ public class Screen {
 
 		int[][] newDataX;
 
-		float runningTally = 0;
+		double runningTally = 0;
 		int intTally;
 		int newXOrigin = 0;
 		int newX = data[0].length;
@@ -302,7 +301,7 @@ public class Screen {
 		return region;
 	}
 
-	public static SpriteSheetRegion getSpriteScaled(String spriteName, float xScale, float yScale) {
+	public static SpriteSheetRegion getSpriteScaled(String spriteName, double xScale, double yScale) {
 		SpriteSheetRegion region = null;
 		if (allSprites.containsKey(spriteName)) {
 			region = allSprites.get(spriteName);
@@ -323,7 +322,7 @@ public class Screen {
 	}
 
 	// TODO: check accuracy against getSpriteScaled
-	public static SpriteInformation getScaledSpriteInfo(String spriteName, float xScale, float yScale) {
+	public static SpriteInformation getScaledSpriteInfo(String spriteName, double xScale, double yScale) {
 		SpriteInformation info = getSpriteInfo(spriteName);
 		if (info != null) {
 			int newOriginX;
