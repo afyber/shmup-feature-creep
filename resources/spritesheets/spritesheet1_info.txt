@@ -1,4 +1,4 @@
-player_sprite_normal:0,0,14,15,7,8
+player_sprite_normal:0,0,12,15,6,8
 player_bullet:14,0,2,7,1,4
 enemy_ship_1_L:16,0,9,22,5,11
 enemy_ship_1_R:25,0,9,22,5,11

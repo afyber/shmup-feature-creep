@@ -23,7 +23,7 @@ public class Player1 extends DynamicObject {
 
 	@Override
 	public void update(WorldMiddleman world) {
-		float movementFactor = 5;
+		float movementFactor = 6;
 		if (Keyboard.keyDown("left")) {
 			x -= movementFactor;
 			if (x < 2) {
@@ -58,17 +58,17 @@ public class Player1 extends DynamicObject {
 		int newAlarm = -1;
 		switch (Global.getIntGlobal("playerLevel")) {
 			case 0 -> {
-				world.createInstance("player_bullet", x, y - 8, depth);
+				world.createInstance("player_bullet", x, y - 8, depth - 1);
 				newAlarm = 6;
 			}
 			case 1 -> {
-				world.createInstance("player_bullet", x - 6, y - 4, depth);
-				world.createInstance("player_bullet", x + 6, y - 4, depth);
+				world.createInstance("player_bullet", x - 6, y - 4, depth - 1);
+				world.createInstance("player_bullet", x + 6, y - 4, depth - 1);
 				newAlarm = 6;
 			}
 			case 2 -> {
-				world.createInstance("player_bullet", x - 6, y - 4, depth);
-				world.createInstance("player_bullet", x + 6, y - 4, depth);
+				world.createInstance("player_bullet", x - 6, y - 4, depth - 1);
+				world.createInstance("player_bullet", x + 6, y - 4, depth - 1);
 				newAlarm = 3;
 			}
 			default -> {
