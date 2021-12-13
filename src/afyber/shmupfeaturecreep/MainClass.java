@@ -35,8 +35,6 @@ public class MainClass {
 
 		Sound.init();
 
-		Sound.loadSounds();
-
 		Game.registerObjects();
 
 		Game.registerRooms();

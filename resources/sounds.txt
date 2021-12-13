@@ -1,3 +1,4 @@
 // the format is like so: filename, type (0 or 1 for now), number of bits (8 or 16), M for mono and S for stereo
 test.wav:test
 alarm_titlescreen.wav:alarm
+loop:alarm_titlescreen.wav:alarm_titlescreen.wav:alarm2

@@ -16,7 +16,8 @@ public class Sound {
 
 	private static boolean ready = false;
 
-	static HashMap<String, SoundParent> allSounds;
+	static HashMap<String, SoundParent> allSounds = new HashMap<>();
+	static HashMap<String, LoopParent> allLoops = new HashMap<>();
 
 	public static final AudioFormat FORMAT = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
 
@@ -28,8 +29,6 @@ public class Sound {
 	private static SoundUpdateRunner updater;
 
 	public static void init() {
-		allSounds = new HashMap<>();
-
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, FORMAT);
 
 		if (!AudioSystem.isLineSupported(info)) {
@@ -44,6 +43,8 @@ public class Sound {
 		}
 
 		soundLine.start();
+
+		loadSounds();
 
 		mixer = new Mixer();
 
@@ -83,8 +84,19 @@ public class Sound {
 
 		for (String line: lines) {
 			if (!line.startsWith("//")) {
-				String[] split = line.split(":");
-				Sound.registerSound("/sounds/" + split[0], split[1]);
+				if (line.startsWith("loop:")) {
+					String[] split = line.substring(5).split(":");
+					if (split.length == 3) {
+						registerBasicLoop("/sounds/" + split[0], "/sounds/" + split[1], split[2]);
+					}
+					else if (split.length == 4) {
+						// TODO: do complex loop (with three audio files, one intro, one for after the intro, and one for every subsequent loop)
+					}
+				}
+				else {
+					String[] split = line.split(":");
+					Sound.registerSound("/sounds/" + split[0], split[1]);
+				}
 			}
 		}
 	}
@@ -93,11 +105,22 @@ public class Sound {
 		SoundParent sound = loadAudio(fileName);
 
 		if (sound == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Registering audio with null sound reference");
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Registering sound with null sound reference");
 			return;
 		}
 
 		allSounds.put(soundName, sound);
+	}
+
+	public static void registerBasicLoop(String introFileName, String loopFileName, String soundName) {
+		LoopParent loop = loadBasicLoop(introFileName, loopFileName);
+
+		if (loop == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Registering loop with null loop reference");
+			return;
+		}
+
+		allLoops.put(soundName, loop);
 	}
 
 	public static void setGlobalGain(double gain) {
@@ -114,6 +137,9 @@ public class Sound {
 	public static void playSound(String soundName) {
 		if (allSounds.containsKey(soundName)) {
 			allSounds.get(soundName).play();
+		}
+		if (allLoops.containsKey(soundName)) {
+			allLoops.get(soundName).play();
 		}
 	}
 
@@ -165,6 +191,63 @@ public class Sound {
 			byte[][] data = readAllBytesStereo(stream);
 
 			return new StereoSound(data);
+		}
+
+		return null;
+	}
+
+	public static LoopParent loadBasicLoop(String introFileName, String loopFileName) {
+		URL url1 = MainClass.class.getResource(introFileName);
+		URL url2 = MainClass.class.getResource(loopFileName);
+
+		if (url1 == null || url2 == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load loop with null file reference");
+			return null;
+		}
+
+		return loadBasicLoop(url1, url2);
+	}
+
+	public static LoopParent loadBasicLoop(URL introFileName, URL loopFileName) {
+		AudioInputStream stream1 = getValidAudioInputStream(introFileName);
+		AudioInputStream stream2 = getValidAudioInputStream(loopFileName);
+
+		if (stream1 == null || stream2 == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load loop with null audio stream");
+			return null;
+		}
+
+		int numChannels1 = stream1.getFormat().getChannels();
+		int numChannels2 = stream2.getFormat().getChannels();
+
+
+		if (numChannels1 == 1) {
+			byte[] data1 = readAllBytesMono(stream1);
+
+			if (numChannels2 == 1) {
+				byte[] data2 = readAllBytesMono(stream2);
+
+				return new BasicLoop(data1, data2);
+			}
+			else if (numChannels2 == 2) {
+				byte[][] data2 = readAllBytesStereo(stream2);
+
+				return new BasicLoop(data1, data2);
+			}
+		}
+		else if (numChannels1 == 2) {
+			byte[][] data1 = readAllBytesStereo(stream1);
+
+			if (numChannels2 == 1) {
+				byte[] data2 = readAllBytesMono(stream2);
+
+				return new BasicLoop(data1, data2);
+			}
+			else if (numChannels2 == 2) {
+				byte[][] data2 = readAllBytesStereo(stream2);
+
+				return new BasicLoop(data1, data2);
+			}
 		}
 
 		return null;

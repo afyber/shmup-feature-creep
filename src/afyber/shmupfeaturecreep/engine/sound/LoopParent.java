@@ -1,24 +1,26 @@
 package afyber.shmupfeaturecreep.engine.sound;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class SoundParent {
+/**
+ * Loops are different from other sounds because:
+ * 1. They have multiple audio data in them
+ * 2. They can handle both mono and stereo, for convenience
+ */
+public abstract class LoopParent {
 
 	protected int bytePos;
 
-	protected AtomicBoolean loop;
-	protected int loopPos;
-
+	protected AtomicInteger playingState;
 	protected AtomicBoolean playing;
 
 	protected double volume;
 
-	protected SoundParent(boolean loop, int loopPos) {
+	protected LoopParent() {
 		this.bytePos = 0;
-		this.loop = new AtomicBoolean();
-		this.loop.set(loop);
-		this.loopPos = loopPos;
 		this.playing = new AtomicBoolean();
+		this.playingState = new AtomicInteger(0);
 		this.volume = 1.0;
 	}
 
@@ -28,15 +30,9 @@ public abstract class SoundParent {
 
 	public abstract int getChannels();
 
-	public void play() {
-		bytePos = 0;
-		playing.set(true);
-	}
+	public abstract void play();
 
-	public void stop() {
-		bytePos = 0;
-		playing.set(false);
-	}
+	public abstract void stop();
 
 	public void pause() {
 		playing.set(false);
@@ -46,22 +42,12 @@ public abstract class SoundParent {
 		playing.set(true);
 	}
 
-	public void loop() {
-		bytePos = 0;
-		loop.set(true);
-		playing.set(true);
-	}
-
 	public void setGain(double gain) {
 		this.volume = gain;
 	}
 
 	public double getGain() {
 		return volume;
-	}
-
-	public void setLooping(boolean loop) {
-		this.loop.set(loop);
 	}
 
 	public boolean isPlaying() {

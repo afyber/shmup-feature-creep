@@ -26,9 +26,11 @@ public class Mixer {
 
 			for (SoundParent sound: Sound.allSounds.values()) {
 				if (sound.isPlaying()) {
+					double volume = globalVolume * sound.getGain();
+
 					if (sound.getChannels() == 1) {
 						int[] val = sound.readFrame();
-						double currVal = val[0] * globalVolume;
+						double currVal = val[0] * volume;
 
 						leftVal += currVal;
 						rightVal += currVal;
@@ -36,8 +38,32 @@ public class Mixer {
 						readBytes = true;
 					} else if (sound.getChannels() == 2) {
 						int[] vals = sound.readFrame();
-						double currLeft = vals[0] * globalVolume;
-						double currRight = vals[1] * globalVolume;
+						double currLeft = vals[0] * volume;
+						double currRight = vals[1] * volume;
+
+						leftVal += currLeft;
+						rightVal += currRight;
+
+						readBytes = true;
+					}
+				}
+			}
+			for (LoopParent loop: Sound.allLoops.values()) {
+				if (loop.isPlaying()) {
+					double volume = globalVolume * loop.getGain();
+
+					if (loop.getChannels() == 1) {
+						int[] val = loop.readFrame();
+						double currVal = val[0] * volume;
+
+						leftVal += currVal;
+						rightVal += currVal;
+
+						readBytes = true;
+					} else if (loop.getChannels() == 2) {
+						int[] vals = loop.readFrame();
+						double currLeft = vals[0] * volume;
+						double currRight = vals[1] * volume;
 
 						leftVal += currLeft;
 						rightVal += currRight;
