@@ -143,6 +143,33 @@ public class Sound {
 		}
 	}
 
+	public static void stopSound(String soundName) {
+		if (allSounds.containsKey(soundName)) {
+			allSounds.get(soundName).stop();
+		}
+		if (allLoops.containsKey(soundName)) {
+			allLoops.get(soundName).stop();
+		}
+	}
+
+	public static void pauseSound(String soundName) {
+		if (allSounds.containsKey(soundName)) {
+			allSounds.get(soundName).pause();
+		}
+		if (allLoops.containsKey(soundName)) {
+			allLoops.get(soundName).pause();
+		}
+	}
+
+	public static void resumeSound(String soundName) {
+		if (allSounds.containsKey(soundName)) {
+			allSounds.get(soundName).resume();
+		}
+		if (allLoops.containsKey(soundName)) {
+			allLoops.get(soundName).resume();
+		}
+	}
+
 	public static void loopSound(String soundName) {
 		if (allSounds.containsKey(soundName)) {
 			allSounds.get(soundName).loop();

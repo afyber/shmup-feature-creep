@@ -88,7 +88,7 @@ public class BasicLoop extends LoopParent {
 
 	@Override
 	public void skipFrames(int frames) {
-		bytePos += frames;
+		bytePos += frames * 2;
 
 		if (playingState.get() == 0) {
 			if (bytePos >= dataIntro[0].length) {
