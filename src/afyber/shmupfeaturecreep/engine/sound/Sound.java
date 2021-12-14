@@ -132,6 +132,9 @@ public class Sound {
 	}
 
 	public static void registerSound(String fileName, String soundName) {
+		if (!ready) {
+			return;
+		}
 		SoundParent sound = loadAudio(fileName);
 
 		if (sound == null) {
@@ -143,6 +146,9 @@ public class Sound {
 	}
 
 	public static void registerBasicLoop(String introFileName, String loopFileName, String soundName) {
+		if (!ready) {
+			return;
+		}
 		LoopParent loop = loadBasicLoop(introFileName, loopFileName);
 
 		if (loop == null) {
@@ -154,6 +160,9 @@ public class Sound {
 	}
 
 	public static void registerComplexLoop(String introFileName, String introLoopFileName, String loopLoopFileName, String soundName) {
+		if (!ready) {
+			return;
+		}
 		LoopParent loop = loadComplexLoop(introFileName, introLoopFileName, loopLoopFileName);
 
 		if (loop == null) {
@@ -165,6 +174,10 @@ public class Sound {
 	}
 
 	public static void setGlobalGain(double gain) {
+		if (!ready) {
+			return;
+		}
+
 		if (gain < 0) {
 			gain = 0;
 		}
@@ -176,6 +189,10 @@ public class Sound {
 	}
 
 	public static void playSound(String soundName) {
+		if (!ready) {
+			return;
+		}
+
 		if (allSounds.containsKey(soundName)) {
 			allSounds.get(soundName).play();
 		}
@@ -185,6 +202,10 @@ public class Sound {
 	}
 
 	public static void stopSound(String soundName) {
+		if (!ready) {
+			return;
+		}
+
 		if (allSounds.containsKey(soundName)) {
 			allSounds.get(soundName).stop();
 		}
@@ -194,6 +215,10 @@ public class Sound {
 	}
 
 	public static void pauseSound(String soundName) {
+		if (!ready) {
+			return;
+		}
+
 		if (allSounds.containsKey(soundName)) {
 			allSounds.get(soundName).pause();
 		}
@@ -203,6 +228,10 @@ public class Sound {
 	}
 
 	public static void resumeSound(String soundName) {
+		if (!ready) {
+			return;
+		}
+
 		if (allSounds.containsKey(soundName)) {
 			allSounds.get(soundName).resume();
 		}
@@ -212,12 +241,20 @@ public class Sound {
 	}
 
 	public static void loopSound(String soundName) {
+		if (!ready) {
+			return;
+		}
+
 		if (allSounds.containsKey(soundName)) {
 			allSounds.get(soundName).loop();
 		}
 	}
 
 	public static void setSoundGain(String soundName, double gain) {
+		if (!ready) {
+			return;
+		}
+
 		if (allSounds.containsKey(soundName)) {
 			if (gain < 0) {
 				gain = 0;
