@@ -93,10 +93,14 @@ public class Sound {
 	}
 
 	public static void shutdown() {
-		updater.stop();
-		updater = null;
-		soundLine.stop();
-		soundLine.flush();
+		if (updater != null) {
+			updater.stop();
+			updater = null;
+		}
+		if (soundLine != null) {
+			soundLine.stop();
+			soundLine.flush();
+		}
 		mixer = null;
 	}
 
@@ -132,9 +136,6 @@ public class Sound {
 	}
 
 	public static void registerSound(String fileName, String soundName) {
-		if (!ready) {
-			return;
-		}
 		SoundParent sound = loadAudio(fileName);
 
 		if (sound == null) {
@@ -146,9 +147,6 @@ public class Sound {
 	}
 
 	public static void registerBasicLoop(String introFileName, String loopFileName, String soundName) {
-		if (!ready) {
-			return;
-		}
 		LoopParent loop = loadBasicLoop(introFileName, loopFileName);
 
 		if (loop == null) {
@@ -160,9 +158,6 @@ public class Sound {
 	}
 
 	public static void registerComplexLoop(String introFileName, String introLoopFileName, String loopLoopFileName, String soundName) {
-		if (!ready) {
-			return;
-		}
 		LoopParent loop = loadComplexLoop(introFileName, introLoopFileName, loopLoopFileName);
 
 		if (loop == null) {
@@ -306,7 +301,7 @@ public class Sound {
 		URL url2 = MainClass.class.getResource(loopFileName);
 
 		if (url1 == null || url2 == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load loop with null file reference");
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load basic loop with null file reference");
 			return null;
 		}
 
@@ -318,7 +313,7 @@ public class Sound {
 		AudioInputStream stream2 = getValidAudioInputStream(loopFile);
 
 		if (stream1 == null || stream2 == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load loop with null audio stream");
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load basic loop with null audio stream");
 			return null;
 		}
 
@@ -355,7 +350,7 @@ public class Sound {
 		URL url3 = MainClass.class.getResource(loopLoopFileName);
 
 		if (url1 == null || url2 == null || url3 == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load loop with null file reference");
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load complex loop with null file reference");
 			return null;
 		}
 
@@ -366,6 +361,11 @@ public class Sound {
 		AudioInputStream introStream = getValidAudioInputStream(introFile);
 		AudioInputStream introLoopStream = getValidAudioInputStream(introLoopFile);
 		AudioInputStream loopLoopStream = getValidAudioInputStream(loopLoopFile);
+
+		if (introStream == null || introLoopStream == null || loopLoopStream == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load complex loop with null audio stream");
+			return null;
+		}
 
 		int channels1 = introStream.getFormat().getChannels();
 		int channels2 = introLoopStream.getFormat().getChannels();
@@ -404,17 +404,10 @@ public class Sound {
 
 	private static byte[] readAllBytesMono(AudioInputStream stream) {
 		byte[] data = null;
-		try {
+		try (stream) {
 			data = getBytes(stream);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "IOException reading bytes from audio stream", e);
-		}
-		finally {
-			try {
-				stream.close();
-			}
-			catch (IOException e) {}
 		}
 
 		return data;
@@ -422,7 +415,7 @@ public class Sound {
 
 	private static byte[][] readAllBytesStereo(AudioInputStream stream) {
 		byte[][] data = null;
-		try {
+		try (stream) {
 			byte[] tmpData = getBytes(stream);
 
 			data = new byte[2][];
@@ -438,15 +431,8 @@ public class Sound {
 
 			data[0] = left;
 			data[1] = right;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "IOException reading bytes from audio stream", e);
-		}
-		finally {
-			try {
-				stream.close();
-			}
-			catch (IOException e) {}
 		}
 
 		return data;
@@ -456,7 +442,7 @@ public class Sound {
 		int bufferSize = (int)FORMAT.getSampleRate() * FORMAT.getFrameSize();
 		byte[] buffer = new byte[bufferSize];
 		ByteList list = new ByteList();
-		int numRead = 0;
+		int numRead;
 		while ((numRead = stream.read(buffer)) > -1) {
 			for (int i = 0; i < numRead; i++) {
 				list.add(buffer[i]);
