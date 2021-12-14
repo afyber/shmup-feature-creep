@@ -4,13 +4,19 @@
 
 Shmup: Feature Creep is a small 2D game engine project that I started like a month ago and have now decided to put on GitHub.
 
-### Running
+It is very unfinished.
 
-This project was built with Java 17 in mind and will almost certainly require it to run.
+### Compiling
+
+If for some reason you have found this and actually want to try it here are your instructions:
+
+This project was made with Java 17 and will almost certainly require it to run/compile.
+
+The libraries in the `lib` folder (except for the javadoc libraries) should be added as libraries to your project (and be extracted into any JAR file), and the working folder should be set to `resources`.
 
 ### Licensing
 
-This software is licenced under the BSD-2 Clause license, but I'm not paying a huge amount of attention to the copyright notices on this project since it's a personal project and a WIP.
+This software is licenced under the BSD-2 Clause license, but I'm not paying a huge amount of attention to the copyright notices on this project since it's a personal project and a work-in-progress.
 
 ### Thanks
 
