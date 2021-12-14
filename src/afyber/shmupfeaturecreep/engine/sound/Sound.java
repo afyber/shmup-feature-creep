@@ -85,7 +85,7 @@ public class Sound {
 			updaterThread.setDaemon(true);
 			updaterThread.setPriority(Thread.MAX_PRIORITY);
 		}
-		catch (Exception e) {}
+		catch (Exception ignored) {}
 
 		updaterThread.start();
 
@@ -496,12 +496,7 @@ public class Sound {
 			try {
 				mixer = AudioSystem.getMixer(info);
 			}
-			catch (SecurityException e) {
-				// just copying from TinySound
-			}
-			catch (IllegalArgumentException e) {
-				// same
-			}
+			catch (SecurityException | IllegalArgumentException ignored) {}
 
 			if (mixer == null || !mixer.isLineSupported(lineInfo)) {
 				continue;
@@ -515,12 +510,7 @@ public class Sound {
 					line.open(FORMAT);
 				}
 			}
-			catch (LineUnavailableException e) {
-				// things happen
-			}
-			catch (SecurityException e) {
-				// they also happen
-			}
+			catch (LineUnavailableException | SecurityException ignored) {}
 
 			if (line != null && line.isOpen()) {
 				return line;
