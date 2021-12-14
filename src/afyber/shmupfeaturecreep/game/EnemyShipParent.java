@@ -14,8 +14,10 @@ public class EnemyShipParent extends DynamicObject {
 
 	@Override
 	public void postUpdate(WorldMiddleman world) {
-		if (world.isColliding(this, "player_bullet", false) && health != -100 && --health <= 0) {
+		int collide = world.isColliding(this, "player_bullet", false);
+		if (collide > 0 && health != -100 && --health <= 0) {
 			world.instanceDestroy(instanceID);
+			world.instanceDestroy(collide);
 			Sound.playSound("test");
 		}
 	}
