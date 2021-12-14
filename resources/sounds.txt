@@ -2,3 +2,4 @@
 test.wav:test
 alarm_titlescreen.wav:alarm
 loop:test.wav:alarm_titlescreen.wav:alarm2
+loop:test.wav:test.wav:alarm_titlescreen.wav:alarm3

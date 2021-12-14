@@ -17,7 +17,7 @@ public class BattleController extends DynamicObject {
 	public void create(WorldMiddleman world) {
 		Global.setIntGlobal("wave", 1);
 		Global.setIntGlobal("playerLevel", 2);
-		Sound.playSound("alarm2");
+		Sound.playSound("alarm3");
 	}
 
 	@Override

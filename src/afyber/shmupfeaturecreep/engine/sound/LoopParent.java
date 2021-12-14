@@ -7,6 +7,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Loops are different from other sounds because:
  * 1. They have multiple audio data in them
  * 2. They can handle both mono and stereo, for convenience
+ *
+ * @author afyber
  */
 public abstract class LoopParent {
 
@@ -30,9 +32,17 @@ public abstract class LoopParent {
 
 	public abstract int getChannels();
 
-	public abstract void play();
+	public void play() {
+		playingState.set(0);
+		bytePos = 0;
+		playing.set(true);
+	}
 
-	public abstract void stop();
+	public void stop() {
+		playingState.set(0);
+		bytePos = 0;
+		playing.set(false);
+	}
 
 	public void pause() {
 		playing.set(false);

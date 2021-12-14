@@ -10,7 +10,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
-
+/**
+ * Sounds, Roxanne. I was afraid of sounds.
+ *
+ * @author afyber
+ */
 public class Sound {
 	private Sound() {}
 
@@ -90,7 +94,7 @@ public class Sound {
 						registerBasicLoop("/sounds/" + split[0], "/sounds/" + split[1], split[2]);
 					}
 					else if (split.length == 4) {
-						// TODO: do complex loop (with three audio files, one intro, one for after the intro, and one for every subsequent loop)
+						registerComplexLoop("/sounds/" + split[0], "/sounds/" + split[1], "/sounds/" + split[2], split[3]);
 					}
 				}
 				else {
@@ -114,6 +118,17 @@ public class Sound {
 
 	public static void registerBasicLoop(String introFileName, String loopFileName, String soundName) {
 		LoopParent loop = loadBasicLoop(introFileName, loopFileName);
+
+		if (loop == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Registering loop with null loop reference");
+			return;
+		}
+
+		allLoops.put(soundName, loop);
+	}
+
+	public static void registerComplexLoop(String introFileName, String introLoopFileName, String loopLoopFileName, String soundName) {
+		LoopParent loop = loadComplexLoop(introFileName, introLoopFileName, loopLoopFileName);
 
 		if (loop == null) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Registering loop with null loop reference");
@@ -235,9 +250,9 @@ public class Sound {
 		return loadBasicLoop(url1, url2);
 	}
 
-	public static LoopParent loadBasicLoop(URL introFileName, URL loopFileName) {
-		AudioInputStream stream1 = getValidAudioInputStream(introFileName);
-		AudioInputStream stream2 = getValidAudioInputStream(loopFileName);
+	public static LoopParent loadBasicLoop(URL introFile, URL loopFile) {
+		AudioInputStream stream1 = getValidAudioInputStream(introFile);
+		AudioInputStream stream2 = getValidAudioInputStream(loopFile);
 
 		if (stream1 == null || stream2 == null) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load loop with null audio stream");
@@ -247,37 +262,81 @@ public class Sound {
 		int numChannels1 = stream1.getFormat().getChannels();
 		int numChannels2 = stream2.getFormat().getChannels();
 
+		byte[][] data1 = null;
+		byte[][] data2 = null;
 
 		if (numChannels1 == 1) {
-			byte[] data1 = readAllBytesMono(stream1);
-
-			if (numChannels2 == 1) {
-				byte[] data2 = readAllBytesMono(stream2);
-
-				return new BasicLoop(data1, data2);
-			}
-			else if (numChannels2 == 2) {
-				byte[][] data2 = readAllBytesStereo(stream2);
-
-				return new BasicLoop(data1, data2);
-			}
+			data1 = new byte[][]{ readAllBytesMono(stream1), null };
 		}
 		else if (numChannels1 == 2) {
-			byte[][] data1 = readAllBytesStereo(stream1);
-
-			if (numChannels2 == 1) {
-				byte[] data2 = readAllBytesMono(stream2);
-
-				return new BasicLoop(data1, data2);
-			}
-			else if (numChannels2 == 2) {
-				byte[][] data2 = readAllBytesStereo(stream2);
-
-				return new BasicLoop(data1, data2);
-			}
+			data1 = readAllBytesStereo(stream1);
+		}
+		if (numChannels2 == 1) {
+			data2 = new byte[][]{ readAllBytesMono(stream2), null };
+		}
+		else if (numChannels2 == 2) {
+			data2 = readAllBytesStereo(stream2);
 		}
 
-		return null;
+		if (data1 == null || data2 == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "An oopsie whoopsie happened when loading the audio data for a basic loop (too many channels?)");
+			return null;
+		}
+
+		return new BasicLoop(data1, data2, numChannels1, numChannels2);
+	}
+
+	public static LoopParent loadComplexLoop(String introFileName, String introLoopFileName, String loopLoopFileName) {
+		URL url1 = MainClass.class.getResource(introFileName);
+		URL url2 = MainClass.class.getResource(introLoopFileName);
+		URL url3 = MainClass.class.getResource(loopLoopFileName);
+
+		if (url1 == null || url2 == null || url3 == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load loop with null file reference");
+			return null;
+		}
+
+		return loadComplexLoop(url1, url2, url3);
+	}
+
+	public static LoopParent loadComplexLoop(URL introFile, URL introLoopFile, URL loopLoopFile) {
+		AudioInputStream introStream = getValidAudioInputStream(introFile);
+		AudioInputStream introLoopStream = getValidAudioInputStream(introLoopFile);
+		AudioInputStream loopLoopStream = getValidAudioInputStream(loopLoopFile);
+
+		int channels1 = introStream.getFormat().getChannels();
+		int channels2 = introLoopStream.getFormat().getChannels();
+		int channels3 = loopLoopStream.getFormat().getChannels();
+
+		byte[][] data1 = null;
+		byte[][] data2 = null;
+		byte[][] data3 = null;
+
+		if (channels1 == 1) {
+			data1 = new byte[][]{ readAllBytesMono(introStream), null };
+		}
+		else if (channels1 == 2) {
+			data1 = readAllBytesStereo(introStream);
+		}
+		if (channels2 == 1) {
+			data2 = new byte[][]{ readAllBytesMono(introLoopStream), null };
+		}
+		else if (channels2 == 2) {
+			data2 = readAllBytesStereo(introLoopStream);
+		}
+		if (channels3 == 1) {
+			data3 = new byte[][]{ readAllBytesMono(loopLoopStream), null };
+		}
+		else if (channels3 == 2) {
+			data3 = readAllBytesStereo(loopLoopStream);
+		}
+
+		if (data1 == null || data2 == null || data3 == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Null audio data when loading a complex loop (too many channels?)");
+			return null;
+		}
+
+		return new ComplexLoop(data1, data2, data3, channels1, channels2, channels3);
 	}
 
 	private static byte[] readAllBytesMono(AudioInputStream stream) {

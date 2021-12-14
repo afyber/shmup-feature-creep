@@ -2,6 +2,11 @@ package afyber.shmupfeaturecreep.engine.sound;
 
 import java.util.Arrays;
 
+/**
+ * ...
+ *
+ * @author afyber
+ */
 public class MonoSound extends SoundParent {
 
 	private final byte[] data;
@@ -37,7 +42,9 @@ public class MonoSound extends SoundParent {
 		bytePos += frames * 2;
 		if (bytePos >= data.length) {
 			if (loop.get()) {
-				bytePos -= data.length;
+				while (bytePos >= data.length) {
+					bytePos -= data.length;
+				}
 			}
 			else {
 				playing.set(false);

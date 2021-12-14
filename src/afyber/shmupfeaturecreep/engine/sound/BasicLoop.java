@@ -1,5 +1,10 @@
 package afyber.shmupfeaturecreep.engine.sound;
 
+/**
+ * "Basic" is going a little far
+ *
+ * @author afyber
+ */
 public class BasicLoop extends LoopParent {
 
 	private final byte[][] dataIntro;
@@ -8,43 +13,11 @@ public class BasicLoop extends LoopParent {
 	private final int introChannels;
 	private final int loopChannels;
 
-	public BasicLoop(byte[] dataIntro, byte[] dataLoop) {
-		this.dataIntro = new byte[][]{ dataIntro, null };
-		this.dataLoop = new byte[][]{ dataLoop, null };
-		this.introChannels = 1;
-		this.loopChannels = 1;
-	}
-	public BasicLoop(byte[][] dataIntro, byte[] dataLoop) {
-		this.dataIntro = dataIntro;
-		this.dataLoop = new byte[][]{ dataLoop, null };
-		this.introChannels = 2;
-		this.loopChannels = 1;
-	}
-	public BasicLoop(byte[] dataIntro, byte[][] dataLoop) {
-		this.dataIntro = new byte[][]{ dataIntro, null };
-		this.dataLoop = dataLoop;
-		this.introChannels = 1;
-		this.loopChannels = 2;
-	}
-	public BasicLoop(byte[][] dataIntro, byte[][] dataLoop) {
+	public BasicLoop(byte[][] dataIntro, byte[][] dataLoop, int introChannels, int loopChannels) {
 		this.dataIntro = dataIntro;
 		this.dataLoop = dataLoop;
-		this.introChannels = 2;
-		this.loopChannels = 2;
-	}
-
-	@Override
-	public void play() {
-		playingState.set(0);
-		bytePos = 0;
-		playing.set(true);
-	}
-
-	@Override
-	public void stop() {
-		playingState.set(0);
-		bytePos = 0;
-		playing.set(false);
+		this.introChannels = introChannels;
+		this.loopChannels = loopChannels;
 	}
 
 	@Override

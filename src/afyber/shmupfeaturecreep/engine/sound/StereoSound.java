@@ -2,6 +2,11 @@ package afyber.shmupfeaturecreep.engine.sound;
 
 import java.util.Arrays;
 
+/**
+ * Why do I feel the need to put one of these in for every class? I don't know!
+ *
+ * @author afyber
+ */
 public class StereoSound extends SoundParent {
 
 	private final byte[][] data;
@@ -40,9 +45,11 @@ public class StereoSound extends SoundParent {
 	@Override
 	public void skipFrames(int frames) {
 		bytePos += frames * 2;
-		if (bytePos >= data.length) {
+		if (bytePos >= data[0].length) {
 			if (loop.get()) {
-				bytePos -= data.length;
+				while (bytePos >= data[0].length) {
+					bytePos -= data[0].length;
+				}
 			}
 			else {
 				playing.set(false);
