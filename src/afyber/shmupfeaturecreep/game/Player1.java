@@ -8,7 +8,7 @@ import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class Player1 extends DynamicObject {
 
-	public Player1(float x, float y, int depth, int instanceID) {
+	public Player1(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "player_object";
 	}

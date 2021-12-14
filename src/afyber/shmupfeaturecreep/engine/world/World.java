@@ -152,14 +152,14 @@ public class World {
 		gameObjectsToRemove.add(new ObjectDestructionReference(false, -1, classRef));
 	}
 
-	public DynamicObject createInstance(String classRef, float x, float y, int depth) {
+	public DynamicObject createInstance(String classRef, double x, double y, int depth) {
 		return createInstance(classRef, x, y, 1, 1, depth);
 	}
-	public DynamicObject createInstance(String classRef, float x, float y, float imageXScale, float imageYScale, int depth) {
+	public DynamicObject createInstance(String classRef, double x, double y, double imageXScale, double imageYScale, int depth) {
 		if (Registry.hasObject(classRef)) {
 			Class<? extends DynamicObject> objectClass = Registry.getObject(classRef);
 			try {
-				Constructor<? extends DynamicObject> con = objectClass.getConstructor(Float.TYPE, Float.TYPE, Integer.TYPE, Integer.TYPE);
+				Constructor<? extends DynamicObject> con = objectClass.getConstructor(Double.TYPE, Double.TYPE, Integer.TYPE, Integer.TYPE);
 				DynamicObject newObject = con.newInstance(x, y, depth, getNextAvailableGameObjectID());
 				newObject.imageXScale = imageXScale;
 				newObject.imageYScale = imageYScale;
@@ -218,12 +218,12 @@ public class World {
 			return false;
 		}
 
-		int callerCorner1X = Math.round(caller.x - callerInfo.originX());
-		int callerCorner1Y = Math.round(caller.y - callerInfo.originY());
+		int callerCorner1X = (int)Math.round(caller.x - callerInfo.originX());
+		int callerCorner1Y = (int)Math.round(caller.y - callerInfo.originY());
 		int callerCorner2X = callerCorner1X + callerInfo.dataWidth();
 		int callerCorner2Y = callerCorner1Y + callerInfo.dataHeight();
-		int otherCorner1X = Math.round(other.x - otherInfo.originX());
-		int otherCorner1Y = Math.round(other.y - otherInfo.originY());
+		int otherCorner1X = (int)Math.round(other.x - otherInfo.originX());
+		int otherCorner1Y = (int)Math.round(other.y - otherInfo.originY());
 		int otherCorner2X = otherCorner1X + otherInfo.dataWidth();
 		int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight();
 

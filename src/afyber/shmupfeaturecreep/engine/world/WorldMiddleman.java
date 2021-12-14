@@ -34,7 +34,7 @@ public class WorldMiddleman {
 	 * @param depth The depth of the instance
 	 * @return The DynamicObject reference to the new instance, so you can change public fields
 	 */
-	public DynamicObject createInstance(String classRef, float x, float y, int depth) {
+	public DynamicObject createInstance(String classRef, double x, double y, int depth) {
 		return world.createInstance(classRef, x, y, depth);
 	}
 

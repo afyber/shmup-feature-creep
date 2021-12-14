@@ -7,7 +7,7 @@ public class TestInstanceClass extends DynamicObject {
 
 	private int siner;
 
-	public TestInstanceClass(float x, float y, int depth, int instanceID) {
+	public TestInstanceClass(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "test_1";
 	}
@@ -21,7 +21,7 @@ public class TestInstanceClass extends DynamicObject {
 
 	@Override
 	public void update(WorldMiddleman world) {
-		imageXScale = (float)(Math.sin(Math.toRadians(siner))) * 3;
+		imageXScale = Math.sin(Math.toRadians(siner)) * 3;
 		//imageYScale = (float)(Math.sin(Math.toRadians(siner + 95))) * 2.4f;
 		siner++;
 	}

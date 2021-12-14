@@ -6,7 +6,7 @@ import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class TestInstanceClass2 extends DynamicObject {
 
-	public TestInstanceClass2(float x, float y, int depth, int instanceID) {
+	public TestInstanceClass2(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 	}
 

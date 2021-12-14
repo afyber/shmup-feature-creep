@@ -43,7 +43,7 @@ public class EngineLogger {
 			if (writeToFile && level.getValue() >= lowestAllowedLevel.getValue()) {
 				Files.writeString(Path.of(filename), "[" + level.name() + "] " + msg + "\n" + e.getMessage() + "\n", StandardOpenOption.APPEND);
 			}
-			System.out.print("[" + level.name() + "] " + msg +"\n" + e.getMessage() + "\n");
+			System.out.print("[" + level.name() + "] " + msg + "\n" + e.toString() + "\n");
 		}
 		catch (IOException ex) {
 			System.out.println("IOError when attempting to log");
