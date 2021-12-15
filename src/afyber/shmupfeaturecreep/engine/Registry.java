@@ -39,9 +39,7 @@ public class Registry {
 	}
 
 	public static void registerObjectAsChildOf(String objectName, String objectParentName) {
-		if (!dynamicObjectChildRegistry.containsKey(objectParentName)) {
-			dynamicObjectChildRegistry.put(objectParentName, new ArrayList<>());
-		}
+		dynamicObjectChildRegistry.computeIfAbsent(objectParentName, val -> new ArrayList<>());
 		dynamicObjectChildRegistry.get(objectParentName).add(objectName);
 	}
 

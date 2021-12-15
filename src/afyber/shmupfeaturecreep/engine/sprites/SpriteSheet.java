@@ -77,7 +77,7 @@ public class SpriteSheet {
 		}
 	}
 
-	private static void setupSprites(String dataString, Map<String, SpriteSheetRegion> map) throws IOException {
+	private static void setupSprites(String dataString, Map<String, SpriteSheetRegion> map) {
 		String name;
 		int x;
 		int y;

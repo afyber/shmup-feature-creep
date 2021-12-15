@@ -4,7 +4,7 @@
 
 Shmup: Feature Creep is a small 2D game engine project that I started like a month ago and have now decided to put on GitHub.
 
-It is very unfinished.
+It is very unfinished. Most of the `game` code is just placeholder and testing code.
 
 ### Compiling
 

@@ -41,6 +41,10 @@ public class GeneralUtil {
 	}
 
 	public static CompactFrameArray arrayOfArraysToSingleArray(int[][] a) {
+		if (a.length == 0) {
+			return new CompactFrameArray(new int[0], 0);
+		}
+
 		int[] newArray = new int[a.length * a[0].length];
 		int dataWidth = a[0].length;
 		for (int i = 0; i < a.length; i++) {
