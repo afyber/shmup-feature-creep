@@ -28,14 +28,7 @@ public class ComplexLoop extends LoopParent {
 	public int[] readFrame() {
 		int[] retur = null;
 		if (playingState.get() == 0) {
-			if (introChannels == 1) {
-				retur = new int[1];
-				retur[0] = dataIntro[0][bytePos + 1] << 8 | dataIntro[0][bytePos] & 0xFF;
-			} else if (introChannels == 2) {
-				retur = new int[2];
-				retur[0] = dataIntro[0][bytePos + 1] << 8 | dataIntro[0][bytePos] & 0xFF;
-				retur[1] = dataIntro[1][bytePos + 1] << 8 | dataIntro[1][bytePos] & 0xFF;
-			}
+			retur = readFrameFromArray(dataIntro, introChannels);
 
 			bytePos += 2;
 
@@ -45,14 +38,7 @@ public class ComplexLoop extends LoopParent {
 			}
 		}
 		else if (playingState.get() == 1) {
-			if (introLoopChannels == 1) {
-				retur = new int[1];
-				retur[0] = dataIntroLoop[0][bytePos + 1] << 8 | dataIntroLoop[0][bytePos] & 0xFF;
-			} else if (introLoopChannels == 2) {
-				retur = new int[2];
-				retur[0] = dataIntroLoop[0][bytePos + 1] << 8 | dataIntroLoop[0][bytePos] & 0xFF;
-				retur[1] = dataIntroLoop[1][bytePos + 1] << 8 | dataIntroLoop[1][bytePos] & 0xFF;
-			}
+			retur = readFrameFromArray(dataIntroLoop, introLoopChannels);
 
 			bytePos += 2;
 
@@ -62,14 +48,7 @@ public class ComplexLoop extends LoopParent {
 			}
 		}
 		else if (playingState.get() == 2) {
-			if (loopLoopChannels == 1) {
-				retur = new int[1];
-				retur[0] = dataLoopLoop[0][bytePos + 1] << 8 | dataLoopLoop[0][bytePos] & 0xFF;
-			} else if (loopLoopChannels == 2) {
-				retur = new int[2];
-				retur[0] = dataLoopLoop[0][bytePos + 1] << 8 | dataLoopLoop[0][bytePos] & 0xFF;
-				retur[1] = dataLoopLoop[1][bytePos + 1] << 8 | dataLoopLoop[1][bytePos] & 0xFF;
-			}
+			retur = readFrameFromArray(dataLoopLoop, loopLoopChannels);
 
 			bytePos += 2;
 
@@ -79,6 +58,21 @@ public class ComplexLoop extends LoopParent {
 		}
 
 		return retur;
+	}
+
+	private int[] readFrameFromArray(byte[][] data, int channels) {
+		int[] frame = null;
+		if (channels == 1) {
+			frame = new int[1];
+			frame[0] = data[0][bytePos + 1] << 8 | data[0][bytePos] & 0xFF;
+		}
+		else if (channels == 2) {
+			frame = new int[2];
+			frame[0] = data[0][bytePos + 1] << 8 | data[0][bytePos] & 0xFF;
+			frame[1] = data[1][bytePos + 1] << 8 | data[1][bytePos] & 0xFF;
+		}
+
+		return frame;
 	}
 
 	@Override
