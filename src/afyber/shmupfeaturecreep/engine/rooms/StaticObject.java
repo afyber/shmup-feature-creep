@@ -1,6 +1,6 @@
 package afyber.shmupfeaturecreep.engine.rooms;
 
-import afyber.shmupfeaturecreep.engine.Screen;
+import afyber.shmupfeaturecreep.engine.screen.Screen;
 
 /**
  * Once again we have here a class that does things, but this time while standing still not doing things

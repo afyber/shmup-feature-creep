@@ -1,6 +1,6 @@
 package afyber.shmupfeaturecreep.engine.rooms;
 
-import afyber.shmupfeaturecreep.engine.Screen;
+import afyber.shmupfeaturecreep.engine.screen.Screen;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 import java.util.Arrays;

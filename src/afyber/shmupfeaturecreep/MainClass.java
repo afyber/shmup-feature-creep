@@ -1,12 +1,12 @@
 package afyber.shmupfeaturecreep;
 
 import afyber.shmupfeaturecreep.engine.Registry;
-import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.Timing;
 import afyber.shmupfeaturecreep.engine.errors.RoomNotDefinedError;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
+import afyber.shmupfeaturecreep.engine.screen.Screen;
 import afyber.shmupfeaturecreep.engine.sound.Sound;
 import afyber.shmupfeaturecreep.engine.world.World;
 

@@ -1,6 +1,8 @@
-package afyber.shmupfeaturecreep.engine;
+package afyber.shmupfeaturecreep.engine.screen;
 
 import afyber.shmupfeaturecreep.MainClass;
+import afyber.shmupfeaturecreep.engine.CompactFrameArray;
+import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.errors.SpriteSheetsNotDefinedError;
 import afyber.shmupfeaturecreep.engine.input.KeyboardHandler;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
@@ -106,18 +108,34 @@ public class Screen {
 	public static void draw(String spriteName, double x, double y, double xScale, double yScale, int depth, double alpha) {
 		if (isDrawing) {
 			try {
-				drawRequests.add(new DrawRequest(spriteName, (int)Math.round(x), (int)Math.round(y), xScale, yScale, depth, alpha));
+				drawRequests.add(new SpriteDrawRequest(spriteName, (int)Math.round(x), (int)Math.round(y), xScale, yScale, depth, alpha));
 			} catch (NullPointerException e) {
 				MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
 		}
 	}
 
-	public static void drawRect(float x1, float y1, float x2, float y2, Color color, int depth) {
+	public static void drawRect(double x1, double y1, double x2, double y2, Color color, int depth) {
 		drawRect(x1, y1, x2, y2, color.getRGB(), depth);
 	}
-	public static void drawRect(float x1, float y1, float x2, float y2, int rgbColor, int depth) {
-		// TODO
+	public static void drawRect(double x1, double y1, double x2, double y2, int rgbColor, int depth) {
+		if (isDrawing) {
+			try {
+				if (x1 > x2) {
+					double tmp = x1;
+					x1 = x2;
+					x2 = tmp;
+				}
+				if (y1 > y2) {
+					double tmp = y1;
+					y1 = y2;
+					y2 = tmp;
+				}
+				drawRequests.add(new RectangleDrawRequest((int)Math.round(x1), (int)Math.round(y1), (int)Math.round(x2), (int)Math.round(y2), rgbColor, depth));
+			} catch (NullPointerException e) {
+				MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
+			}
+		}
 	}
 
 	public static void clearAllPixelsToColor(Color color) {
@@ -144,9 +162,21 @@ public class Screen {
 
 		// draw the things in order
 		for (DrawRequest request: drawRequests) {
-			if (allSprites.containsKey(request.spriteName())) {
-				SpriteSheetRegion region = allSprites.get(request.spriteName());
-				copySpriteRegionToFrame(region, request);
+			switch (request.getType()) {
+				case SPRITE -> {
+					SpriteDrawRequest requestConvert = (SpriteDrawRequest)request;
+					if (allSprites.containsKey(requestConvert.spriteName())) {
+						SpriteSheetRegion region = allSprites.get(requestConvert.spriteName());
+						copySpriteRegionToFrame(region, requestConvert);
+					}
+				}
+				case RECT -> {
+					RectangleDrawRequest requestConvert = (RectangleDrawRequest)request;
+					applyRectToFrame(requestConvert);
+				}
+				case LINE -> {
+					// TODO
+				}
 			}
 		}
 		// get rid of them all (we processed them all anyways)
@@ -159,13 +189,13 @@ public class Screen {
 		panel.repaint();
 	}
 
-	private static void copySpriteRegionToFrame(SpriteSheetRegion sprite, DrawRequest request) {
+	private static void copySpriteRegionToFrame(SpriteSheetRegion sprite, SpriteDrawRequest request) {
 		// all this to say, if the sprite does not overlap the image, do not draw it
 		int actualX = request.x() - (int)Math.round(sprite.originX() * request.xScale());
 		int actualY = request.y() - (int)Math.round(sprite.originY() * request.yScale());
 		int actualX2 = actualX + (int)Math.round(sprite.dataWidth() * request.xScale());
 		int actualY2 = actualY + (int)Math.round(sprite.dataHeight() * request.yScale());
-		if (!GeneralUtil.areRectanglesIntersecting(actualX, actualY, actualX2, actualY2, 0, 0, MainClass.WINDOW_WIDTH - 1, MainClass.WINDOW_HEIGHT - 1)) {
+		if (!GeneralUtil.areRectanglesIntersecting(actualX, actualY, actualX2, actualY2, 0, 0, image.getWidth() - 1, image.getHeight() - 1)) {
 			return;
 		}
 
@@ -193,6 +223,23 @@ public class Screen {
 					double percentage = ((float)(spriteData[y][x] >> 24 & 0xFF) / 0xFF) * alphaPercent;
 					currentFrame[calculatedY][calculatedX] = 0xFF000000 | Math.min(0xFF, (int)((currentFrame[calculatedY][calculatedX] >> 16 & 0xFF) * (1 - percentage) + (spriteData[y][x] >> 16 & 0xFF) * percentage)) << 16 | Math.min(0xFF, (int)((currentFrame[calculatedY][calculatedX] >> 8 & 0xFF) * (1 - percentage) + (spriteData[y][x] >> 8 & 0xFF) * percentage)) << 8 | Math.min(0xFF, (int)((currentFrame[calculatedY][calculatedX] & 0xFF) * (1 - percentage) + (spriteData[y][x] & 0xFF) * percentage));
 				}
+			}
+		}
+	}
+
+	private static void applyRectToFrame(RectangleDrawRequest request) {
+		if (!GeneralUtil.areRectanglesIntersecting(request.x1(), request.y1(), request.x2(), request.y2(), 0, 0, image.getWidth() - 1, image.getHeight() - 1)) {
+			return;
+		}
+
+		for (int y = request.y1(); y < request.y2(); y++) {
+			for (int x = request.x1(); x < request.x2(); x++) {
+				if (y < 0 || y >= image.getHeight() ||
+				    x < 0 || x >= image.getWidth()) {
+					continue;
+				}
+
+				currentFrame[y][x] = request.rgbColor();
 			}
 		}
 	}
@@ -372,6 +419,4 @@ public class Screen {
 			g2d.drawImage(image, 0, 0, MainClass.WINDOW_WIDTH, MainClass.WINDOW_HEIGHT, null);
 		}
 	}
-
-	private record DrawRequest(String spriteName, int x, int y, double xScale, double yScale, int depth, double alpha) {}
 }

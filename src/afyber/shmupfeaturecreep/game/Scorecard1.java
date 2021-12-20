@@ -2,6 +2,7 @@ package afyber.shmupfeaturecreep.game;
 
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
+import afyber.shmupfeaturecreep.engine.screen.Screen;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class Scorecard1 extends DynamicObject {
@@ -13,6 +14,6 @@ public class Scorecard1 extends DynamicObject {
 
 	@Override
 	public void draw(WorldMiddleman world) {
-		draw("vertical_border", MainClass.WINDOW_WIDTH * 3f/4f, 0, 1, MainClass.WINDOW_HEIGHT);
+		Screen.drawRect(MainClass.WINDOW_WIDTH * 3f/4f, 0, MainClass.WINDOW_WIDTH * 3f/4f + 3, MainClass.WINDOW_HEIGHT, 0xFFFFFF, 0);
 	}
 }

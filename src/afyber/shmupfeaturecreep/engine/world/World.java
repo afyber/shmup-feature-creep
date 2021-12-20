@@ -3,13 +3,13 @@ package afyber.shmupfeaturecreep.engine.world;
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.Registry;
-import afyber.shmupfeaturecreep.engine.Screen;
 import afyber.shmupfeaturecreep.engine.errors.ObjectNotDefinedError;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.rooms.ObjectCreationReference;
 import afyber.shmupfeaturecreep.engine.rooms.Room;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
+import afyber.shmupfeaturecreep.engine.screen.Screen;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteInformation;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
 
