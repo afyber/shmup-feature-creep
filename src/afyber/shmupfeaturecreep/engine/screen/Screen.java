@@ -120,6 +120,10 @@ public class Screen {
 	}
 	public static void drawRect(double x1, double y1, double x2, double y2, int rgbColor, int depth) {
 		if (isDrawing) {
+			if ((rgbColor >> 24 & 0xFF) == 0x0) {
+				rgbColor = 0xFF000000 | rgbColor;
+			}
+
 			try {
 				if (x1 > x2) {
 					double tmp = x1;
@@ -142,7 +146,17 @@ public class Screen {
 		drawLine(x1, y1, x2, y2, width, color.getRGB(), depth);
 	}
 	public static void drawLine(double x1, double y1, double x2, double y2, double width, int rgbColor, int depth) {
-		drawRequests.add(new LineDrawRequest((int)Math.round(x1), (int)Math.round(y1), (int)Math.round(x2), (int)Math.round(y2), (int)Math.floor(width), rgbColor, depth));
+		if (isDrawing) {
+			if ((rgbColor >> 24 & 0xFF) == 0x0) {
+				rgbColor = 0xFF000000 | rgbColor;
+			}
+
+			try {
+				drawRequests.add(new LineDrawRequest((int)Math.round(x1), (int)Math.round(y1), (int)Math.round(x2), (int)Math.round(y2), (int)Math.floor(width), rgbColor, depth));
+			} catch (NullPointerException e) {
+				MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
+			}
+		}
 	}
 
 	public static void clearAllPixelsToColor(Color color) {
@@ -223,14 +237,7 @@ public class Screen {
 					continue;
 				}
 
-				if ((spriteData[y][x] >> 24 & 0xFF) == 0xFF && alphaPercent == 1) {
-					currentFrame[calculatedY][calculatedX] = spriteData[y][x];
-				}
-				else if ((spriteData[y][x] >> 24 & 0xFF) != 0x0 && alphaPercent > 0) {
-					// basically takes a weighted average of the R, G, and B components of the sprite and the current frame, with the weight being the alpha of the sprite being drawn
-					double percentage = ((float)(spriteData[y][x] >> 24 & 0xFF) / 0xFF) * alphaPercent;
-					currentFrame[calculatedY][calculatedX] = 0xFF000000 | Math.min(0xFF, (int)((currentFrame[calculatedY][calculatedX] >> 16 & 0xFF) * (1 - percentage) + (spriteData[y][x] >> 16 & 0xFF) * percentage)) << 16 | Math.min(0xFF, (int)((currentFrame[calculatedY][calculatedX] >> 8 & 0xFF) * (1 - percentage) + (spriteData[y][x] >> 8 & 0xFF) * percentage)) << 8 | Math.min(0xFF, (int)((currentFrame[calculatedY][calculatedX] & 0xFF) * (1 - percentage) + (spriteData[y][x] & 0xFF) * percentage));
-				}
+				applyPixelToFrameWithAlpha(calculatedX, calculatedY, spriteData[y][x], alphaPercent);
 			}
 		}
 	}
@@ -242,12 +249,7 @@ public class Screen {
 
 		for (int y = request.y1(); y < request.y2(); y++) {
 			for (int x = request.x1(); x < request.x2(); x++) {
-				if (y < 0 || y >= image.getHeight() ||
-				    x < 0 || x >= image.getWidth()) {
-					continue;
-				}
-
-				currentFrame[y][x] = request.rgbColor();
+				applyPixelToFrame(x, y, request.rgbColor());
 			}
 		}
 	}
@@ -264,6 +266,25 @@ public class Screen {
 		else {
 			// This is a diagonal line, this is where it gets complicated
 			// TODO
+		}
+	}
+
+	private static void applyPixelToFrame(int x, int y, int rgbColor) {
+		applyPixelToFrameWithAlpha(x, y, rgbColor, 1);
+	}
+	private static void applyPixelToFrameWithAlpha(int x, int y, int rgbColor, double alpha) {
+		if (y < 0 || y >= image.getHeight() ||
+				x < 0 || x >= image.getWidth()) {
+			return;
+		}
+
+		if (alpha == 1 && (rgbColor >> 24 & 0xFF) == 0xFF) {
+			currentFrame[y][x] = rgbColor;
+		}
+		if (alpha > 0 && (rgbColor >> 24 & 0xFF) > 0x0) {
+			// basically takes a weighted average of the R, G, and B components of the sprite and the current frame, with the weight being the alpha of the sprite being drawn
+			double percentage = ((float)(rgbColor >> 24 & 0xFF) / 0xFF) * alpha;
+			currentFrame[y][x] = 0xFF000000 | Math.min(0xFF, (int)((currentFrame[y][x] >> 16 & 0xFF) * (1 - percentage) + (rgbColor >> 16 & 0xFF) * percentage)) << 16 | Math.min(0xFF, (int)((currentFrame[y][x] >> 8 & 0xFF) * (1 - percentage) + (rgbColor >> 8 & 0xFF) * percentage)) << 8 | Math.min(0xFF, (int)((currentFrame[y][x] & 0xFF) * (1 - percentage) + (rgbColor & 0xFF) * percentage));
 		}
 	}
 
