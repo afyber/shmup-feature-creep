@@ -138,6 +138,13 @@ public class Screen {
 		}
 	}
 
+	public static void drawLine(double x1, double y1, double x2, double y2, double width, Color color, int depth) {
+		drawLine(x1, y1, x2, y2, width, color.getRGB(), depth);
+	}
+	public static void drawLine(double x1, double y1, double x2, double y2, double width, int rgbColor, int depth) {
+		drawRequests.add(new LineDrawRequest((int)Math.round(x1), (int)Math.round(y1), (int)Math.round(x2), (int)Math.round(y2), (int)Math.floor(width), rgbColor, depth));
+	}
+
 	public static void clearAllPixelsToColor(Color color) {
 		clearAllPixelsToColor(color.getRGB());
 	}
@@ -175,7 +182,8 @@ public class Screen {
 					applyRectToFrame(requestConvert);
 				}
 				case LINE -> {
-					// TODO
+					LineDrawRequest requestConvert = (LineDrawRequest)request;
+					applyLineToFrame(requestConvert);
 				}
 			}
 		}
@@ -241,6 +249,21 @@ public class Screen {
 
 				currentFrame[y][x] = request.rgbColor();
 			}
+		}
+	}
+
+	private static void applyLineToFrame(LineDrawRequest request) {
+		if (request.x1() == request.x2()) {
+			// This is a vertical line
+			applyRectToFrame(new RectangleDrawRequest(request.x1() - request.width() / 2, request.y1(), request.x2() + request.width() / 2 + 1, request.y2(), request.rgbColor(), request.depth()));
+		}
+		else if (request.y1() == request.y2()) {
+			// This is a horizontal line
+			applyRectToFrame(new RectangleDrawRequest(request.x1(), request.y1() - request.width() / 2, request.x2(), request.y2() + request.width() / 2 + 1, request.rgbColor(), request.depth()));
+		}
+		else {
+			// This is a diagonal line, this is where it gets complicated
+			// TODO
 		}
 	}
 
@@ -368,7 +391,6 @@ public class Screen {
 		return info;
 	}
 
-	// TODO: check accuracy against getSpriteScaled
 	public static SpriteInformation getScaledSpriteInfo(String spriteName, double xScale, double yScale) {
 		SpriteInformation info = getSpriteInfo(spriteName);
 		if (info != null) {

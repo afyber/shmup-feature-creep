@@ -14,6 +14,6 @@ public class Scorecard1 extends DynamicObject {
 
 	@Override
 	public void draw(WorldMiddleman world) {
-		Screen.drawRect(MainClass.WINDOW_WIDTH * 3f/4f, 0, MainClass.WINDOW_WIDTH * 3f/4f + 3, MainClass.WINDOW_HEIGHT, 0xFFFFFF, 0);
+		Screen.drawLine(MainClass.WINDOW_WIDTH * 3.0/4.0, 0, MainClass.WINDOW_WIDTH * 3.0/4.0, MainClass.WINDOW_HEIGHT, 3, 0xFFFFFF, 0);
 	}
 }
