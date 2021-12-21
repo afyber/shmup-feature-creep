@@ -225,17 +225,12 @@ public class Screen {
 
 		SpriteSheetRegion scaledSprite = scaleImageData(sprite.data(), request.xScale(), request.yScale(), sprite.originX(), sprite.originY());
 		int[][] spriteData = scaledSprite.data();
-		double alphaPercent = Math.min(1, request.alpha());
+		double alphaPercent = Math.max(Math.min(1, request.alpha()), 0);
 
 		for (int y = 0; y < scaledSprite.dataHeight(); y++) {
 			for (int x = 0; x < scaledSprite.dataWidth(); x++) {
 				int calculatedX = request.x() + x - scaledSprite.originX();
 				int calculatedY = request.y() + y - scaledSprite.originY();
-				if (calculatedX < 0 || calculatedX >= image.getWidth() ||
-						calculatedY < 0 || calculatedY >= image.getHeight()) {
-					// if this pixel is not on-screen, do not attempt to draw it
-					continue;
-				}
 
 				applyPixelToFrameWithAlpha(calculatedX, calculatedY, spriteData[y][x], alphaPercent);
 			}
