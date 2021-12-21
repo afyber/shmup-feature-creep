@@ -17,7 +17,7 @@ public class BattleController extends DynamicObject {
 	public void create(WorldMiddleman world) {
 		Global.setIntGlobal("wave", 1);
 		Global.setIntGlobal("playerLevel", 2);
-		Sound.playSound("alarm3");
+		Sound.playSound("megalo");
 	}
 
 	@Override
@@ -29,18 +29,6 @@ public class BattleController extends DynamicObject {
 			for (int i = 0; i < 10; i++) {
 				world.createInstance("enemy_ship_cannon_fodder", 32 + i * 63, -50 - i * 20, 0);
 			}
-		}
-		if (Keyboard.keyJustDown("b")) {
-			Sound.pauseSound("alarm2");
-		}
-		if (Keyboard.keyJustDown("n")) {
-			Sound.resumeSound("alarm2");
-		}
-		if (Keyboard.keyJustDown("m")) {
-			Sound.playSound("alarm2");
-		}
-		if (Keyboard.keyJustDown("v")) {
-			Sound.stopSound("alarm2");
 		}
 	}
 }
