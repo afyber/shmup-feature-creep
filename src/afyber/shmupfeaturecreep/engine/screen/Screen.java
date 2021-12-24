@@ -33,11 +33,14 @@ public class Screen {
 	private static int[][] currentFrame;
 	private static boolean isDrawing;
 
+	private static String currentFont;
+
 	private static boolean windowClosed;
 
 	private static ArrayList<DrawRequest> drawRequests;
 
 	private static HashMap<String, SpriteSheetRegion> allSprites;
+	private static HashMap<String, Font> allFonts;
 
 	public static void setupScreen(String name, int width, int height) {
 		setupScreen(name, width, height, false);
@@ -80,8 +83,11 @@ public class Screen {
 		drawRequests = new ArrayList<>();
 
 		allSprites = new HashMap<>();
+		allFonts = new HashMap<>();
 
 		loadSpriteSheets();
+
+		loadFonts();
 	}
 
 	private static void loadSpriteSheets() {
@@ -95,6 +101,24 @@ public class Screen {
 			}
 		}
 		catch (IOException e) {
+			throw new SpriteSheetsNotDefinedError();
+		}
+	}
+
+	private static void loadFonts() {
+		try {
+			String[] allData = GeneralUtil.readResourceToString("/fonts.txt").split("\r\n");
+
+			for (String line: allData) {
+				if (!line.startsWith("//")) {
+					Font newFont = new Font("/fonts/" + line);
+
+					allFonts.put(line, newFont);
+
+					currentFont = line;
+				}
+			}
+		} catch (IOException e) {
 			throw new SpriteSheetsNotDefinedError();
 		}
 	}
@@ -159,6 +183,19 @@ public class Screen {
 		}
 	}
 
+	public static void drawText(String message, double x, double y, int depth) {
+		drawText(message, x, y, -1, depth);
+	}
+	public static void drawText(String message, double x, double y, double wrapWidth, int depth) {
+		if (isDrawing) {
+			try {
+				drawRequests.add(new TextDrawRequest(message, currentFont, (int)Math.round(x), (int)Math.round(y), (int)Math.round(wrapWidth), depth));
+			} catch (NullPointerException e) {
+				MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
+			}
+		}
+	}
+
 	public static void clearAllPixelsToColor(Color color) {
 		clearAllPixelsToColor(color.getRGB());
 	}
@@ -199,6 +236,10 @@ public class Screen {
 					LineDrawRequest requestConvert = (LineDrawRequest)request;
 					applyLineToFrame(requestConvert);
 				}
+				case TEXT -> {
+					TextDrawRequest requestConvert = (TextDrawRequest)request;
+					applyTextToFrame(requestConvert);
+				}
 			}
 		}
 		// get rid of them all (we processed them all anyways)
@@ -237,6 +278,16 @@ public class Screen {
 		}
 	}
 
+	private static void applySpriteDataToFrame(int[][] data, int x, int y) {
+		// less efficient sometimes, faster other times
+
+		for (int i = 0; i < data.length; i++) {
+			for (int c = 0; c < data[0].length; c++) {
+				applyPixelToFrame(x + c, y + i, data[i][c]);
+			}
+		}
+	}
+
 	private static void applyRectToFrame(RectangleDrawRequest request) {
 		if (!GeneralUtil.areRectanglesIntersecting(request.x1(), request.y1(), request.x2(), request.y2(), 0, 0, image.getWidth() - 1, image.getHeight() - 1)) {
 			return;
@@ -261,6 +312,44 @@ public class Screen {
 		else {
 			// This is a diagonal line, this is where it gets complicated
 			// TODO
+		}
+	}
+
+	private static void applyTextToFrame(TextDrawRequest request) {
+		int runningX = 0;
+		int runningY = 0;
+
+		Font font;
+		if (allFonts.containsKey(request.font())) {
+			font = allFonts.get(request.font());
+		}
+		else {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Could not draw text: invalid or missing font");
+			return;
+		}
+
+		for (int i = 0; i < request.message().length(); i++) {
+			if (runningX > request.wrapWidth()) {
+				runningY += font.getLineHeight();
+				runningX = 0;
+			}
+
+			char current = request.message().charAt(i);
+
+			if (current == ' ') {
+				runningX += font.getSpaceWidth();
+			}
+			else {
+				FontCharacter character = font.getCharacter(current);
+				if (character != null) {
+					applySpriteDataToFrame(character.imageData(), request.x() + runningX + character.xOffs(), request.y() + runningY + character.yOffs());
+
+					runningX += character.xOffs() + character.imageWidth() + character.nextXOffs();
+				}
+				else {
+					runningX += font.getSpaceWidth();
+				}
+			}
 		}
 	}
 

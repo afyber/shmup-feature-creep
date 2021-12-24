@@ -82,6 +82,7 @@ public class Sound {
 
 		Thread updaterThread = new Thread(updater);
 		try {
+			updaterThread.setName("EngineAudioUpdater");
 			updaterThread.setDaemon(true);
 			updaterThread.setPriority(Thread.MAX_PRIORITY);
 		}
