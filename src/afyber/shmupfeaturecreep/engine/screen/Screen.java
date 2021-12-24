@@ -347,6 +347,7 @@ public class Screen {
 					runningX += character.xOffs() + character.imageWidth() + character.nextXOffs();
 				}
 				else {
+					// The character is not in the font-set
 					runningX += font.getSpaceWidth();
 				}
 			}
@@ -365,7 +366,7 @@ public class Screen {
 		if (alpha == 1 && (rgbColor >> 24 & 0xFF) == 0xFF) {
 			currentFrame[y][x] = rgbColor;
 		}
-		if (alpha > 0 && (rgbColor >> 24 & 0xFF) > 0x0) {
+		else if (alpha > 0 && (rgbColor >> 24 & 0xFF) > 0x0) {
 			// basically takes a weighted average of the R, G, and B components of the sprite and the current frame, with the weight being the alpha of the sprite being drawn
 			double percentage = ((float)(rgbColor >> 24 & 0xFF) / 0xFF) * alpha;
 			currentFrame[y][x] = 0xFF000000 | Math.min(0xFF, (int)((currentFrame[y][x] >> 16 & 0xFF) * (1 - percentage) + (rgbColor >> 16 & 0xFF) * percentage)) << 16 | Math.min(0xFF, (int)((currentFrame[y][x] >> 8 & 0xFF) * (1 - percentage) + (rgbColor >> 8 & 0xFF) * percentage)) << 8 | Math.min(0xFF, (int)((currentFrame[y][x] & 0xFF) * (1 - percentage) + (rgbColor & 0xFF) * percentage));

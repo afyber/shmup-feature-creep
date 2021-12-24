@@ -31,7 +31,10 @@ public class MainClass {
 		}
 		LOGGER.log(LoggingLevel.DEBUG, "Program start");
 
-		Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT, true);
+		boolean splashScreen = MainClass.class.getResource("/splashscreen.png") != null;
+		if (splashScreen) {
+			Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT, true);
+		}
 
 		Sound.init();
 
@@ -42,6 +45,10 @@ public class MainClass {
 		Timing.setIdealFrameTimeMillis((long)Math.ceil(1000.0/IDEAL_FPS));
 
 		Keyboard.clearKeys();
+
+		if (!splashScreen) {
+			Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT, false);
+		}
 
 		World world;
 		if (Registry.hasRoom("roomStart")) {
