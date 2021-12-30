@@ -316,39 +316,56 @@ public class Screen {
 	}
 
 	private static void applyTextToFrame(TextDrawRequest request) {
-		int runningX = 0;
-		int runningY = 0;
-
 		Font font;
 		if (allFonts.containsKey(request.font())) {
 			font = allFonts.get(request.font());
 		}
 		else {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Could not draw text: invalid or missing font");
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Could not draw text: invalid or missing font \"" + request.font() + "\"");
 			return;
 		}
 
+		int runningX = 0;
+		int runningY = 0;
+
 		for (int i = 0; i < request.message().length(); i++) {
-			if (runningX > request.wrapWidth()) {
-				runningY += font.getLineHeight();
-				runningX = 0;
-			}
 
 			char current = request.message().charAt(i);
 
 			if (current == ' ') {
-				runningX += font.getSpaceWidth();
+				// this code being duped is very annoying
+				if (runningX + font.getSpaceWidth() > request.wrapWidth()) {
+					runningX = font.getSpaceWidth();
+					runningY += font.getLineHeight();
+				}
+				else {
+					runningX += font.getSpaceWidth();
+				}
 			}
 			else {
 				FontCharacter character = font.getCharacter(current);
 				if (character != null) {
+					// most of the magic happens in here
+
+					// if this character will go past the wrap width, and we have drawn a character this line, wrap around
+					if (runningX != 0 && runningX + character.imageWidth() > request.wrapWidth()) {
+						runningX = 0;
+						runningY += font.getLineHeight();
+					}
+
 					applySpriteDataToFrame(character.imageData(), request.x() + runningX + character.xOffs(), request.y() + runningY + character.yOffs());
 
 					runningX += character.xOffs() + character.imageWidth() + character.nextXOffs();
 				}
 				else {
-					// The character is not in the font-set
-					runningX += font.getSpaceWidth();
+					// The character is not in the font-set, also make sure to wrap, even for whitespace
+					if (runningX + font.getSpaceWidth() > request.wrapWidth()) {
+						runningX = font.getSpaceWidth();
+						runningY += font.getLineHeight();
+					}
+					else {
+						runningX += font.getSpaceWidth();
+					}
 				}
 			}
 		}
