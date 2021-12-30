@@ -225,7 +225,7 @@ public class Screen {
 					SpriteDrawRequest requestConvert = (SpriteDrawRequest)request;
 					if (allSprites.containsKey(requestConvert.spriteName())) {
 						SpriteSheetRegion region = allSprites.get(requestConvert.spriteName());
-						copySpriteRegionToFrame(region, requestConvert);
+						applySpriteRequestToFrame(region, requestConvert);
 					}
 				}
 				case RECT -> {
@@ -252,7 +252,7 @@ public class Screen {
 		panel.repaint();
 	}
 
-	private static void copySpriteRegionToFrame(SpriteSheetRegion sprite, SpriteDrawRequest request) {
+	private static void applySpriteRequestToFrame(SpriteSheetRegion sprite, SpriteDrawRequest request) {
 		// all this to say, if the sprite does not overlap the image, do not draw it
 		int actualX = request.x() - (int)Math.round(sprite.originX() * request.xScale());
 		int actualY = request.y() - (int)Math.round(sprite.originY() * request.yScale());
@@ -332,41 +332,28 @@ public class Screen {
 
 			char current = request.message().charAt(i);
 
-			if (current == ' ') {
-				// this code being duped is very annoying
-				if (runningX + font.getSpaceWidth() > request.wrapWidth()) {
-					runningX = font.getSpaceWidth();
+			FontCharacter character = font.getCharacter(current);
+
+			if (character == null || current == ' ') {
+				// The character is either an actual space, or not in the font-set, also make sure to wrap, even for whitespace
+				if (runningX != 0 && runningX + font.getSpaceWidth() > request.wrapWidth()) {
+					runningX = 0;
 					runningY += font.getLineHeight();
 				}
-				else {
-					runningX += font.getSpaceWidth();
-				}
+				runningX += font.getSpaceWidth();
 			}
 			else {
-				FontCharacter character = font.getCharacter(current);
-				if (character != null) {
-					// most of the magic happens in here
+				// most of the magic happens in here
 
-					// if this character will go past the wrap width, and we have drawn a character this line, wrap around
-					if (runningX != 0 && runningX + character.imageWidth() > request.wrapWidth()) {
-						runningX = 0;
-						runningY += font.getLineHeight();
-					}
-
-					applySpriteDataToFrame(character.imageData(), request.x() + runningX + character.xOffs(), request.y() + runningY + character.yOffs());
-
-					runningX += character.xOffs() + character.imageWidth() + character.nextXOffs();
+				// if this character will go past the wrap width, and we have drawn a character this line, wrap around
+				if (runningX != 0 && runningX + character.imageWidth() > request.wrapWidth()) {
+					runningX = 0;
+					runningY += font.getLineHeight();
 				}
-				else {
-					// The character is not in the font-set, also make sure to wrap, even for whitespace
-					if (runningX + font.getSpaceWidth() > request.wrapWidth()) {
-						runningX = font.getSpaceWidth();
-						runningY += font.getLineHeight();
-					}
-					else {
-						runningX += font.getSpaceWidth();
-					}
-				}
+
+				applySpriteDataToFrame(character.imageData(), request.x() + runningX + character.xOffs(), request.y() + runningY + character.yOffs());
+
+				runningX += character.xOffs() + character.imageWidth() + character.nextXOffs();
 			}
 		}
 	}
@@ -384,7 +371,7 @@ public class Screen {
 			currentFrame[y][x] = rgbColor;
 		}
 		else if (alpha > 0 && (rgbColor >> 24 & 0xFF) > 0x0) {
-			// basically takes a weighted average of the R, G, and B components of the sprite and the current frame, with the weight being the alpha of the sprite being drawn
+			// basically takes a weighted average of the R, G, and B components of the pixel and the current frame, with the weight being the alpha of the sprite being drawn
 			double percentage = ((float)(rgbColor >> 24 & 0xFF) / 0xFF) * alpha;
 			currentFrame[y][x] = 0xFF000000 | Math.min(0xFF, (int)((currentFrame[y][x] >> 16 & 0xFF) * (1 - percentage) + (rgbColor >> 16 & 0xFF) * percentage)) << 16 | Math.min(0xFF, (int)((currentFrame[y][x] >> 8 & 0xFF) * (1 - percentage) + (rgbColor >> 8 & 0xFF) * percentage)) << 8 | Math.min(0xFF, (int)((currentFrame[y][x] & 0xFF) * (1 - percentage) + (rgbColor & 0xFF) * percentage));
 		}
