@@ -269,7 +269,7 @@ public class Sound {
 		}
 	}
 
-	public static void musicSetGain(String soundName, double gain) {
+	public static void setMusicGain(String soundName, double gain) {
 		if (!ready) {
 			return;
 		}
@@ -284,6 +284,24 @@ public class Sound {
 		}
 		if (allLoops.containsKey(soundName)) {
 			allLoops.get(soundName).setGain(gain);
+		}
+	}
+
+	public static void setMusicPanning(String soundName, double pan) {
+		if (!ready) {
+			return;
+		}
+
+		if (pan < -1.0) {
+			pan = -1.0;
+		} else if (pan > 1.0) {
+			pan = 1.0;
+		}
+		if (allMusic.containsKey(soundName)) {
+			allMusic.get(soundName).setPanning(pan);
+		}
+		if (allLoops.containsKey(soundName)) {
+			allLoops.get(soundName).setPanning(pan);
 		}
 	}
 
@@ -324,6 +342,26 @@ public class Sound {
 			for (SoundInstance sound: mixer.playingSounds) {
 				if (sound.getSoundRefName().equals(soundName)) {
 					sound.setGain(gain);
+				}
+			}
+		}
+	}
+
+	public static void setSoundPanning(String soundName, double pan) {
+		if (!ready) {
+			return;
+		}
+
+		if (allSounds.containsKey(soundName)) {
+			if (pan < -1.0) {
+				pan = -1.0;
+			} else if (pan > 1.0) {
+				pan = 1.0;
+			}
+
+			for (SoundInstance sound: mixer.playingSounds) {
+				if (sound.getSoundRefName().equals(soundName)) {
+					sound.setPanning(pan);
 				}
 			}
 		}

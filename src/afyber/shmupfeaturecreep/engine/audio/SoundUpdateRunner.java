@@ -53,7 +53,7 @@ public class SoundUpdateRunner implements Runnable {
 		byte[] audioBuffer = new byte[bufferSize];
 
 		// NOTE: increasing the maximum frames per update has a band-aid effect on the below issue, but is an inconsistent fix
-		int maxFramesPerUpdate = (int)((Sound.FORMAT.getFrameRate() / 1000) * 40);
+		int maxFramesPerUpdate = (int)((Sound.FORMAT.getFrameRate() / 1000) * 200);
 		int numBytesRead = 0;
 		double framesAccrued = 0;
 		long lastUpdate = System.nanoTime();

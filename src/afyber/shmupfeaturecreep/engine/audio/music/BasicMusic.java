@@ -49,6 +49,6 @@ public class BasicMusic extends MusicParent {
 
 	@Override
 	public int getChannels() {
-		return 1;
+		return channels;
 	}
 }

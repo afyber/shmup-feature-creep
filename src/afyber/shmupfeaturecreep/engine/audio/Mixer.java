@@ -66,8 +66,8 @@ public class Mixer {
 						int[] val = sound.readFrame();
 						double currVal = val[0] * volume;
 
-						leftVal += currVal;
-						rightVal += currVal;
+						leftVal += currVal * (sound.panning <= 0 ? 1 : 1 - sound.panning);
+						rightVal += currVal * (sound.panning >= 0 ? 1 : 1 + sound.panning);
 
 						readBytes = true;
 					} else if (sound.getChannels() == 2) {
@@ -75,8 +75,13 @@ public class Mixer {
 						double currLeft = vals[0] * volume;
 						double currRight = vals[1] * volume;
 
-						leftVal += currLeft;
-						rightVal += currRight;
+						double ll = currLeft * (sound.panning <= 0 ? 1 : 1 - sound.panning);
+						double lr = currLeft * (sound.panning <= 0 ? 0 : sound.panning);
+						double rr = currRight * (sound.panning >= 0 ? 1 : 1 + sound.panning);
+						double rl = currRight * (sound.panning >= 0 ? 0 : -sound.panning);
+
+						leftVal += ll + rl;
+						rightVal += rr + lr;
 
 						readBytes = true;
 					}
@@ -94,8 +99,8 @@ public class Mixer {
 						int[] val = music.readFrame();
 						double currVal = val[0] * volume;
 
-						leftVal += currVal;
-						rightVal += currVal;
+						leftVal += currVal * (music.panning <= 0 ? 1 : 1 - music.panning);
+						rightVal += currVal * (music.panning >= 0 ? 1 : 1 + music.panning);
 
 						readBytes = true;
 					} else if (music.getChannels() == 2) {
@@ -103,8 +108,13 @@ public class Mixer {
 						double currLeft = vals[0] * volume;
 						double currRight = vals[1] * volume;
 
-						leftVal += currLeft;
-						rightVal += currRight;
+						double ll = currLeft * (music.panning <= 0 ? 1 : 1 - music.panning);
+						double lr = currLeft * (music.panning <= 0 ? 0 : music.panning);
+						double rr = currRight * (music.panning >= 0 ? 1 : 1 + music.panning);
+						double rl = currRight * (music.panning >= 0 ? 0 : -music.panning);
+
+						leftVal += ll + rl;
+						rightVal += rr + lr;
 
 						readBytes = true;
 					}
@@ -118,8 +128,8 @@ public class Mixer {
 						int[] val = loop.readFrame();
 						double currVal = val[0] * volume;
 
-						leftVal += currVal;
-						rightVal += currVal;
+						leftVal += currVal * (loop.panning <= 0 ? 1 : 1 - loop.panning);
+						rightVal += currVal * (loop.panning >= 0 ? 1 : 1 + loop.panning);
 
 						readBytes = true;
 					} else if (loop.getChannels() == 2) {
@@ -127,8 +137,13 @@ public class Mixer {
 						double currLeft = vals[0] * volume;
 						double currRight = vals[1] * volume;
 
-						leftVal += currLeft;
-						rightVal += currRight;
+						double ll = currLeft * (loop.panning <= 0 ? 1 : 1 - loop.panning);
+						double lr = currLeft * (loop.panning <= 0 ? 0 : loop.panning);
+						double rr = currRight * (loop.panning >= 0 ? 1 : 1 + loop.panning);
+						double rl = currRight * (loop.panning >= 0 ? 0 : -loop.panning);
+
+						leftVal += ll + rl;
+						rightVal += rr + lr;
 
 						readBytes = true;
 					}
