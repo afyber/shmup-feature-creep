@@ -2,12 +2,12 @@ package afyber.shmupfeaturecreep;
 
 import afyber.shmupfeaturecreep.engine.Registry;
 import afyber.shmupfeaturecreep.engine.Timing;
+import afyber.shmupfeaturecreep.engine.audio.Sound;
 import afyber.shmupfeaturecreep.engine.errors.RoomNotDefinedError;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 import afyber.shmupfeaturecreep.engine.screen.Screen;
-import afyber.shmupfeaturecreep.engine.sound.Sound;
 import afyber.shmupfeaturecreep.engine.world.World;
 
 import java.awt.*;
@@ -61,6 +61,7 @@ public class MainClass {
 
 		LOGGER.log(LoggingLevel.DEBUG, "Main loop start");
 
+		// ======== MAIN LOOP ========
 		while (!Screen.isWindowClosed()) {
 			Timing.mainLoopBodyStarted();
 
@@ -101,13 +102,7 @@ public class MainClass {
 			Keyboard.frameDone();
 
 			Timing.mainLoopBodyEnded();
-			try {
-				Timing.calculateTimeAndWaitThread();
-			}
-			catch (InterruptedException e) {
-				LOGGER.log(LoggingLevel.ERROR, "For some reason an InterruptedException happened while waiting the main thread:", e);
-				Thread.currentThread().interrupt();
-			}
+			Timing.calculateTimeAndWaitThread();
 		}
 
 		LOGGER.log(LoggingLevel.DEBUG, "Main loop end");

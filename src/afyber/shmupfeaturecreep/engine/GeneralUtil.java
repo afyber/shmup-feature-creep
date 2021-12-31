@@ -34,6 +34,15 @@ public class GeneralUtil {
 		}
 	}
 
+	public static void sleepHandlingInterrupt(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "InterruptedException occurred waiting in the main thread", e);
+			Thread.currentThread().interrupt();
+		}
+	}
+
 	public static boolean areRectanglesIntersecting(int c1X, int c1Y, int c2X, int c2Y, int o1X, int o1Y, int o2X, int o2Y) {
 		// this works because corner #1 is always the top left and corner #2 is always the bottom right,
 		// if that ever becomes not true this function will no longer work

@@ -20,9 +20,9 @@ public class Timing {
 		lastMeasuredEndMillis = System.currentTimeMillis();
 	}
 
-	public static long calculateTimeAndWaitThread() throws InterruptedException {
+	public static long calculateTimeAndWaitThread() {
 		if (lastMeasuredEndMillis - lastMeasuredStartMillis < idealFrameTimeMillis) {
-			Thread.sleep(idealFrameTimeMillis - (lastMeasuredEndMillis - lastMeasuredStartMillis));
+			GeneralUtil.sleepHandlingInterrupt(idealFrameTimeMillis - (lastMeasuredEndMillis - lastMeasuredStartMillis));
 		}
 		return (lastMeasuredEndMillis - lastMeasuredStartMillis);
 	}
