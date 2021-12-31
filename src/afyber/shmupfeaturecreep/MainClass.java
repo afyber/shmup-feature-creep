@@ -1,5 +1,6 @@
 package afyber.shmupfeaturecreep;
 
+import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.Registry;
 import afyber.shmupfeaturecreep.engine.Timing;
 import afyber.shmupfeaturecreep.engine.audio.Sound;
@@ -45,6 +46,9 @@ public class MainClass {
 		Timing.setIdealFrameTimeMillis((long)Math.ceil(1000.0/IDEAL_FPS));
 
 		Keyboard.clearKeys();
+
+		// NOTE: This fixes an audio bug where audio that plays on game start skips a few thousand frames DO NOT REMOVE IT
+		GeneralUtil.sleepHandlingInterrupt(200);
 
 		if (!splashScreen) {
 			Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT, false);

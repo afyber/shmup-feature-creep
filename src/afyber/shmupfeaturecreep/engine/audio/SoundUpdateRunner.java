@@ -52,13 +52,11 @@ public class SoundUpdateRunner implements Runnable {
 		int bufferSize = (int)Sound.FORMAT.getFrameRate() * Sound.FORMAT.getFrameSize();
 		byte[] audioBuffer = new byte[bufferSize];
 
-		// NOTE: increasing the maximum frames per update has a band-aid effect on the below issue, but is an inconsistent fix
-		int maxFramesPerUpdate = (int)((Sound.FORMAT.getFrameRate() / 1000) * 200);
+		int maxFramesPerUpdate = (int)((Sound.FORMAT.getFrameRate() / 1000) * 25);
 		int numBytesRead = 0;
 		double framesAccrued = 0;
 		long lastUpdate = System.nanoTime();
 
-		// FIXME: The first time this loop processes audio it will almost always skip frames and I'm not sure why
 		while (this.running.get()) {
 
 			long currTime = System.nanoTime();

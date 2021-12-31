@@ -18,7 +18,6 @@ public class BattleController extends DynamicObject {
 		Global.setIntGlobal("wave", 1);
 		Global.setIntGlobal("playerLevel", 2);
 		Sound.loopMusic("untitled");
-		Sound.setMusicPanning("untitled", -1);
 	}
 
 	@Override
