@@ -31,9 +31,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SoundUpdateRunner implements Runnable {
 
-	private AtomicBoolean running;
-	private SourceDataLine outLine;
-	private Mixer mixer;
+	private final AtomicBoolean running;
+	private final SourceDataLine outLine;
+	private final Mixer mixer;
 
 	public SoundUpdateRunner(Mixer mixer, SourceDataLine outLine) {
 		running = new AtomicBoolean();

@@ -21,12 +21,14 @@ public abstract class LoopParent extends AudioParent {
 		this.volume = 1.0;
 	}
 
+	@Override
 	public void play() {
 		playingState.set(0);
 		bytePos = 0;
 		playing.set(true);
 	}
 
+	@Override
 	public void stop() {
 		playingState.set(0);
 		bytePos = 0;
