@@ -75,7 +75,6 @@ public class SoundUpdateRunner implements Runnable {
 
 			if (framesToSkip > 0) {
 				mixer.skipFrames(framesToSkip);
-				System.out.println("Skipped " + framesToSkip + " frames");
 			}
 
 			if (framesToRead > 0) {

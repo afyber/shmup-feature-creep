@@ -106,6 +106,7 @@ public class MainClass {
 			Keyboard.frameDone();
 
 			Timing.mainLoopBodyEnded();
+			// wait until the next frame
 			Timing.calculateTimeAndWaitThread();
 		}
 

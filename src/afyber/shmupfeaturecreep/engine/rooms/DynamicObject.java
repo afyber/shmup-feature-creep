@@ -29,8 +29,10 @@ public class DynamicObject {
 	public double imageXScale = 1;
 	public double imageYScale = 1;
 
-	public String spriteIndex = "";
-	public String collisionIndex = "";
+	public String sprite = "";
+	public double spriteIndex = 0;
+	public double imageSpeed = 0;
+	public String collision = "";
 
 	public float xSpeed = 0;
 	public float ySpeed = 0;
@@ -130,25 +132,25 @@ public class DynamicObject {
 
 	protected final void drawSelf() {
 		if (visible) {
-			draw(spriteIndex, x, y, imageXScale, imageYScale);
+			draw(sprite, spriteIndex, x, y, imageXScale, imageYScale);
 		}
 	}
 
-	protected final void drawSimple(String spriteIndex, double x, double y) {
+	protected final void drawSimple(String sprite, double spriteIndex, double x, double y) {
 		if (visible) {
-			Screen.draw(spriteIndex, x, y, depth);
+			Screen.draw(sprite, spriteIndex, x, y, depth);
 		}
 	}
 
-	protected final void draw(String spriteIndex, double x, double y, double xScale, double yScale) {
+	protected final void draw(String sprite, double spriteIndex, double x, double y, double xScale, double yScale) {
 		if (visible) {
-			Screen.draw(spriteIndex, x, y, xScale, yScale, depth);
+			Screen.draw(sprite, spriteIndex, x, y, xScale, yScale, depth);
 		}
 	}
 
-	protected final void drawExtended(String spriteIndex, float x, float y, float xScale, float yScale, float alpha) {
+	protected final void drawExtended(String sprite, double spriteIndex, double x, double y, double xScale, double yScale, double alpha) {
 		if (visible) {
-			Screen.draw(spriteIndex, x, y, xScale, yScale, depth, alpha);
+			Screen.draw(sprite, spriteIndex, x, y, xScale, yScale, depth, alpha);
 		}
 	}
 }

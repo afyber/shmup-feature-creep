@@ -12,8 +12,8 @@ public class EnemyShipCannonFodder extends EnemyShipParent {
 
 	@Override
 	public void create(WorldMiddleman world) {
-		spriteIndex = "enemy_ship_cannon_fodder";
-		collisionIndex = "enemy_ship_cannon_fodder";
+		sprite = "enemy_ship_cannon_fodder";
+		collision = "enemy_ship_cannon_fodder";
 		imageXScale = 3;
 		imageYScale = 3;
 		health = 1;

@@ -81,6 +81,7 @@ public class World {
 
 	public void physicsUpdateAll() {
 		for (DynamicObject object: allGameObjects) {
+			object.spriteIndex += object.imageSpeed;
 			object.x += object.xSpeed;
 			object.y += object.ySpeed;
 		}
@@ -211,8 +212,8 @@ public class World {
 			return false;
 		}
 
-		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(caller.collisionIndex, caller.imageXScale, caller.imageYScale);
-		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(other.collisionIndex, other.imageXScale, other.imageYScale);
+		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(caller.collision, 0, caller.imageXScale, caller.imageYScale);
+		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(other.collision, 0, other.imageXScale, other.imageYScale);
 
 		if (otherInfo == null || callerInfo == null) {
 			return false;
@@ -229,8 +230,8 @@ public class World {
 
 		if (GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
 				otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y)) {
-			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(caller.collisionIndex, caller.imageXScale, caller.imageYScale);
-			SpriteSheetRegion otherRegion = Screen.getSpriteScaled(other.collisionIndex, other.imageXScale, other.imageYScale);
+			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(caller.collision, 0, caller.imageXScale, caller.imageYScale);
+			SpriteSheetRegion otherRegion = Screen.getSpriteScaled(other.collision, 0, other.imageXScale, other.imageYScale);
 
 			if (otherRegion == null || callerRegion == null) {
 				return false;

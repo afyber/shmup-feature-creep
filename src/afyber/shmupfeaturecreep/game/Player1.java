@@ -15,14 +15,18 @@ public class Player1 extends DynamicObject {
 
 	@Override
 	public void create(WorldMiddleman world) {
-		spriteIndex = "player_sprite_normal";
-		collisionIndex = "player_sprite_normal";
+		sprite = "player_sprite_normal";
+		collision = "player_sprite_normal";
 		imageXScale = 2;
 		imageYScale = 2;
+		imageSpeed = 0.1;
 	}
 
 	@Override
 	public void update(WorldMiddleman world) {
+		if (spriteIndex >= 2) {
+			spriteIndex = 0;
+		}
 		float movementFactor = 6;
 		if (Keyboard.keyDown("left")) {
 			x -= movementFactor;

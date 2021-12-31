@@ -17,8 +17,8 @@ public class EnemyShip1L extends EnemyShipParent {
 
 	@Override
 	public void create(WorldMiddleman world) {
-		spriteIndex = "enemy_ship_1_L";
-		collisionIndex = "enemy_ship_1_L";
+		sprite = "enemy_ship_1_L";
+		collision = "enemy_ship_1_L";
 		imageXScale = 2;
 		imageYScale = 2;
 		targetX = 200;

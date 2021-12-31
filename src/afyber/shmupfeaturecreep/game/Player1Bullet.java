@@ -12,8 +12,8 @@ public class Player1Bullet extends DynamicObject {
 
 	@Override
 	public void create(WorldMiddleman world) {
-		spriteIndex = "player_bullet";
-		collisionIndex = "player_bullet";
+		sprite = "player_bullet";
+		collision = "player_bullet";
 		ySpeed = -11;
 	}
 

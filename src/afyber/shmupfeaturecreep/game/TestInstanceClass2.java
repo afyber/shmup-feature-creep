@@ -12,7 +12,7 @@ public class TestInstanceClass2 extends DynamicObject {
 
 	@Override
 	public void create(WorldMiddleman world) {
-		spriteIndex = "sprite_1";
+		sprite = "sprite_1";
 	}
 
 	@Override

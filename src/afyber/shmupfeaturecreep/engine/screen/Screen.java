@@ -6,6 +6,7 @@ import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.errors.SpriteSheetsNotDefinedError;
 import afyber.shmupfeaturecreep.engine.input.KeyboardHandler;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
+import afyber.shmupfeaturecreep.engine.sprites.Sprite;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteInformation;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheet;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
@@ -39,7 +40,7 @@ public class Screen {
 
 	private static ArrayList<DrawRequest> drawRequests;
 
-	private static HashMap<String, SpriteSheetRegion> allSprites;
+	private static HashMap<String, Sprite> allSprites;
 	private static HashMap<String, Font> allFonts;
 
 	public static void setupScreen(String name, int width, int height) {
@@ -123,16 +124,16 @@ public class Screen {
 		}
 	}
 
-	public static void draw(String spriteName, double x, double y, int depth) {
-		draw(spriteName, x, y, 1, 1, depth);
+	public static void draw(String spriteName, double spriteIndex, double x, double y, int depth) {
+		draw(spriteName, spriteIndex, x, y, 1, 1, depth);
 	}
-	public static void draw(String spriteName, double x, double y, double xScale, double yScale, int depth) {
-		draw(spriteName, x, y, xScale, yScale, depth, 1);
+	public static void draw(String spriteName, double spriteIndex, double x, double y, double xScale, double yScale, int depth) {
+		draw(spriteName, spriteIndex, x, y, xScale, yScale, depth, 1);
 	}
-	public static void draw(String spriteName, double x, double y, double xScale, double yScale, int depth, double alpha) {
+	public static void draw(String spriteName, double spriteIndex, double x, double y, double xScale, double yScale, int depth, double alpha) {
 		if (isDrawing) {
 			try {
-				drawRequests.add(new SpriteDrawRequest(spriteName, (int)Math.round(x), (int)Math.round(y), xScale, yScale, depth, alpha));
+				drawRequests.add(new SpriteDrawRequest(spriteName, (int)spriteIndex, (int)Math.round(x), (int)Math.round(y), xScale, yScale, depth, alpha));
 			} catch (NullPointerException e) {
 				MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
@@ -224,7 +225,8 @@ public class Screen {
 				case SPRITE -> {
 					SpriteDrawRequest requestConvert = (SpriteDrawRequest)request;
 					if (allSprites.containsKey(requestConvert.spriteName())) {
-						SpriteSheetRegion region = allSprites.get(requestConvert.spriteName());
+						Sprite sprite = allSprites.get(requestConvert.spriteName());
+						SpriteSheetRegion region = sprite.getFrame(requestConvert.spriteIndex());
 						applySpriteRequestToFrame(region, requestConvert);
 					}
 				}
@@ -473,18 +475,18 @@ public class Screen {
 		return new SpriteSheetRegion(newDataY, newX, newY, newXOrigin, newYOrigin);
 	}
 
-	public static SpriteSheetRegion getSprite(String spriteName) {
+	public static SpriteSheetRegion getSprite(String spriteName, int spriteIndex) {
 		SpriteSheetRegion region = null;
 		if (allSprites.containsKey(spriteName)) {
-			region = allSprites.get(spriteName);
+			region = allSprites.get(spriteName).getFrame(spriteIndex);
 		}
 		return region;
 	}
 
-	public static SpriteSheetRegion getSpriteScaled(String spriteName, double xScale, double yScale) {
+	public static SpriteSheetRegion getSpriteScaled(String spriteName, int spriteIndex, double xScale, double yScale) {
 		SpriteSheetRegion region = null;
 		if (allSprites.containsKey(spriteName)) {
-			region = allSprites.get(spriteName);
+			region = allSprites.get(spriteName).getFrame(spriteIndex);
 		}
 		if (region != null) {
 			return scaleImageData(region.data(), xScale, yScale, region.originX(), region.originY());
@@ -492,17 +494,17 @@ public class Screen {
 		return null;
 	}
 
-	public static SpriteInformation getSpriteInfo(String spriteName) {
+	public static SpriteInformation getSpriteInfo(String spriteName, int spriteIndex) {
 		SpriteInformation info = null;
 		if (allSprites.containsKey(spriteName)) {
-			SpriteSheetRegion tmp = allSprites.get(spriteName);
+			SpriteSheetRegion tmp = allSprites.get(spriteName).getFrame(spriteIndex);
 			info = new SpriteInformation(tmp.dataWidth(), tmp.dataHeight(), tmp.originX(), tmp.originY());
 		}
 		return info;
 	}
 
-	public static SpriteInformation getScaledSpriteInfo(String spriteName, double xScale, double yScale) {
-		SpriteInformation info = getSpriteInfo(spriteName);
+	public static SpriteInformation getScaledSpriteInfo(String spriteName, int spriteIndex, double xScale, double yScale) {
+		SpriteInformation info = getSpriteInfo(spriteName, spriteIndex);
 		if (info != null) {
 			int newOriginX;
 			int newOriginY;

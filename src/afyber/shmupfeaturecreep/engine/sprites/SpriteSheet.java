@@ -19,7 +19,7 @@ public class SpriteSheet {
 
 	private static int[][] imageData;
 
-	public static void loadSpriteSheet(String imageName, Map<String, SpriteSheetRegion> out) {
+	public static void loadSpriteSheet(String imageName, Map<String, Sprite> out) {
 		PngReaderInt imageReader;
 		try {
 			imageReader = new PngReaderInt(MainClass.class.getResourceAsStream(imageName + ".png"));
@@ -77,8 +77,8 @@ public class SpriteSheet {
 		}
 	}
 
-	private static void setupSprites(String dataString, Map<String, SpriteSheetRegion> map) {
-		String name;
+	private static void setupSprites(String dataString, Map<String, Sprite> map) {
+		int frame;
 		int x;
 		int y;
 		int width;
@@ -89,7 +89,7 @@ public class SpriteSheet {
 		String[] allInfoSplit = dataString.split("\r\n");
 
 
-		for (String section: allInfoSplit) {
+		/*for (String section: allInfoSplit) {
 			String[] splitMore = section.split(":");
 			name = splitMore[0];
 
@@ -107,6 +107,53 @@ public class SpriteSheet {
 			}
 			SpriteSheetRegion region = new SpriteSheetRegion(newData, width, height, originX, originY);
 			map.put(name, region);
+		}*/
+
+		int line = 0;
+		Sprite currentSprite = null;
+		String currentName = null;
+
+		while (line < allInfoSplit.length) {
+			String currentLine = allInfoSplit[line];
+
+			if (Character.isAlphabetic(currentLine.charAt(0))) {
+				if (currentSprite != null) {
+					if (currentName == null) {
+						MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sprite definition");
+					}
+					else {
+						map.put(currentName, currentSprite);
+					}
+				}
+
+				String[] split = currentLine.split(":");
+				currentName = split[0];
+				int frames = Integer.parseInt(split[1]);
+
+				currentSprite = new Sprite(frames);
+			}
+			else if (Character.isDigit(currentLine.charAt(0))) {
+				String[] splitMore = currentLine.split(":");
+				frame = Integer.parseInt(splitMore[0]);
+
+				String[] splitEvenMore = splitMore[1].split(",");
+				x = Integer.parseInt(splitEvenMore[0]);
+				y = Integer.parseInt(splitEvenMore[1]);
+				width = Integer.parseInt(splitEvenMore[2]);
+				height = Integer.parseInt(splitEvenMore[3]);
+				originX = Integer.parseInt(splitEvenMore[4]);
+				originY = Integer.parseInt(splitEvenMore[5]);
+
+				int[][] newData = new int[height][width];
+				for (int i = 0; i < height; i++) {
+					System.arraycopy(imageData[i + y], x, newData[i], 0, width);
+				}
+				SpriteSheetRegion region = new SpriteSheetRegion(newData, width, height, originX, originY);
+
+				currentSprite.setFrame(region, frame);
+			}
+
+			line++;
 		}
 	}
 }
