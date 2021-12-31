@@ -2,6 +2,7 @@ package afyber.shmupfeaturecreep.engine.input;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashMap;
 
 /**
  * This class is the KeyListener attached to the custom JFrame
@@ -9,6 +10,13 @@ import java.awt.event.KeyListener;
  * @author afyber
  */
 public class KeyboardHandler implements KeyListener {
+	
+	private final HashMap<Integer, String> keyMap = new HashMap<>();
+	
+	public KeyboardHandler() {
+		super();
+		setupKeyMap();
+	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -30,56 +38,57 @@ public class KeyboardHandler implements KeyListener {
 	}
 
 	private String getKeyName(int keyCode) {
-		return switch(keyCode) {
-			case KeyEvent.VK_UP: yield "up";
-			case KeyEvent.VK_DOWN: yield "down";
-			case KeyEvent.VK_LEFT: yield "left";
-			case KeyEvent.VK_RIGHT: yield "right";
-			case KeyEvent.VK_ESCAPE: yield "escape";
-			case KeyEvent.VK_ENTER: yield "enter";
-			case KeyEvent.VK_BACK_SPACE: yield "backspace";
-			case KeyEvent.VK_COMMA: yield "comma";
-			case KeyEvent.VK_PERIOD: yield "period";
-			case KeyEvent.VK_SLASH: yield "slash";
-			case KeyEvent.VK_BACK_SLASH: yield "backslash";
-			case KeyEvent.VK_SEMICOLON: yield "semicolon";
-			case KeyEvent.VK_1: yield "1";
-			case KeyEvent.VK_2: yield "2";
-			case KeyEvent.VK_3: yield "3";
-			case KeyEvent.VK_4: yield "4";
-			case KeyEvent.VK_5: yield "5";
-			case KeyEvent.VK_6: yield "6";
-			case KeyEvent.VK_7: yield "7";
-			case KeyEvent.VK_8: yield "8";
-			case KeyEvent.VK_9: yield "9";
-			case KeyEvent.VK_0: yield "0";
-			case KeyEvent.VK_Q: yield "q";
-			case KeyEvent.VK_W: yield "w";
-			case KeyEvent.VK_E: yield "e";
-			case KeyEvent.VK_R: yield "r";
-			case KeyEvent.VK_T: yield "t";
-			case KeyEvent.VK_Y: yield "y";
-			case KeyEvent.VK_U: yield "u";
-			case KeyEvent.VK_I: yield "i";
-			case KeyEvent.VK_O: yield "o";
-			case KeyEvent.VK_P: yield "p";
-			case KeyEvent.VK_A: yield "a";
-			case KeyEvent.VK_S: yield "s";
-			case KeyEvent.VK_D: yield "d";
-			case KeyEvent.VK_F: yield "f";
-			case KeyEvent.VK_G: yield "g";
-			case KeyEvent.VK_H: yield "h";
-			case KeyEvent.VK_J: yield "j";
-			case KeyEvent.VK_K: yield "k";
-			case KeyEvent.VK_L: yield "l";
-			case KeyEvent.VK_Z: yield "z";
-			case KeyEvent.VK_X: yield "x";
-			case KeyEvent.VK_C: yield "c";
-			case KeyEvent.VK_V: yield "v";
-			case KeyEvent.VK_B: yield "b";
-			case KeyEvent.VK_N: yield "n";
-			case KeyEvent.VK_M: yield "m";
-			default: yield null;
-		};
+		return keyMap.get(keyCode);
+	}
+	
+	private void setupKeyMap() {
+		keyMap.put(KeyEvent.VK_UP, "up");
+		keyMap.put(KeyEvent.VK_DOWN, "down");
+		keyMap.put(KeyEvent.VK_LEFT, "left");
+		keyMap.put(KeyEvent.VK_RIGHT, "right");
+		keyMap.put(KeyEvent.VK_ESCAPE, "escape");
+		keyMap.put(KeyEvent.VK_ENTER, "enter");
+		keyMap.put(KeyEvent.VK_BACK_SPACE, "backspace");
+		keyMap.put(KeyEvent.VK_COMMA, "comma");
+		keyMap.put(KeyEvent.VK_PERIOD, "period");
+		keyMap.put(KeyEvent.VK_SLASH, "slash");
+		keyMap.put(KeyEvent.VK_BACK_SLASH, "backslash");
+		keyMap.put(KeyEvent.VK_SEMICOLON, "semicolon");
+		keyMap.put(KeyEvent.VK_1, "1");
+		keyMap.put(KeyEvent.VK_2, "2");
+		keyMap.put(KeyEvent.VK_3, "3");
+		keyMap.put(KeyEvent.VK_4, "4");
+		keyMap.put(KeyEvent.VK_5, "5");
+		keyMap.put(KeyEvent.VK_6, "6");
+		keyMap.put(KeyEvent.VK_7, "7");
+		keyMap.put(KeyEvent.VK_8, "8");
+		keyMap.put(KeyEvent.VK_9, "9");
+		keyMap.put(KeyEvent.VK_0, "0");
+		keyMap.put(KeyEvent.VK_Q, "q");
+		keyMap.put(KeyEvent.VK_W, "w");
+		keyMap.put(KeyEvent.VK_E, "e");
+		keyMap.put(KeyEvent.VK_R, "r");
+		keyMap.put(KeyEvent.VK_T, "t");
+		keyMap.put(KeyEvent.VK_Y, "y");
+		keyMap.put(KeyEvent.VK_U, "u");
+		keyMap.put(KeyEvent.VK_I, "i");
+		keyMap.put(KeyEvent.VK_O, "o");
+		keyMap.put(KeyEvent.VK_P, "p");
+		keyMap.put(KeyEvent.VK_A, "a");
+		keyMap.put(KeyEvent.VK_S, "s");
+		keyMap.put(KeyEvent.VK_D, "d");
+		keyMap.put(KeyEvent.VK_F, "f");
+		keyMap.put(KeyEvent.VK_G, "g");
+		keyMap.put(KeyEvent.VK_H, "h");
+		keyMap.put(KeyEvent.VK_J, "j");
+		keyMap.put(KeyEvent.VK_K, "k");
+		keyMap.put(KeyEvent.VK_L, "l");
+		keyMap.put(KeyEvent.VK_Z, "z");
+		keyMap.put(KeyEvent.VK_X, "x");
+		keyMap.put(KeyEvent.VK_C, "c");
+		keyMap.put(KeyEvent.VK_V, "v");
+		keyMap.put(KeyEvent.VK_B, "b");
+		keyMap.put(KeyEvent.VK_N, "n");
+		keyMap.put(KeyEvent.VK_M, "m");
 	}
 }

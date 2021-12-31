@@ -96,7 +96,7 @@ public class MainClass {
 
 			Screen.applyDrawRequestsAndPaint();
 
-			// perform physics
+			// perform physics (and other calculations)
 			world.physicsUpdateAll();
 
 			// alarm code

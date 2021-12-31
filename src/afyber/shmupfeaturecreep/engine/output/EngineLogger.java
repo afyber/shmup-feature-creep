@@ -14,23 +14,16 @@ public class EngineLogger {
 	public EngineLogger(String filename, boolean writeToFile) {
 		this.filename = filename;
 		this.lowestAllowedLevel = LoggingLevel.WARNING;
-		this.writeToFile = writeToFile;
-		if (writeToFile) {
-			try {
-				Files.createFile(Path.of(filename));
-			} catch (IOException e) {
-				System.out.println("Either the log file already exists or the program doesn't have the ability to create a file");
-				e.printStackTrace();
-			}
-		}
+		setWriteToFile(writeToFile);
 	}
 
 	public void log(LoggingLevel level, String msg) {
 		try {
+			String message = "[" + level.name() + "] " + msg + "\n";
+			System.out.print(message);
 			if (writeToFile && level.getValue() >= lowestAllowedLevel.getValue()) {
-				Files.writeString(Path.of(filename), "[" + level.name() + "] " + msg + "\n", StandardOpenOption.APPEND);
+				Files.writeString(Path.of(filename), message, StandardOpenOption.APPEND);
 			}
-			System.out.print("[" + level.name() + "] " + msg + "\n");
 		}
 		catch (IOException e) {
 			System.out.println("IOException when attempting to log");
@@ -40,10 +33,11 @@ public class EngineLogger {
 
 	public void log(LoggingLevel level, String msg, Throwable e) {
 		try {
+			String message = "[" + level.name() + "] " + msg + "\n" + e.toString() + "\n";
+			System.out.print(message);
 			if (writeToFile && level.getValue() >= lowestAllowedLevel.getValue()) {
-				Files.writeString(Path.of(filename), "[" + level.name() + "] " + msg + "\n" + e.getMessage() + "\n", StandardOpenOption.APPEND);
+				Files.writeString(Path.of(filename), message, StandardOpenOption.APPEND);
 			}
-			System.out.print("[" + level.name() + "] " + msg + "\n" + e.toString() + "\n");
 		}
 		catch (IOException ex) {
 			System.out.println("IOError when attempting to log");
@@ -57,5 +51,17 @@ public class EngineLogger {
 
 	public LoggingLevel getLoggingLevel() {
 		return this.lowestAllowedLevel;
+	}
+
+	public void setWriteToFile(boolean val) {
+		writeToFile = val;
+		if (writeToFile) {
+			try {
+				Files.createFile(Path.of(filename));
+			} catch (IOException e) {
+				System.out.println("Either the log file already exists or the program doesn't have the ability to create a file");
+				e.printStackTrace();
+			}
+		}
 	}
 }
