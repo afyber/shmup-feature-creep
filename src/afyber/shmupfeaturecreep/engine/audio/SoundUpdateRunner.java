@@ -24,7 +24,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package afyber.shmupfeaturecreep.engine.sound;
+package afyber.shmupfeaturecreep.engine.audio;
 
 import javax.sound.sampled.SourceDataLine;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -52,12 +52,13 @@ public class SoundUpdateRunner implements Runnable {
 		int bufferSize = (int)Sound.FORMAT.getFrameRate() * Sound.FORMAT.getFrameSize();
 		byte[] audioBuffer = new byte[bufferSize];
 
-		// 20 milliseconds worth
-		int maxFramesPerUpdate = (int)((Sound.FORMAT.getFrameRate() / 1000) * 20);
+		// NOTE: increasing the maximum frames per update has a band-aid effect on the below issue, but is an inconsistent fix
+		int maxFramesPerUpdate = (int)((Sound.FORMAT.getFrameRate() / 1000) * 40);
 		int numBytesRead = 0;
 		double framesAccrued = 0;
 		long lastUpdate = System.nanoTime();
 
+		// FIXME: The first time this loop processes audio it will almost always skip frames and I'm not sure why
 		while (this.running.get()) {
 
 			long currTime = System.nanoTime();
@@ -76,6 +77,7 @@ public class SoundUpdateRunner implements Runnable {
 
 			if (framesToSkip > 0) {
 				mixer.skipFrames(framesToSkip);
+				System.out.println("Skipped " + framesToSkip + " frames");
 			}
 
 			if (framesToRead > 0) {

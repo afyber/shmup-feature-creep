@@ -1,1 +1,3 @@
 loop:megaloantico_intro.wav:megaloanticho.wav:megalo
+music:megaloanticho.wav:megalo2
+splat.wav:test

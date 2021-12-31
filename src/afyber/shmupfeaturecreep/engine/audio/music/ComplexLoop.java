@@ -1,4 +1,4 @@
-package afyber.shmupfeaturecreep.engine.sound;
+package afyber.shmupfeaturecreep.engine.audio.music;
 
 /**
  * This class lives up to its stinking name
@@ -58,21 +58,6 @@ public class ComplexLoop extends LoopParent {
 		}
 
 		return retur;
-	}
-
-	private int[] readFrameFromArray(byte[][] data, int channels) {
-		int[] frame = null;
-		if (channels == 1) {
-			frame = new int[1];
-			frame[0] = data[0][bytePos + 1] << 8 | data[0][bytePos] & 0xFF;
-		}
-		else if (channels == 2) {
-			frame = new int[2];
-			frame[0] = data[0][bytePos + 1] << 8 | data[0][bytePos] & 0xFF;
-			frame[1] = data[1][bytePos + 1] << 8 | data[1][bytePos] & 0xFF;
-		}
-
-		return frame;
 	}
 
 	@Override

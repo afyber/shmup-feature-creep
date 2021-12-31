@@ -24,10 +24,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package afyber.shmupfeaturecreep.engine.sound;
+package afyber.shmupfeaturecreep.engine.audio;
 
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
+import afyber.shmupfeaturecreep.engine.audio.music.*;
+import afyber.shmupfeaturecreep.engine.audio.sounds.SoundDataReference;
+import afyber.shmupfeaturecreep.engine.audio.sounds.SoundInstance;
 import afyber.shmupfeaturecreep.engine.errors.SoundsNotDefinedError;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 
@@ -46,7 +49,8 @@ public class Sound {
 
 	private static boolean ready = false;
 
-	static HashMap<String, SoundParent> allSounds = new HashMap<>();
+	static HashMap<String, SoundDataReference> allSounds = new HashMap<>();
+	static HashMap<String, MusicParent> allMusic = new HashMap<>();
 	static HashMap<String, LoopParent> allLoops = new HashMap<>();
 
 	public static final AudioFormat FORMAT = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
@@ -128,6 +132,10 @@ public class Sound {
 						registerComplexLoop("/sounds/" + split[0], "/sounds/" + split[1], "/sounds/" + split[2], split[3]);
 					}
 				}
+				else if (line.startsWith("music:")) {
+					String[] split = line.substring(6).split(":");
+					registerMusic("/sounds/" + split[0], split[1]);
+				}
 				else {
 					String[] split = line.split(":");
 					Sound.registerSound("/sounds/" + split[0], split[1]);
@@ -137,7 +145,7 @@ public class Sound {
 	}
 
 	public static void registerSound(String fileName, String soundName) {
-		SoundParent sound = loadAudio(fileName);
+		SoundDataReference sound = loadSound(fileName, soundName);
 
 		if (sound == null) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Registering sound with null sound reference");
@@ -145,6 +153,17 @@ public class Sound {
 		}
 
 		allSounds.put(soundName, sound);
+	}
+
+	public static void registerMusic(String fileName, String soundName) {
+		MusicParent music = loadMusic(fileName);
+
+		if (music == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Registering music with null music reference");
+			return;
+		}
+
+		allMusic.put(soundName, music);
 	}
 
 	public static void registerBasicLoop(String introFileName, String loopFileName, String soundName) {
@@ -184,16 +203,97 @@ public class Sound {
 		mixer.setGlobalVolume(gain);
 	}
 
+	public static void playMusic(String soundName) {
+		if (!ready) {
+			return;
+		}
+
+		if (allMusic.containsKey(soundName)) {
+			allMusic.get(soundName).play();
+		}
+		if (allLoops.containsKey(soundName)) {
+			allLoops.get(soundName).play();
+		}
+	}
+
+	public static void stopMusic(String soundName) {
+		if (!ready) {
+			return;
+		}
+
+		if (allMusic.containsKey(soundName)) {
+			allMusic.get(soundName).stop();
+		}
+		if (allLoops.containsKey(soundName)) {
+			allLoops.get(soundName).stop();
+		}
+	}
+
+	public static void pauseMusic(String soundName) {
+		if (!ready) {
+			return;
+		}
+
+		if (allMusic.containsKey(soundName)) {
+			allMusic.get(soundName).pause();
+		}
+		if (allLoops.containsKey(soundName)) {
+			allLoops.get(soundName).pause();
+		}
+	}
+
+	public static void resumeMusic(String soundName) {
+		if (!ready) {
+			return;
+		}
+
+		if (allMusic.containsKey(soundName)) {
+			allMusic.get(soundName).resume();
+		}
+		if (allLoops.containsKey(soundName)) {
+			allLoops.get(soundName).resume();
+		}
+	}
+
+	public static void loopMusic(String soundName) {
+		if (!ready) {
+			return;
+		}
+
+		if (allMusic.containsKey(soundName)) {
+			allMusic.get(soundName).setLoop(true);
+			allMusic.get(soundName).play();
+		}
+		if (allLoops.containsKey(soundName)) {
+			allLoops.get(soundName).play();
+		}
+	}
+
+	public static void musicSetGain(String soundName, double gain) {
+		if (!ready) {
+			return;
+		}
+
+		if (gain < 0) {
+			gain = 0;
+		} else if (gain > 1.0) {
+			gain = 1.0;
+		}
+		if (allMusic.containsKey(soundName)) {
+			allMusic.get(soundName).setGain(gain);
+		}
+		if (allLoops.containsKey(soundName)) {
+			allLoops.get(soundName).setGain(gain);
+		}
+	}
+
 	public static void playSound(String soundName) {
 		if (!ready) {
 			return;
 		}
 
 		if (allSounds.containsKey(soundName)) {
-			allSounds.get(soundName).play();
-		}
-		if (allLoops.containsKey(soundName)) {
-			allLoops.get(soundName).play();
+			mixer.addSound(new SoundInstance(allSounds.get(soundName)));
 		}
 	}
 
@@ -202,47 +302,10 @@ public class Sound {
 			return;
 		}
 
-		if (allSounds.containsKey(soundName)) {
-			allSounds.get(soundName).stop();
-		}
-		if (allLoops.containsKey(soundName)) {
-			allLoops.get(soundName).stop();
-		}
-	}
-
-	public static void pauseSound(String soundName) {
-		if (!ready) {
-			return;
-		}
-
-		if (allSounds.containsKey(soundName)) {
-			allSounds.get(soundName).pause();
-		}
-		if (allLoops.containsKey(soundName)) {
-			allLoops.get(soundName).pause();
-		}
-	}
-
-	public static void resumeSound(String soundName) {
-		if (!ready) {
-			return;
-		}
-
-		if (allSounds.containsKey(soundName)) {
-			allSounds.get(soundName).resume();
-		}
-		if (allLoops.containsKey(soundName)) {
-			allLoops.get(soundName).resume();
-		}
-	}
-
-	public static void loopSound(String soundName) {
-		if (!ready) {
-			return;
-		}
-
-		if (allSounds.containsKey(soundName)) {
-			allSounds.get(soundName).loop();
+		for (SoundInstance sound: mixer.playingSounds) {
+			if (sound.getSoundRefName().equals(soundName)) {
+				mixer.removeSound(sound);
+			}
 		}
 	}
 
@@ -258,46 +321,89 @@ public class Sound {
 				gain = 1.0;
 			}
 
-			allSounds.get(soundName).setGain(gain);
+			for (SoundInstance sound: mixer.playingSounds) {
+				if (sound.getSoundRefName().equals(soundName)) {
+					sound.setGain(gain);
+				}
+			}
 		}
 	}
 
-	public static SoundParent loadAudio(String fileName) {
+	private static SoundDataReference loadSound(String fileName, String soundName) {
 		URL url = MainClass.class.getResource(fileName);
 
 		if (url == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "URL was null when loading audio");
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "URL was null when loading sound");
 			return null;
 		}
 
-		return loadAudio(url);
+		return loadSound(url, soundName);
 	}
 
-	public static SoundParent loadAudio(URL url) {
+	private static SoundDataReference loadSound(URL url, String soundName) {
 		AudioInputStream stream = getValidAudioInputStream(url);
 
 		if (stream == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't get correctly formatted audio stream when loading audio");
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't get correctly formatted audio stream when loading sound");
 			return null;
 		}
 
 		int numChannels = stream.getFormat().getChannels();
 
+		byte[][] data = null;
 		if (numChannels == 1) {
-			byte[] data = readAllBytesMono(stream);
-
-			return new MonoSound(data);
+			data = new byte[][]{ readAllBytesMono(stream), null };
 		}
 		else if (numChannels == 2) {
-			byte[][] data = readAllBytesStereo(stream);
-
-			return new StereoSound(data);
+			data = readAllBytesStereo(stream);
 		}
 
-		return null;
+		if (data == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't read sound data from stream");
+			return null;
+		}
+
+		return new SoundDataReference(data, numChannels, soundName);
 	}
 
-	public static LoopParent loadBasicLoop(String introFileName, String loopFileName) {
+	private static MusicParent loadMusic(String fileName) {
+		URL url = MainClass.class.getResource(fileName);
+
+		if (url == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "URL was null when loading music");
+			return null;
+		}
+
+		return loadMusic(url);
+	}
+
+	private static MusicParent loadMusic(URL url) {
+		AudioInputStream stream = getValidAudioInputStream(url);
+
+		if (stream == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't get correctly formatted audio stream when loading music");
+			return null;
+		}
+
+		int numChannels = stream.getFormat().getChannels();
+
+		byte[][] data = null;
+		if (numChannels == 1) {
+			data = new byte[][]{ readAllBytesMono(stream), null };
+		}
+		else if (numChannels == 2) {
+			data = readAllBytesStereo(stream);
+		}
+
+		if (data == null) {
+			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't read music data from stream");
+			return null;
+		}
+
+		return new BasicMusic(data, numChannels);
+	}
+
+	private static LoopParent loadBasicLoop(String introFileName, String loopFileName) {
 		URL url1 = MainClass.class.getResource(introFileName);
 		URL url2 = MainClass.class.getResource(loopFileName);
 
@@ -309,7 +415,7 @@ public class Sound {
 		return loadBasicLoop(url1, url2);
 	}
 
-	public static LoopParent loadBasicLoop(URL introFile, URL loopFile) {
+	private static LoopParent loadBasicLoop(URL introFile, URL loopFile) {
 		AudioInputStream stream1 = getValidAudioInputStream(introFile);
 		AudioInputStream stream2 = getValidAudioInputStream(loopFile);
 
@@ -345,7 +451,7 @@ public class Sound {
 		return new BasicLoop(data1, data2, numChannels1, numChannels2);
 	}
 
-	public static LoopParent loadComplexLoop(String introFileName, String introLoopFileName, String loopLoopFileName) {
+	private static LoopParent loadComplexLoop(String introFileName, String introLoopFileName, String loopLoopFileName) {
 		URL url1 = MainClass.class.getResource(introFileName);
 		URL url2 = MainClass.class.getResource(introLoopFileName);
 		URL url3 = MainClass.class.getResource(loopLoopFileName);
@@ -358,7 +464,7 @@ public class Sound {
 		return loadComplexLoop(url1, url2, url3);
 	}
 
-	public static LoopParent loadComplexLoop(URL introFile, URL introLoopFile, URL loopLoopFile) {
+	private static LoopParent loadComplexLoop(URL introFile, URL introLoopFile, URL loopLoopFile) {
 		AudioInputStream introStream = getValidAudioInputStream(introFile);
 		AudioInputStream introLoopStream = getValidAudioInputStream(introLoopFile);
 		AudioInputStream loopLoopStream = getValidAudioInputStream(loopLoopFile);

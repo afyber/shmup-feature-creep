@@ -24,7 +24,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package afyber.shmupfeaturecreep.engine.sound;
+package afyber.shmupfeaturecreep.engine.audio;
 
 import java.util.Arrays;
 

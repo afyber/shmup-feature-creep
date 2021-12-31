@@ -24,14 +24,23 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package afyber.shmupfeaturecreep.engine.sound;
+package afyber.shmupfeaturecreep.engine.audio;
+
+import afyber.shmupfeaturecreep.engine.audio.music.LoopParent;
+import afyber.shmupfeaturecreep.engine.audio.music.MusicParent;
+import afyber.shmupfeaturecreep.engine.audio.sounds.SoundInstance;
+
+import java.util.ArrayList;
 
 public class Mixer {
 
 	private double globalVolume;
 
+	final ArrayList<SoundInstance> playingSounds;
+
 	public Mixer() {
 		globalVolume = 1.0;
+		playingSounds = new ArrayList<>();
 	}
 
 	public synchronized void setGlobalVolume(double volume) {
@@ -50,10 +59,9 @@ public class Mixer {
 			double leftVal = 0.0;
 			double rightVal = 0.0;
 
-			for (SoundParent sound: Sound.allSounds.values()) {
+			for (SoundInstance sound: playingSounds) {
 				if (sound.isPlaying()) {
 					double volume = globalVolume * sound.getGain();
-
 					if (sound.getChannels() == 1) {
 						int[] val = sound.readFrame();
 						double currVal = val[0] * volume;
@@ -64,6 +72,34 @@ public class Mixer {
 						readBytes = true;
 					} else if (sound.getChannels() == 2) {
 						int[] vals = sound.readFrame();
+						double currLeft = vals[0] * volume;
+						double currRight = vals[1] * volume;
+
+						leftVal += currLeft;
+						rightVal += currRight;
+
+						readBytes = true;
+					}
+				}
+			}
+
+			// remove sounds that are no longer playing
+			playingSounds.removeIf(sound -> !sound.isPlaying());
+
+			for (MusicParent music: Sound.allMusic.values()) {
+				if (music.isPlaying()) {
+					double volume = globalVolume * music.getGain();
+
+					if (music.getChannels() == 1) {
+						int[] val = music.readFrame();
+						double currVal = val[0] * volume;
+
+						leftVal += currVal;
+						rightVal += currVal;
+
+						readBytes = true;
+					} else if (music.getChannels() == 2) {
+						int[] vals = music.readFrame();
 						double currLeft = vals[0] * volume;
 						double currRight = vals[1] * volume;
 
@@ -119,10 +155,22 @@ public class Mixer {
 	}
 
 	public synchronized void skipFrames(int frames) {
-		for (SoundParent sound: Sound.allSounds.values()) {
-			if (sound.isPlaying()) {
-				sound.skipFrames(frames);
-			}
+		for (SoundInstance sound: playingSounds) {
+			sound.skipFrames(frames);
 		}
+		for (MusicParent music: Sound.allMusic.values()) {
+			music.skipFrames(frames);
+		}
+		for (LoopParent loop: Sound.allLoops.values()) {
+			loop.skipFrames(frames);
+		}
+	}
+
+	public synchronized void addSound(SoundInstance sound) {
+		playingSounds.add(sound);
+	}
+
+	public synchronized void removeSound(SoundInstance sound) {
+		playingSounds.remove(sound);
 	}
 }

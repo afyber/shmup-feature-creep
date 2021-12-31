@@ -1,4 +1,4 @@
-package afyber.shmupfeaturecreep.engine.sound;
+package afyber.shmupfeaturecreep.engine.audio.music;
 
 /**
  * "Basic" is going a little far
@@ -24,14 +24,7 @@ public class BasicLoop extends LoopParent {
 	public int[] readFrame() {
 		int[] retur = null;
 		if (playingState.get() == 0) {
-			if (introChannels == 1) {
-				retur = new int[1];
-				retur[0] = dataIntro[0][bytePos + 1] << 8 | dataIntro[0][bytePos] & 0xFF;
-			} else if (introChannels == 2) {
-				retur = new int[2];
-				retur[0] = dataIntro[0][bytePos + 1] << 8 | dataIntro[0][bytePos] & 0xFF;
-				retur[1] = dataIntro[1][bytePos + 1] << 8 | dataIntro[1][bytePos] & 0xFF;
-			}
+			retur = readFrameFromArray(dataIntro, introChannels);
 
 			bytePos += 2;
 
@@ -40,14 +33,7 @@ public class BasicLoop extends LoopParent {
 				playingState.set(1);
 			}
 		} else if (playingState.get() == 1) {
-			if (loopChannels == 1) {
-				retur = new int[1];
-				retur[0] = dataLoop[0][bytePos + 1] << 8 | dataLoop[0][bytePos] & 0xFF;
-			} else if (loopChannels == 2) {
-				retur = new int[2];
-				retur[0] = dataLoop[0][bytePos + 1] << 8 | dataLoop[0][bytePos] & 0xFF;
-				retur[1] = dataLoop[1][bytePos + 1] << 8 | dataLoop[1][bytePos] & 0xFF;
-			}
+			retur = readFrameFromArray(dataLoop, loopChannels);
 
 			bytePos += 2;
 
