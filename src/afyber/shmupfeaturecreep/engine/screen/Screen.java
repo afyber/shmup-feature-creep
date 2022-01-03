@@ -96,7 +96,7 @@ public class Screen {
 			String[] allData = GeneralUtil.readResourceToString("/spritesheets.txt").split("\r\n");
 
 			for (String str: allData) {
-				if (!str.startsWith("//")) {
+				if (GeneralUtil.isLineConfigViable(str)) {
 					SpriteSheet.loadSpriteSheet("/spritesheets/" + str, allSprites);
 				}
 			}
@@ -111,7 +111,7 @@ public class Screen {
 			String[] allData = GeneralUtil.readResourceToString("/fonts.txt").split("\r\n");
 
 			for (String line: allData) {
-				if (!line.startsWith("//")) {
+				if (GeneralUtil.isLineConfigViable(line)) {
 					Font newFont = new Font("/fonts/" + line);
 
 					allFonts.put(line, newFont);

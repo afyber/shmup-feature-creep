@@ -122,7 +122,7 @@ public class Sound {
 		String[] lines = file.split("\r\n");
 
 		for (String line: lines) {
-			if (!line.startsWith("//")) {
+			if (GeneralUtil.isLineConfigViable(line)) {
 				if (line.startsWith("loop:")) {
 					String[] split = line.substring(5).split(":");
 					if (split.length == 3) {

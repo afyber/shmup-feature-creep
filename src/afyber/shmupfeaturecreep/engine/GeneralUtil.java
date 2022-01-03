@@ -34,6 +34,10 @@ public class GeneralUtil {
 		}
 	}
 
+	public static boolean isLineConfigViable(String line) {
+		return !line.equals("") && !(line.startsWith("//") || line.startsWith(" ") || line.startsWith("\t"));
+	}
+
 	public static void sleepHandlingInterrupt(long millis) {
 		try {
 			Thread.sleep(millis);
