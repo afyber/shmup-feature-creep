@@ -2,7 +2,7 @@ package afyber.shmupfeaturecreep.engine.sprites;
 
 public class Sprite {
 
-	private SpriteSheetRegion[] frames;
+	private final SpriteSheetRegion[] frames;
 
 	public Sprite(int frames) {
 		this.frames = new SpriteSheetRegion[frames];

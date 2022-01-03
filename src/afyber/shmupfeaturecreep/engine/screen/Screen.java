@@ -313,7 +313,7 @@ public class Screen {
 		}
 		else {
 			// This is a diagonal line, this is where it gets complicated
-			// TODO
+			// TODO LOW PRIORITY: Line drawing for diagonal lines
 		}
 	}
 

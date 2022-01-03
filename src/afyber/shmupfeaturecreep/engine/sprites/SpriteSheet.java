@@ -88,27 +88,6 @@ public class SpriteSheet {
 
 		String[] allInfoSplit = dataString.split("\r\n");
 
-
-		/*for (String section: allInfoSplit) {
-			String[] splitMore = section.split(":");
-			name = splitMore[0];
-
-			String[] splitEvenMore = splitMore[1].split(",");
-			x = Integer.parseInt(splitEvenMore[0]);
-			y = Integer.parseInt(splitEvenMore[1]);
-			width = Integer.parseInt(splitEvenMore[2]);
-			height = Integer.parseInt(splitEvenMore[3]);
-			originX = Integer.parseInt(splitEvenMore[4]);
-			originY = Integer.parseInt(splitEvenMore[5]);
-
-			int[][] newData = new int[height][width];
-			for (int i = 0; i < height; i++) {
-				System.arraycopy(imageData[i + y], x, newData[i], 0, width);
-			}
-			SpriteSheetRegion region = new SpriteSheetRegion(newData, width, height, originX, originY);
-			map.put(name, region);
-		}*/
-
 		int line = 0;
 		Sprite currentSprite = null;
 		String currentName = null;
@@ -150,7 +129,9 @@ public class SpriteSheet {
 				}
 				SpriteSheetRegion region = new SpriteSheetRegion(newData, width, height, originX, originY);
 
-				currentSprite.setFrame(region, frame);
+				if (currentSprite != null) {
+					currentSprite.setFrame(region, frame);
+				}
 			}
 
 			line++;
