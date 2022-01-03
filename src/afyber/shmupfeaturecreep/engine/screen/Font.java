@@ -18,7 +18,7 @@ public class Font {
 	public Font(String fileName) {
 		String[] fileContents;
 		try {
-			 fileContents = GeneralUtil.readResourceToString(fileName + "_info.txt").split("\r\n");
+			 fileContents = GeneralUtil.readResourceAsLineArray(fileName + "_info.txt");
 		} catch (IOException e) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Error loading font definition");
 			throw new SpriteSheetNotDefinedError();

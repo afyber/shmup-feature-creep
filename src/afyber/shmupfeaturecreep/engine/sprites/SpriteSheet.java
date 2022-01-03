@@ -40,7 +40,7 @@ public class SpriteSheet {
 		}
 
 		try {
-			setupSprites(GeneralUtil.readResourceToString(imageName + "_info.txt"), out);
+			setupSprites(GeneralUtil.readResourceAsLineArray(imageName + "_info.txt"), out);
 		}
 		catch (IOException e) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load sprite-sheet caused IOException", e);
@@ -77,7 +77,7 @@ public class SpriteSheet {
 		}
 	}
 
-	private static void setupSprites(String dataString, Map<String, Sprite> map) {
+	private static void setupSprites(String[] lines, Map<String, Sprite> map) {
 		int frame;
 		int x;
 		int y;
@@ -86,14 +86,12 @@ public class SpriteSheet {
 		int originX;
 		int originY;
 
-		String[] allInfoSplit = dataString.split("\r\n");
-
 		int line = 0;
 		Sprite currentSprite = null;
 		String currentName = null;
 
-		while (line < allInfoSplit.length) {
-			String currentLine = allInfoSplit[line];
+		while (line < lines.length) {
+			String currentLine = lines[line];
 
 			if (Character.isAlphabetic(currentLine.charAt(0))) {
 				if (currentSprite != null) {

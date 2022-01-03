@@ -26,8 +26,8 @@ public class DynamicObject {
 	public int depth;
 	public boolean visible = true;
 
-	public double imageXScale = 1;
-	public double imageYScale = 1;
+	public double imageXScale;
+	public double imageYScale;
 
 	public String sprite = "";
 	public double spriteIndex = 0;

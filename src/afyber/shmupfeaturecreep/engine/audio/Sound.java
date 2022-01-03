@@ -110,16 +110,14 @@ public class Sound {
 	}
 
 	public static void loadSounds() {
-		String file;
+		String[] lines;
 		try {
-			file = GeneralUtil.readResourceToString("/sounds.txt");
+			lines = GeneralUtil.readResourceAsLineArray("/sounds.txt");
 		}
 		catch (IOException e) {
 			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sounds.txt");
 			throw new SoundsNotDefinedError();
 		}
-
-		String[] lines = file.split("\r\n");
 
 		for (String line: lines) {
 			if (GeneralUtil.isLineConfigViable(line)) {

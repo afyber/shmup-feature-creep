@@ -26,8 +26,14 @@ public class Registry {
 		return roomRegistry.containsKey(roomName);
 	}
 
-	public static void registerObject(String objectName, Class<? extends DynamicObject> classRef) {
-		dynamicObjectRegistry.put(objectName, classRef);
+	public static void registerObject(DynamicObject object) {
+		dynamicObjectRegistry.put(object.objectName, object.getClass());
+	}
+
+	public static void registerObjectAsChildOf(DynamicObject object, String objectParentName) {
+		registerObject(object);
+		dynamicObjectChildRegistry.computeIfAbsent(objectParentName, val -> new ArrayList<>());
+		dynamicObjectChildRegistry.get(objectParentName).add(object.objectName);
 	}
 
 	public static Class<? extends DynamicObject> getObject(String objectName) {
@@ -36,11 +42,6 @@ public class Registry {
 
 	public static boolean hasObject(String objectName) {
 		return dynamicObjectRegistry.containsKey(objectName);
-	}
-
-	public static void registerObjectAsChildOf(String objectName, String objectParentName) {
-		dynamicObjectChildRegistry.computeIfAbsent(objectParentName, val -> new ArrayList<>());
-		dynamicObjectChildRegistry.get(objectParentName).add(objectName);
 	}
 
 	public static List<String> getChildrenOfObject(String objectName) {

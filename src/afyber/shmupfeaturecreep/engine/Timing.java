@@ -8,30 +8,31 @@ package afyber.shmupfeaturecreep.engine;
 public class Timing {
 	private Timing() {}
 
-	private static long lastMeasuredStartMillis;
-	private static long lastMeasuredEndMillis;
-	private static long idealFrameTimeMillis;
+	private static long lastMeasuredStartNanos;
+	private static long lastMeasuredEndNanos;
+	private static long idealFrameTimeNanos;
 
 	public static void mainLoopBodyStarted() {
-		lastMeasuredStartMillis = System.currentTimeMillis();
+		lastMeasuredStartNanos = System.nanoTime();
 	}
 
 	public static void mainLoopBodyEnded() {
-		lastMeasuredEndMillis = System.currentTimeMillis();
+		lastMeasuredEndNanos = System.nanoTime();
 	}
 
 	public static long calculateTimeAndWaitThread() {
-		if (lastMeasuredEndMillis - lastMeasuredStartMillis < idealFrameTimeMillis) {
-			GeneralUtil.sleepHandlingInterrupt(idealFrameTimeMillis - (lastMeasuredEndMillis - lastMeasuredStartMillis));
+		if (lastMeasuredEndNanos - lastMeasuredStartNanos < idealFrameTimeNanos) {
+			long millis = Math.round(idealFrameTimeNanos - (lastMeasuredEndNanos - lastMeasuredStartNanos) / 1000.0);
+			GeneralUtil.sleepHandlingInterrupt(millis);
 		}
-		return (lastMeasuredEndMillis - lastMeasuredStartMillis);
+		return (lastMeasuredEndNanos - lastMeasuredStartNanos);
 	}
 
-	public static void setIdealFrameTimeMillis(long frameTimeMillis) {
-		idealFrameTimeMillis = frameTimeMillis;
+	public static void setIdealFrameTimeNanos(long frameTimeNanos) {
+		idealFrameTimeNanos = frameTimeNanos;
 	}
 
-	public static long getIdealFrameTimeMillis() {
-		return idealFrameTimeMillis;
+	public static long getIdealFrameTimeNanos() {
+		return idealFrameTimeNanos;
 	}
 }

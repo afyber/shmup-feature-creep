@@ -66,6 +66,10 @@ public class GeneralUtil {
 		return new CompactFrameArray(newArray, dataWidth);
 	}
 
+	public static String[] readResourceAsLineArray(String fileName) throws IOException {
+		return readResourceToString(fileName).split("\r\n");
+	}
+
 	public static String readResourceToString(String fileName) throws IOException {
 		try (InputStream stream = MainClass.class.getResourceAsStream(fileName)) {
 			if (stream == null) {

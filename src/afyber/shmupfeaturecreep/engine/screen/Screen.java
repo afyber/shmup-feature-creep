@@ -93,7 +93,7 @@ public class Screen {
 
 	private static void loadSpriteSheets() {
 		try {
-			String[] allData = GeneralUtil.readResourceToString("/spritesheets.txt").split("\r\n");
+			String[] allData = GeneralUtil.readResourceAsLineArray("/spritesheets.txt");
 
 			for (String str: allData) {
 				if (GeneralUtil.isLineConfigViable(str)) {
@@ -108,7 +108,7 @@ public class Screen {
 
 	private static void loadFonts() {
 		try {
-			String[] allData = GeneralUtil.readResourceToString("/fonts.txt").split("\r\n");
+			String[] allData = GeneralUtil.readResourceAsLineArray("/fonts.txt");
 
 			for (String line: allData) {
 				if (GeneralUtil.isLineConfigViable(line)) {
