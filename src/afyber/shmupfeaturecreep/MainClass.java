@@ -15,26 +15,17 @@ import java.awt.*;
 
 public class MainClass {
 
-	public static final String GAME_NAME = "shmupfeaturecreep";
-	public static final String GAME_NAME_NICE = "Shmup: Feature Creep";
-	public static final int WINDOW_WIDTH = 640;
-	public static final int WINDOW_HEIGHT = 640;
-
-	private static final int IDEAL_FPS = 60;
-
-	public static final boolean DEBUG = true;
-
 	public static final EngineLogger LOGGER = new EngineLogger(System.currentTimeMillis() + ".txt", false);
 
 	public static void main(String[] args) {
-		if (DEBUG) {
+		if (Game.DEBUG) {
 			LOGGER.setLoggingLevel(LoggingLevel.DEBUG);
 		}
 		LOGGER.log(LoggingLevel.DEBUG, "Program start");
 
 		boolean splashScreen = MainClass.class.getResource("/splashscreen.png") != null;
 		if (splashScreen) {
-			Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT, true);
+			Screen.setupScreen(Game.GAME_NAME_NICE, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT, true);
 		}
 
 		Sound.init();
@@ -43,7 +34,7 @@ public class MainClass {
 
 		Game.registerRooms();
 
-		Timing.setIdealFrameTimeNanos((long)Math.ceil(1000000.0/IDEAL_FPS));
+		Timing.setIdealFrameTimeNanos((long)Math.ceil(1000000.0/Game.IDEAL_FPS));
 
 		Keyboard.clearKeys();
 
@@ -51,7 +42,7 @@ public class MainClass {
 		GeneralUtil.sleepHandlingInterrupt(200);
 
 		if (!splashScreen) {
-			Screen.setupScreen(GAME_NAME_NICE, WINDOW_WIDTH, WINDOW_HEIGHT, false);
+			Screen.setupScreen(Game.GAME_NAME_NICE, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT, false);
 		}
 
 		World world;

@@ -5,9 +5,9 @@ import afyber.shmupfeaturecreep.engine.audio.AudioParent;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Loops are different from other sounds because:
+ * Loops are different from other music because:
  * 1. They have multiple audio data in them
- * 2. They can handle both mono and stereo, for convenience
+ * 2. They automatically loop, no need to call loopMusic()
  *
  * @author afyber
  */

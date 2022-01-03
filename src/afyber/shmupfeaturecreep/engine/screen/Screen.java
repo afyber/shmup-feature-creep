@@ -27,6 +27,9 @@ import java.util.HashMap;
 public class Screen {
 	private Screen() {}
 
+	private static int screenWidth;
+	private static int screenHeight;
+
 	private static JFrame frame;
 	private static CustomPanel panel;
 	private static BufferedImage image;
@@ -47,6 +50,8 @@ public class Screen {
 		setupScreen(name, width, height, false);
 	}
 	public static void setupScreen(String name, int width, int height, boolean splashScreen) {
+		screenWidth = width;
+		screenHeight = height;
 		// Window setup
 		image = new BufferedImage(width, height, Image.SCALE_DEFAULT);
 		frame = new JFrame() {
@@ -65,7 +70,7 @@ public class Screen {
 		frame.setResizable(false);
 		frame.setTitle(name);
 		// these numbers are so that the drawable area is actually the size specified
-		frame.setSize(width + 16, height + 39);
+		frame.setSize(screenWidth + 16, screenHeight + 39);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
 
@@ -74,7 +79,7 @@ public class Screen {
 
 		if (splashScreen) {
 			SpriteSheetRegion splashScreenData = SpriteSheet.loadSingleImage("/splashscreen.png");
-			SpriteSheetRegion splashScreenScaled = scaleImageData(splashScreenData.data(), (float)width / splashScreenData.dataWidth(), (float)height / splashScreenData.dataHeight(), 0, 0);
+			SpriteSheetRegion splashScreenScaled = scaleImageData(splashScreenData.data(), (double)width / splashScreenData.dataWidth(), (double)height / splashScreenData.dataHeight(), 0, 0);
 
 			image.setRGB(0, 0, width, height, GeneralUtil.arrayOfArraysToSingleArray(splashScreenScaled.data()).a(), 0, width);
 
@@ -381,7 +386,7 @@ public class Screen {
 
 	private static void copyFrameToImage() {
 		CompactFrameArray singleArray = GeneralUtil.arrayOfArraysToSingleArray(currentFrame);
-		image.setRGB(0, 0, MainClass.WINDOW_WIDTH, MainClass.WINDOW_HEIGHT, singleArray.a(), 0, singleArray.dataWidth());
+		image.setRGB(0, 0, screenWidth, screenHeight, singleArray.a(), 0, singleArray.dataWidth());
 	}
 
 	public static SpriteSheetRegion scaleImageData(int[][] data, double xScale, double yScale, int originX, int originY) {
@@ -543,14 +548,14 @@ public class Screen {
 		return isDrawing;
 	}
 
-	// NOTE: private classes and records
+	// NOTE: private classes
 
 	private static class CustomPanel extends JPanel {
 		@Override
 		public void paint(Graphics g) {
 			Graphics2D g2d = (Graphics2D)g;
 
-			g2d.drawImage(image, 0, 0, MainClass.WINDOW_WIDTH, MainClass.WINDOW_HEIGHT, null);
+			g2d.drawImage(image, 0, 0, screenWidth, screenHeight, null);
 		}
 	}
 }

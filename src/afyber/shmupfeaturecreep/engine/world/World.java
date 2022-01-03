@@ -326,7 +326,7 @@ public class World {
 		ArrayList<DynamicObject> list = new ArrayList<>();
 		boolean hasChildren = false;
 		ArrayList<String> children = new ArrayList<>();
-		if (Registry.hasChildrenForObject(classRef)) {
+		if (Registry.hasChildrenOfObject(classRef)) {
 			children.addAll(Registry.getChildrenOfObject(classRef));
 			hasChildren = true;
 		}

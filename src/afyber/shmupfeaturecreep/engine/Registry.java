@@ -48,7 +48,7 @@ public class Registry {
 		return dynamicObjectChildRegistry.get(objectName);
 	}
 
-	public static boolean hasChildrenForObject(String objectName) {
+	public static boolean hasChildrenOfObject(String objectName) {
 		return dynamicObjectChildRegistry.containsKey(objectName);
 	}
 }
