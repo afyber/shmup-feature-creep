@@ -1,6 +1,7 @@
 package afyber.shmupfeaturecreep.engine.rooms;
 
 import afyber.shmupfeaturecreep.engine.screen.Screen;
+import afyber.shmupfeaturecreep.engine.world.Collision;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 import java.util.Arrays;
@@ -32,7 +33,8 @@ public class DynamicObject {
 	public String sprite = "";
 	public double spriteIndex = 0;
 	public double imageSpeed = 0;
-	public String collision = "";
+
+	public Collision collision = null;
 
 	public float xSpeed = 0;
 	public float ySpeed = 0;

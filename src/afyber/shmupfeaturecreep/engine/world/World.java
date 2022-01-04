@@ -207,13 +207,20 @@ public class World {
 		return !classRefToObjectList(classRef).isEmpty();
 	}
 
-	private boolean isColliding(DynamicObject caller, DynamicObject other) {
+	private boolean isCollidingPrecise(DynamicObject caller, DynamicObject other) {
 		if (other == null || caller == null) {
 			return false;
 		}
 
-		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(caller.collision, 0, caller.imageXScale, caller.imageYScale);
-		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(other.collision, 0, other.imageXScale, other.imageYScale);
+		SpriteCollision callerCollision = (SpriteCollision)caller.collision;
+		SpriteCollision otherCollision = (SpriteCollision)other.collision;
+
+		if (otherCollision == null || callerCollision == null) {
+			return false;
+		}
+
+		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(callerCollision.getSpriteName(), 0, caller.imageXScale, caller.imageYScale);
+		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(otherCollision.getSpriteName(), 0, other.imageXScale, other.imageYScale);
 
 		if (otherInfo == null || callerInfo == null) {
 			return false;
@@ -230,8 +237,8 @@ public class World {
 
 		if (GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
 				otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y)) {
-			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(caller.collision, 0, caller.imageXScale, caller.imageYScale);
-			SpriteSheetRegion otherRegion = Screen.getSpriteScaled(other.collision, 0, other.imageXScale, other.imageYScale);
+			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(callerCollision.getSpriteName(), 0, caller.imageXScale, caller.imageYScale);
+			SpriteSheetRegion otherRegion = Screen.getSpriteScaled(otherCollision.getSpriteName(), 0, other.imageXScale, other.imageYScale);
 
 			if (otherRegion == null || callerRegion == null) {
 				return false;
@@ -258,6 +265,112 @@ public class World {
 				}
 			}
 		}
+		return false;
+	}
+
+	private boolean isCollidingSemiPrecise(DynamicObject caller, DynamicObject other) {
+		if (other == null || caller == null) {
+			return false;
+		}
+
+		SpriteCollision callerCollision = (SpriteCollision)caller.collision;
+		RectangleCollision otherCollision = (RectangleCollision)other.collision;
+
+		if (otherCollision == null || callerCollision == null) {
+			return false;
+		}
+
+		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(callerCollision.getSpriteName(), 0, caller.imageXScale, caller.imageYScale);
+		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(other.sprite, (int)other.spriteIndex, other.imageXScale, other.imageYScale);
+
+		if (otherInfo == null || callerInfo == null) {
+			return false;
+		}
+
+		int callerCorner1X = (int)Math.round(caller.x - callerInfo.originX());
+		int callerCorner1Y = (int)Math.round(caller.y - callerInfo.originY());
+		int callerCorner2X = callerCorner1X + callerInfo.dataWidth();
+		int callerCorner2Y = callerCorner1Y + callerInfo.dataHeight();
+		int otherCorner1X = (int)Math.round(other.x - otherInfo.originX()) + otherCollision.getMargin(0);
+		int otherCorner1Y = (int)Math.round(other.y - otherInfo.originY()) + otherCollision.getMargin(1);
+		int otherCorner2X = otherCorner1X + otherInfo.dataWidth() + otherCollision.getMargin(2);
+		int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight() + otherCollision.getMargin(3);
+
+		if (GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
+				otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y)) {
+			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(callerCollision.getSpriteName(), 0, caller.imageXScale, caller.imageYScale);
+
+			if (callerRegion == null) {
+				return false;
+			}
+
+			int[][] callerData = callerRegion.data();
+
+			for (int i = 0; i < callerRegion.dataHeight(); i++) {
+				for (int c = 0; c < callerRegion.dataWidth(); c++) {
+					if ((callerData[i][c] >> 24 & 0xFF) != 0x0) {
+						if (callerCorner1Y + i >= otherCorner1Y && callerCorner1Y + i <= otherCorner2Y &&
+						    callerCorner1X + c >= otherCorner1X && callerCorner1X + c <= otherCorner2X) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private boolean isCollidingImprecise(DynamicObject caller, DynamicObject other) {
+		if (other == null || caller == null) {
+			return false;
+		}
+
+		RectangleCollision callerCollision = (RectangleCollision)caller.collision;
+		RectangleCollision otherCollision = (RectangleCollision)other.collision;
+
+		if (otherCollision == null || callerCollision == null) {
+			return false;
+		}
+
+		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(caller.sprite, (int)caller.spriteIndex, caller.imageXScale, caller.imageYScale);
+		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(other.sprite, (int)other.spriteIndex, other.imageXScale, other.imageYScale);
+
+		if (otherInfo == null || callerInfo == null) {
+			return false;
+		}
+
+		int callerCorner1X = (int)Math.round(caller.x - callerInfo.originX()) + callerCollision.getMargin(0);
+		int callerCorner1Y = (int)Math.round(caller.y - callerInfo.originY()) + callerCollision.getMargin(1);
+		int callerCorner2X = callerCorner1X + callerInfo.dataWidth() + callerCollision.getMargin(2);
+		int callerCorner2Y = callerCorner1Y + callerInfo.dataHeight() + callerCollision.getMargin(3);
+		int otherCorner1X = (int)Math.round(other.x - otherInfo.originX()) + otherCollision.getMargin(0);
+		int otherCorner1Y = (int)Math.round(other.y - otherInfo.originY()) + otherCollision.getMargin(1);
+		int otherCorner2X = otherCorner1X + otherInfo.dataWidth() + otherCollision.getMargin(2);
+		int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight() + otherCollision.getMargin(3);
+
+		return GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
+				otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y);
+	}
+
+	private boolean isColliding(DynamicObject caller, DynamicObject other) {
+		if (caller.collision.getType() == CollisionType.SPRITE) {
+			if (other.collision.getType() == CollisionType.SPRITE) {
+				return isCollidingPrecise(caller, other);
+			}
+			else if (other.collision.getType() == CollisionType.RECT) {
+				return isCollidingSemiPrecise(caller, other);
+			}
+		}
+		else if (caller.collision.getType() == CollisionType.RECT) {
+			if (other.collision.getType() == CollisionType.SPRITE) {
+				return isCollidingSemiPrecise(other, caller);
+			}
+			else if (other.collision.getType() == CollisionType.RECT) {
+				return isCollidingImprecise(caller, other);
+			}
+		}
+
 		return false;
 	}
 
