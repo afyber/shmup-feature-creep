@@ -60,12 +60,12 @@ public class MainClass {
 		while (!Screen.isWindowClosed()) {
 			Timing.mainLoopBodyStarted();
 
-			if (world.getIsRoomChange()) {
-				if (Registry.hasRoom(world.getRoomChangeRoomName())) {
-					world = new World(Registry.getRoom(world.getRoomChangeRoomName()));
+			if (world.getRoomChangeRequested()) {
+				if (Registry.hasRoom(world.getRoomChangeRequestName())) {
+					world = new World(Registry.getRoom(world.getRoomChangeRequestName()));
 				}
 				else {
-					LOGGER.log(LoggingLevel.ERROR, "Couldn't load room \"" + world.getRoomChangeRoomName() + "\" after call to changeRoom");
+					LOGGER.log(LoggingLevel.ERROR, "Couldn't load room \"" + world.getRoomChangeRequestName() + "\" after call to changeRoom");
 					throw new RoomNotDefinedError();
 				}
 			}

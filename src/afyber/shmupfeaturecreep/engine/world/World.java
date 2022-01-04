@@ -273,44 +273,44 @@ public class World {
 			return false;
 		}
 
-		SpriteCollision callerCollision = (SpriteCollision)sprite.collision;
-		RectangleCollision otherCollision = (RectangleCollision)rect.collision;
+		SpriteCollision spriteCollision = (SpriteCollision)sprite.collision;
+		RectangleCollision rectCollision = (RectangleCollision)rect.collision;
 
-		if (otherCollision == null || callerCollision == null) {
+		if (rectCollision == null || spriteCollision == null) {
 			return false;
 		}
 
-		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(callerCollision.getSpriteName(), 0, sprite.imageXScale, sprite.imageYScale);
-		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(rect.sprite, (int)rect.spriteIndex, rect.imageXScale, rect.imageYScale);
+		SpriteInformation spriteInfo = Screen.getScaledSpriteInfo(spriteCollision.getSpriteName(), 0, sprite.imageXScale, sprite.imageYScale);
+		SpriteInformation rectInfo = Screen.getScaledSpriteInfo(rect.sprite, (int)rect.spriteIndex, rect.imageXScale, rect.imageYScale);
 
-		if (otherInfo == null || callerInfo == null) {
+		if (rectInfo == null || spriteInfo == null) {
 			return false;
 		}
 
-		int callerCorner1X = (int)Math.round(sprite.x - callerInfo.originX());
-		int callerCorner1Y = (int)Math.round(sprite.y - callerInfo.originY());
-		int callerCorner2X = callerCorner1X + callerInfo.dataWidth();
-		int callerCorner2Y = callerCorner1Y + callerInfo.dataHeight();
-		int otherCorner1X = (int)Math.round(rect.x - otherInfo.originX()) + otherCollision.getMargin(0);
-		int otherCorner1Y = (int)Math.round(rect.y - otherInfo.originY()) + otherCollision.getMargin(1);
-		int otherCorner2X = otherCorner1X + otherInfo.dataWidth() + otherCollision.getMargin(2);
-		int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight() + otherCollision.getMargin(3);
+		int spriteCorner1X = (int)Math.round(sprite.x - spriteInfo.originX());
+		int spriteCorner1Y = (int)Math.round(sprite.y - spriteInfo.originY());
+		int spriteCorner2X = spriteCorner1X + spriteInfo.dataWidth();
+		int spriteCorner2Y = spriteCorner1Y + spriteInfo.dataHeight();
+		int rectCorner1X = (int)Math.round(rect.x - rectInfo.originX()) - rectCollision.getMargin(0);
+		int rectCorner1Y = (int)Math.round(rect.y - rectInfo.originY()) - rectCollision.getMargin(1);
+		int rectCorner2X = rectCorner1X + rectInfo.dataWidth() + rectCollision.getMargin(2);
+		int rectCorner2Y = rectCorner1Y + rectInfo.dataHeight() + rectCollision.getMargin(3);
 
-		if (GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
-				otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y)) {
-			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(callerCollision.getSpriteName(), 0, sprite.imageXScale, sprite.imageYScale);
+		if (GeneralUtil.areRectanglesIntersecting(spriteCorner1X, spriteCorner1Y, spriteCorner2X, spriteCorner2Y,
+				rectCorner1X, rectCorner1Y, rectCorner2X, rectCorner2Y)) {
+			SpriteSheetRegion spriteRegion = Screen.getSpriteScaled(spriteCollision.getSpriteName(), 0, sprite.imageXScale, sprite.imageYScale);
 
-			if (callerRegion == null) {
+			if (spriteRegion == null) {
 				return false;
 			}
 
-			int[][] callerData = callerRegion.data();
+			int[][] spriteData = spriteRegion.data();
 
-			for (int i = 0; i < callerRegion.dataHeight(); i++) {
-				for (int c = 0; c < callerRegion.dataWidth(); c++) {
-					if ((callerData[i][c] >> 24 & 0xFF) != 0x0) {
-						if (callerCorner1Y + i >= otherCorner1Y && callerCorner1Y + i <= otherCorner2Y &&
-						    callerCorner1X + c >= otherCorner1X && callerCorner1X + c <= otherCorner2X) {
+			for (int i = 0; i < spriteRegion.dataHeight(); i++) {
+				for (int c = 0; c < spriteRegion.dataWidth(); c++) {
+					if ((spriteData[i][c] >> 24 & 0xFF) != 0x0) {
+						if (spriteCorner1Y + i >= rectCorner1Y && spriteCorner1Y + i <= rectCorner2Y &&
+						    spriteCorner1X + c >= rectCorner1X && spriteCorner1X + c <= rectCorner2X) {
 							return true;
 						}
 					}
@@ -340,12 +340,12 @@ public class World {
 			return false;
 		}
 
-		int callerCorner1X = (int)Math.round(caller.x - callerInfo.originX()) + callerCollision.getMargin(0);
-		int callerCorner1Y = (int)Math.round(caller.y - callerInfo.originY()) + callerCollision.getMargin(1);
+		int callerCorner1X = (int)Math.round(caller.x - callerInfo.originX()) - callerCollision.getMargin(0);
+		int callerCorner1Y = (int)Math.round(caller.y - callerInfo.originY()) - callerCollision.getMargin(1);
 		int callerCorner2X = callerCorner1X + callerInfo.dataWidth() + callerCollision.getMargin(2);
 		int callerCorner2Y = callerCorner1Y + callerInfo.dataHeight() + callerCollision.getMargin(3);
-		int otherCorner1X = (int)Math.round(other.x - otherInfo.originX()) + otherCollision.getMargin(0);
-		int otherCorner1Y = (int)Math.round(other.y - otherInfo.originY()) + otherCollision.getMargin(1);
+		int otherCorner1X = (int)Math.round(other.x - otherInfo.originX()) - otherCollision.getMargin(0);
+		int otherCorner1Y = (int)Math.round(other.y - otherInfo.originY()) - otherCollision.getMargin(1);
 		int otherCorner2X = otherCorner1X + otherInfo.dataWidth() + otherCollision.getMargin(2);
 		int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight() + otherCollision.getMargin(3);
 
@@ -470,11 +470,11 @@ public class World {
 		return list;
 	}
 
-	public boolean getIsRoomChange() {
+	public boolean getRoomChangeRequested() {
 		return !roomChange.equals("");
 	}
 
-	public String getRoomChangeRoomName() {
+	public String getRoomChangeRequestName() {
 		return roomChange;
 	}
 }
