@@ -75,7 +75,7 @@ public class WorldMiddleman {
 	/**
 	 * Gives the DynamicObject for a given instanceID
 	 * @param objRef The instanceID of the object to find
-	 * @return The DynamicObject of the instance
+	 * @return The DynamicObject reference of the instance
 	 */
 	public DynamicObject getObject(int objRef) {
 		return world.objRefToObject(objRef);

@@ -4,6 +4,7 @@ import afyber.shmupfeaturecreep.engine.screen.Screen;
 import afyber.shmupfeaturecreep.engine.world.Collision;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
+import java.awt.*;
 import java.util.Arrays;
 
 /**
@@ -39,7 +40,7 @@ public class DynamicObject {
 	public float xSpeed = 0;
 	public float ySpeed = 0;
 
-	public int[] alarm = new int[10];
+	public int[] alarm = new int[11];
 
 	public DynamicObject(double x, double y, int depth, int instanceID) {
 		this(x, y, depth, 1, 1, instanceID);
@@ -51,7 +52,7 @@ public class DynamicObject {
 		this.imageXScale = xScale;
 		this.imageYScale = yScale;
 		this.instanceID = instanceID;
-		Arrays.fill(alarm, -1);
+		Arrays.fill(alarm, 0);
 	}
 
 	public void create(WorldMiddleman world) {
@@ -130,6 +131,10 @@ public class DynamicObject {
 		// to override
 	}
 
+	public void alarm10(WorldMiddleman world) {
+		// to override
+	}
+
 	// THE METHODS BELOW ARE TO BE USED BY CHILD CLASSES IN THEIR VERSIONS OF THE ABOVE METHODS
 
 	protected final void drawSelf() {
@@ -153,6 +158,30 @@ public class DynamicObject {
 	protected final void drawExtended(String sprite, double spriteIndex, double x, double y, double xScale, double yScale, double alpha) {
 		if (visible) {
 			Screen.draw(sprite, spriteIndex, x, y, xScale, yScale, depth, alpha);
+		}
+	}
+
+	protected final void drawText(String message, double x, double y) {
+		if (visible) {
+			Screen.drawText(message, x, y, depth);
+		}
+	}
+
+	protected final void drawText(String message, double x, double y, double wrapWidth) {
+		if (visible) {
+			Screen.drawText(message, x, y, wrapWidth, depth);
+		}
+	}
+
+	protected final void drawRect(double x1, double y1, double x2, double y2, Color color) {
+		if (visible) {
+			drawRect(x1, y1, x2, y2, color.getRGB());
+		}
+	}
+
+	protected final void drawRect(double x1, double y1, double x2, double y2, int rgbColor) {
+		if (visible) {
+			Screen.drawRect(x1, y1, x2, y2, rgbColor, depth);
 		}
 	}
 }

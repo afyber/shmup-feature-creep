@@ -125,7 +125,6 @@ public class World {
 
 					// here, if it has just become 0 from that subtraction, trigger the alarm
 					if (object.alarm[i] == 0) {
-						object.alarm[i] = -1;
 						switch (i) {
 							case 0 -> object.alarm0(worldMiddleman);
 							case 1 -> object.alarm1(worldMiddleman);
@@ -137,6 +136,7 @@ public class World {
 							case 7 -> object.alarm7(worldMiddleman);
 							case 8 -> object.alarm8(worldMiddleman);
 							case 9 -> object.alarm9(worldMiddleman);
+							case 10 -> object.alarm10(worldMiddleman);
 							default -> MainClass.LOGGER.log(LoggingLevel.WARNING, "Something has gone very wrong in the alarm code");
 						}
 					}
@@ -268,37 +268,37 @@ public class World {
 		return false;
 	}
 
-	private boolean isCollidingSemiPrecise(DynamicObject caller, DynamicObject other) {
-		if (other == null || caller == null) {
+	private boolean isCollidingSemiPrecise(DynamicObject sprite, DynamicObject rect) {
+		if (rect == null || sprite == null) {
 			return false;
 		}
 
-		SpriteCollision callerCollision = (SpriteCollision)caller.collision;
-		RectangleCollision otherCollision = (RectangleCollision)other.collision;
+		SpriteCollision callerCollision = (SpriteCollision)sprite.collision;
+		RectangleCollision otherCollision = (RectangleCollision)rect.collision;
 
 		if (otherCollision == null || callerCollision == null) {
 			return false;
 		}
 
-		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(callerCollision.getSpriteName(), 0, caller.imageXScale, caller.imageYScale);
-		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(other.sprite, (int)other.spriteIndex, other.imageXScale, other.imageYScale);
+		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(callerCollision.getSpriteName(), 0, sprite.imageXScale, sprite.imageYScale);
+		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(rect.sprite, (int)rect.spriteIndex, rect.imageXScale, rect.imageYScale);
 
 		if (otherInfo == null || callerInfo == null) {
 			return false;
 		}
 
-		int callerCorner1X = (int)Math.round(caller.x - callerInfo.originX());
-		int callerCorner1Y = (int)Math.round(caller.y - callerInfo.originY());
+		int callerCorner1X = (int)Math.round(sprite.x - callerInfo.originX());
+		int callerCorner1Y = (int)Math.round(sprite.y - callerInfo.originY());
 		int callerCorner2X = callerCorner1X + callerInfo.dataWidth();
 		int callerCorner2Y = callerCorner1Y + callerInfo.dataHeight();
-		int otherCorner1X = (int)Math.round(other.x - otherInfo.originX()) + otherCollision.getMargin(0);
-		int otherCorner1Y = (int)Math.round(other.y - otherInfo.originY()) + otherCollision.getMargin(1);
+		int otherCorner1X = (int)Math.round(rect.x - otherInfo.originX()) + otherCollision.getMargin(0);
+		int otherCorner1Y = (int)Math.round(rect.y - otherInfo.originY()) + otherCollision.getMargin(1);
 		int otherCorner2X = otherCorner1X + otherInfo.dataWidth() + otherCollision.getMargin(2);
 		int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight() + otherCollision.getMargin(3);
 
 		if (GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
 				otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y)) {
-			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(callerCollision.getSpriteName(), 0, caller.imageXScale, caller.imageYScale);
+			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(callerCollision.getSpriteName(), 0, sprite.imageXScale, sprite.imageYScale);
 
 			if (callerRegion == null) {
 				return false;
