@@ -54,6 +54,8 @@ public class MainClass {
 			throw new RoomNotDefinedError();
 		}
 
+		world.gameStart();
+
 		LOGGER.log(LoggingLevel.DEBUG, "Main loop start");
 
 		// ======== MAIN LOOP ========

@@ -1,5 +1,7 @@
 package afyber.shmupfeaturecreep;
 
+import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
+
 public class Game {
 
 	public static final String GAME_NAME = "shmupfeaturecreep";
@@ -13,6 +15,10 @@ public class Game {
 	public static final boolean DEBUG = true;
 
 	private Game() {}
+
+	public static void gameStart(WorldMiddleman world) {
+
+	}
 
 	public static void registerObjects() {
 

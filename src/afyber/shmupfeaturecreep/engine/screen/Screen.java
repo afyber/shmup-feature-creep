@@ -149,6 +149,9 @@ public class Screen {
 		drawRect(x1, y1, x2, y2, color.getRGB(), depth);
 	}
 	public static void drawRect(double x1, double y1, double x2, double y2, int rgbColor, int depth) {
+		drawRect(x1, y1, x2, y2, rgbColor, depth, 1.0);
+	}
+	public static void drawRect(double x1, double y1, double x2, double y2, int rgbColor, int depth, double alpha) {
 		if (isDrawing) {
 			if ((rgbColor >> 24 & 0xFF) == 0x0) {
 				rgbColor = 0xFF000000 | rgbColor;
@@ -165,7 +168,7 @@ public class Screen {
 					y1 = y2;
 					y2 = tmp;
 				}
-				drawRequests.add(new RectangleDrawRequest((int)Math.round(x1), (int)Math.round(y1), (int)Math.round(x2), (int)Math.round(y2), rgbColor, depth));
+				drawRequests.add(new RectangleDrawRequest((int)Math.round(x1), (int)Math.round(y1), (int)Math.round(x2), (int)Math.round(y2), rgbColor, depth, alpha));
 			} catch (NullPointerException e) {
 				MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
@@ -176,13 +179,16 @@ public class Screen {
 		drawLine(x1, y1, x2, y2, width, color.getRGB(), depth);
 	}
 	public static void drawLine(double x1, double y1, double x2, double y2, double width, int rgbColor, int depth) {
+		drawLine(x1, y1, x2, y2, width, rgbColor, depth, 1.0);
+	}
+	public static void drawLine(double x1, double y1, double x2, double y2, double width, int rgbColor, int depth, double alpha) {
 		if (isDrawing) {
 			if ((rgbColor >> 24 & 0xFF) == 0x0) {
 				rgbColor = 0xFF000000 | rgbColor;
 			}
 
 			try {
-				drawRequests.add(new LineDrawRequest((int)Math.round(x1), (int)Math.round(y1), (int)Math.round(x2), (int)Math.round(y2), (int)Math.floor(width), rgbColor, depth));
+				drawRequests.add(new LineDrawRequest((int)Math.round(x1), (int)Math.round(y1), (int)Math.round(x2), (int)Math.round(y2), (int)Math.floor(width), rgbColor, depth, alpha));
 			} catch (NullPointerException e) {
 				MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
@@ -193,9 +199,12 @@ public class Screen {
 		drawText(message, x, y, -1, depth);
 	}
 	public static void drawText(String message, double x, double y, double wrapWidth, int depth) {
+		drawText(message, x, y, wrapWidth, depth, 1.0);
+	}
+	public static void drawText(String message, double x, double y, double wrapWidth, int depth, double alpha) {
 		if (isDrawing) {
 			try {
-				drawRequests.add(new TextDrawRequest(message, currentFont, (int)Math.round(x), (int)Math.round(y), (int)Math.round(wrapWidth), depth));
+				drawRequests.add(new TextDrawRequest(message, currentFont, (int)Math.round(x), (int)Math.round(y), (int)Math.round(wrapWidth), depth, alpha));
 			} catch (NullPointerException e) {
 				MainClass.LOGGER.log(LoggingLevel.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
@@ -285,12 +294,12 @@ public class Screen {
 		}
 	}
 
-	private static void applySpriteDataToFrame(int[][] data, int x, int y) {
+	private static void applySpriteDataToFrame(int[][] data, int x, int y, double alpha) {
 		// less efficient sometimes, faster other times
 
 		for (int i = 0; i < data.length; i++) {
 			for (int c = 0; c < data[0].length; c++) {
-				applyPixelToFrame(x + c, y + i, data[i][c]);
+				applyPixelToFrameWithAlpha(x + c, y + i, data[i][c], alpha);
 			}
 		}
 	}
@@ -302,7 +311,7 @@ public class Screen {
 
 		for (int y = request.y1(); y < request.y2(); y++) {
 			for (int x = request.x1(); x < request.x2(); x++) {
-				applyPixelToFrame(x, y, request.rgbColor());
+				applyPixelToFrameWithAlpha(x, y, request.rgbColor(), request.alpha());
 			}
 		}
 	}
@@ -310,11 +319,11 @@ public class Screen {
 	private static void applyLineToFrame(LineDrawRequest request) {
 		if (request.x1() == request.x2()) {
 			// This is a vertical line
-			applyRectToFrame(new RectangleDrawRequest(request.x1() - request.width() / 2, request.y1(), request.x2() + request.width() / 2 + 1, request.y2(), request.rgbColor(), request.depth()));
+			applyRectToFrame(new RectangleDrawRequest(request.x1() - request.width() / 2, request.y1(), request.x2() + request.width() / 2 + 1, request.y2(), request.rgbColor(), request.depth(), request.alpha()));
 		}
 		else if (request.y1() == request.y2()) {
 			// This is a horizontal line
-			applyRectToFrame(new RectangleDrawRequest(request.x1(), request.y1() - request.width() / 2, request.x2(), request.y2() + request.width() / 2 + 1, request.rgbColor(), request.depth()));
+			applyRectToFrame(new RectangleDrawRequest(request.x1(), request.y1() - request.width() / 2, request.x2(), request.y2() + request.width() / 2 + 1, request.rgbColor(), request.depth(), request.alpha()));
 		}
 		else {
 			// This is a diagonal line, this is where it gets complicated
@@ -343,7 +352,7 @@ public class Screen {
 
 			if (character == null || current == ' ') {
 				// The character is either an actual space, or not in the font-set, also make sure to wrap, even for whitespace
-				if (runningX != 0 && runningX + font.getSpaceWidth() > request.wrapWidth()) {
+				if (request.wrapWidth() != -1 && runningX != 0 && runningX + font.getSpaceWidth() > request.wrapWidth()) {
 					runningX = 0;
 					runningY += font.getLineHeight();
 				}
@@ -353,12 +362,12 @@ public class Screen {
 				// most of the magic happens in here
 
 				// if this character will go past the wrap width, and we have drawn a character this line, wrap around
-				if (runningX != 0 && runningX + character.imageWidth() > request.wrapWidth()) {
+				if (request.wrapWidth() != -1 && runningX != 0 && runningX + character.imageWidth() > request.wrapWidth()) {
 					runningX = 0;
 					runningY += font.getLineHeight();
 				}
 
-				applySpriteDataToFrame(character.imageData(), request.x() + runningX + character.xOffs(), request.y() + runningY + character.yOffs());
+				applySpriteDataToFrame(character.imageData(), request.x() + runningX + character.xOffs(), request.y() + runningY + character.yOffs(), request.alpha());
 
 				runningX += character.xOffs() + character.imageWidth() + character.nextXOffs();
 			}

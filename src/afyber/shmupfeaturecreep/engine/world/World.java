@@ -1,10 +1,13 @@
 package afyber.shmupfeaturecreep.engine.world;
 
+import afyber.shmupfeaturecreep.Game;
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.Registry;
 import afyber.shmupfeaturecreep.engine.errors.ObjectNotDefinedError;
 import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
+import afyber.shmupfeaturecreep.engine.particle.Particle;
+import afyber.shmupfeaturecreep.engine.particle.ParticleRegistry;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.rooms.ObjectCreationReference;
 import afyber.shmupfeaturecreep.engine.rooms.Room;
@@ -36,6 +39,8 @@ public class World {
 	// they are added to the allGameObjects list and will start doing that stuff on the next frame
 	private final ArrayList<DynamicObject> gameObjectsCreatedThisFrame;
 
+	private final ArrayList<Particle> allParticles;
+
 	private int nextAvailableGameObjectID = 1;
 
 	private final WorldMiddleman worldMiddleman;
@@ -45,6 +50,7 @@ public class World {
 		allGameObjects = new ArrayList<>();
 		gameObjectsToRemove = new ArrayList<>();
 		gameObjectsCreatedThisFrame = new ArrayList<>();
+		allParticles = new ArrayList<>();
 
 		worldMiddleman = new WorldMiddleman(this);
 
@@ -85,6 +91,11 @@ public class World {
 			object.x += object.xSpeed;
 			object.y += object.ySpeed;
 		}
+		for (Particle particle: allParticles) {
+			particle.lived += 1;
+			particle.update();
+		}
+		allParticles.removeIf(particle -> particle.lived >= particle.lifetime);
 	}
 
 	public void drawAll() {
@@ -100,6 +111,9 @@ public class World {
 		}
 		for (DynamicObject object: allGameObjects) {
 			object.postDraw(worldMiddleman);
+		}
+		for (Particle particle: allParticles) {
+			particle.draw();
 		}
 		Screen.setIsDrawing(false);
 	}
@@ -151,6 +165,15 @@ public class World {
 
 	public void queueObjectDestruction(String classRef) {
 		gameObjectsToRemove.add(new ObjectDestructionReference(false, -1, classRef));
+	}
+
+	public void createParticle(String name, double x, double y) {
+		if (ParticleRegistry.hasParticle(name)) {
+			Particle particle = ParticleRegistry.getNewParticle(name);
+			particle.x = x;
+			particle.y = y;
+			allParticles.add(particle);
+		}
 	}
 
 	public DynamicObject createInstance(String classRef, double x, double y, int depth) {
@@ -476,5 +499,9 @@ public class World {
 
 	public String getRoomChangeRequestName() {
 		return roomChange;
+	}
+
+	public void gameStart() {
+		Game.gameStart(worldMiddleman);
 	}
 }
