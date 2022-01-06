@@ -34,7 +34,7 @@ public class MainClass {
 
 		Game.registerRooms();
 
-		Timing.setIdealFrameTimeNanos((long)Math.ceil(1000000.0/Game.IDEAL_FPS));
+		Timing.setIdealFrameTimeMillis((long)Math.ceil(1000.0/Game.IDEAL_FPS));
 
 		Keyboard.clearKeys();
 
