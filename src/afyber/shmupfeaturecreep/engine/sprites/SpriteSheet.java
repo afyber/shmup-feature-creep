@@ -134,5 +134,15 @@ public class SpriteSheet {
 
 			line++;
 		}
+
+		// fixes a bug
+		if (currentSprite != null) {
+			if (currentName == null) {
+				MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sprite definition");
+			}
+			else {
+				map.put(currentName, currentSprite);
+			}
+		}
 	}
 }

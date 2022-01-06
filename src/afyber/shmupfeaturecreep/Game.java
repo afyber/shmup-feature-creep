@@ -1,6 +1,14 @@
 package afyber.shmupfeaturecreep;
 
+import afyber.shmupfeaturecreep.engine.Registry;
+import afyber.shmupfeaturecreep.engine.rooms.ObjectCreationReference;
+import afyber.shmupfeaturecreep.engine.rooms.Room;
+import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
+import afyber.shmupfeaturecreep.game.PlayerBulletBW;
+import afyber.shmupfeaturecreep.game.PlayerShipBW;
+
+import java.util.ArrayList;
 
 public class Game {
 
@@ -21,10 +29,14 @@ public class Game {
 	}
 
 	public static void registerObjects() {
-
+		Registry.registerObject(new PlayerShipBW(0,0,0,-1));
+		Registry.registerObject(new PlayerBulletBW(0,0,0,-1));
 	}
 
 	public static void registerRooms() {
-
+		ArrayList<StaticObject> tiles = new ArrayList<>();
+		ArrayList<ObjectCreationReference> objects = new ArrayList<>();
+		objects.add(new ObjectCreationReference("player_ship_bw", 320, 480, 2, 2, 100));
+		Registry.registerRoom("roomStart", new Room(tiles, objects));
 	}
 }

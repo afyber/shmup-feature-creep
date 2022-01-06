@@ -12,8 +12,8 @@ public class RandomUtil {
 
 	private static final Random random = new Random(System.currentTimeMillis());
 
-	public static int randInt(int boundInclusive) {
-		return random.nextInt(boundInclusive + 1);
+	public static int randInt(int bound) {
+		return random.nextInt(bound);
 	}
 
 	public static double random() {
@@ -30,5 +30,17 @@ public class RandomUtil {
 
 	public static void randomize() {
 		random.setSeed(System.currentTimeMillis());
+	}
+
+	public static String choose(String... args) {
+		return args[randInt(args.length)];
+	}
+
+	public static int choose(Integer... args) {
+		return args[randInt(args.length)];
+	}
+
+	public static double choose(Double... args) {
+		return args[randInt(args.length)];
 	}
 }
