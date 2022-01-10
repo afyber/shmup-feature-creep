@@ -55,10 +55,10 @@ public class Particle {
 	}
 
 	public Particle copy() {
-		return new Particle(x, y, lifetime, physics, renderer, fadeRule, depth);
+		return new Particle(x, y, lifetime, physics.copy(), renderer.copy(), fadeRule, depth);
 	}
 
-	enum FadeRule {
+	public enum FadeRule {
 		LINEAR,
 		SQUARE,
 		CUBE,

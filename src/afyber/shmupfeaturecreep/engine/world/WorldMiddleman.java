@@ -27,6 +27,16 @@ public class WorldMiddleman {
 	}
 
 	/**
+	 * Creates a new instance of the particle with the given name at the given location
+	 * @param name The name of the particle to create
+	 * @param x The initial x position of the particle
+	 * @param y The initial y position of the particle
+	 */
+	public void createParticle(String name, double x, double y) {
+		world.createParticle(name, x, y);
+	}
+
+	/**
 	 * Creates an instance of an object initialized with the given parameters.
 	 * @param classRef The type of object to create an instance of
 	 * @param x The initial x position of the instance

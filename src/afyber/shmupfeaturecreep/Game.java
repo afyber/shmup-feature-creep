@@ -2,6 +2,10 @@ package afyber.shmupfeaturecreep;
 
 import afyber.shmupfeaturecreep.engine.Registry;
 import afyber.shmupfeaturecreep.engine.audio.Sound;
+import afyber.shmupfeaturecreep.engine.particle.Particle;
+import afyber.shmupfeaturecreep.engine.particle.ParticleRegistry;
+import afyber.shmupfeaturecreep.engine.particle.physics.FrictionVelocity;
+import afyber.shmupfeaturecreep.engine.particle.render.SquareRenderer;
 import afyber.shmupfeaturecreep.engine.rooms.ObjectCreationReference;
 import afyber.shmupfeaturecreep.engine.rooms.Room;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
@@ -28,6 +32,8 @@ public class Game {
 
 	public static void gameStart(WorldMiddleman world) {
 		Sound.setMusicGain("small_explosion_bw", 0.65);
+
+		ParticleRegistry.registerParticle("small_enemy_thrust_bw", new Particle(-1, -1, 30, new FrictionVelocity(270, 3, 0.15), new SquareRenderer(3, 0xffffff), Particle.FadeRule.LINEAR, -100));
 	}
 
 	public static void registerObjects() {

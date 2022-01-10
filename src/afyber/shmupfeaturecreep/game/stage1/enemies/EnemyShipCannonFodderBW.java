@@ -1,12 +1,14 @@
 package afyber.shmupfeaturecreep.game.stage1.enemies;
 
 import afyber.shmupfeaturecreep.engine.MathUtil;
+import afyber.shmupfeaturecreep.engine.RandomUtil;
 import afyber.shmupfeaturecreep.engine.world.RectangleCollision;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class EnemyShipCannonFodderBW extends EnemyShipParentBW {
 
 	public double speed;
+	public int timer;
 
 	public EnemyShipCannonFodderBW(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
@@ -25,7 +27,13 @@ public class EnemyShipCannonFodderBW extends EnemyShipParentBW {
 
 	@Override
 	public void update(WorldMiddleman world) {
-		speed = MathUtil.interpolateExp(speed, 4, 30, 0.5);
+		speed = MathUtil.interpolateExp(speed, 4, 30, 0.1);
 		y += speed;
+
+		timer++;
+		if (timer >= 24 / speed) {
+			world.createParticle("small_enemy_thrust_bw", x + RandomUtil.randInt(-9, 9), y - 8);
+			timer = 0;
+		}
 	}
 }

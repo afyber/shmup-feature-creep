@@ -17,4 +17,9 @@ public class SquareRenderer implements RenderModel {
 	public void draw(Particle particle) {
 		Screen.drawRect(particle.x - width / 2, particle.y - width / 2, particle.x + width / 2, particle.y + width / 2, color, particle.depth, particle.alpha);
 	}
+
+	@Override
+	public RenderModel copy() {
+		return new SquareRenderer(width, color);
+	}
 }

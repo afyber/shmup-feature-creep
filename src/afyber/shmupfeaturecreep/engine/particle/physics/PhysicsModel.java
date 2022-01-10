@@ -5,4 +5,6 @@ import afyber.shmupfeaturecreep.engine.particle.Particle;
 public interface PhysicsModel {
 
 	void update(Particle particle);
+
+	PhysicsModel copy();
 }

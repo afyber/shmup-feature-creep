@@ -13,7 +13,7 @@ public class ExplosionSmallBW extends DynamicObject {
 	@Override
 	public void create(WorldMiddleman world) {
 		sprite = "explosion_small_bw";
-		imageSpeed = 0.5;
+		imageSpeed = 0.25;
 		imageXScale = 3;
 		imageYScale = 3;
 	}

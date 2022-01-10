@@ -68,6 +68,10 @@ public class World {
 		roomChange = roomName;
 	}
 
+	public void gameStart() {
+		Game.gameStart(worldMiddleman);
+	}
+
 	public void destroyAll() {
 		for (ObjectDestructionReference destroyRef: gameObjectsToRemove) {
 			if (destroyRef.useInstanceID()) {
@@ -499,9 +503,5 @@ public class World {
 
 	public String getRoomChangeRequestName() {
 		return roomChange;
-	}
-
-	public void gameStart() {
-		Game.gameStart(worldMiddleman);
 	}
 }
