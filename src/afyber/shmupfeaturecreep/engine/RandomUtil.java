@@ -15,6 +15,9 @@ public class RandomUtil {
 	public static int randInt(int bound) {
 		return random.nextInt(bound);
 	}
+	public static int randInt(int minimum, int bound) {
+		return random.nextInt(minimum, bound);
+	}
 
 	public static double random() {
 		return random.nextDouble();

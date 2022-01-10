@@ -15,7 +15,7 @@ public class WaveControllerBW extends DynamicObject {
 	@Override
 	public void update(WorldMiddleman world) {
 		if (Keyboard.keyJustDown("x")) {
-			world.createInstance("enemy_ship_cannon_fodder_bw", RandomUtil.randInt(640), -16, 0);
+			world.createInstance("enemy_ship_cannon_fodder_bw", RandomUtil.randInt(16, 626), -16, 0);
 		}
 	}
 }

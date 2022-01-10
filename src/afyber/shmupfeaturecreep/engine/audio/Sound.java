@@ -318,11 +318,7 @@ public class Sound {
 			return;
 		}
 
-		for (SoundInstance sound: mixer.playingSounds) {
-			if (sound.getSoundRefName().equals(soundName)) {
-				mixer.removeSound(sound);
-			}
-		}
+		mixer.playingSounds.removeIf(sound -> sound.getSoundRefName().equals(soundName));
 	}
 
 	public static void setSoundGain(String soundName, double gain) {

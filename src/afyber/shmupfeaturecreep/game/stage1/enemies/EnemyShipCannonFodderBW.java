@@ -1,4 +1,4 @@
-package afyber.shmupfeaturecreep.game.stage1;
+package afyber.shmupfeaturecreep.game.stage1.enemies;
 
 import afyber.shmupfeaturecreep.engine.MathUtil;
 import afyber.shmupfeaturecreep.engine.world.RectangleCollision;

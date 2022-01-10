@@ -6,6 +6,8 @@ import afyber.shmupfeaturecreep.engine.rooms.Room;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 import afyber.shmupfeaturecreep.game.stage1.*;
+import afyber.shmupfeaturecreep.game.stage1.enemies.EnemyShipCannonFodderBW;
+import afyber.shmupfeaturecreep.game.stage1.enemies.EnemyShipParentBW;
 
 import java.util.ArrayList;
 
