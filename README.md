@@ -12,7 +12,7 @@ If for some reason you have found this and actually want to try it here are your
 
 This project was made with Java 17 and will almost certainly require it to run/compile.
 
-The libraries in the `lib` folder (except for the javadoc libraries) should be added as libraries to your project (and be put into any JAR file), and the working folder should be set to `resources`.
+The libraries in the `lib` folder (except for the javadoc libraries) should be added as libraries to your project (and be extracted into any JAR file), and the working folder should be set to `resources`.
 
 ### Licensing
 
