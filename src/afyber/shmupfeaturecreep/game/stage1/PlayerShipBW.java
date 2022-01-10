@@ -1,4 +1,4 @@
-package afyber.shmupfeaturecreep.game;
+package afyber.shmupfeaturecreep.game.stage1;
 
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
@@ -14,21 +14,23 @@ public class PlayerShipBW extends DynamicObject {
 	@Override
 	public void create(WorldMiddleman world) {
 		sprite = "player_ship_bw_1";
+		imageXScale = 3;
+		imageYScale = 3;
 	}
 
 	@Override
 	public void update(WorldMiddleman world) {
 		if (Keyboard.keyDown("up")) {
-			y -= 4;
+			y -= 6;
 		}
 		if (Keyboard.keyDown("down")) {
-			y += 4;
+			y += 6;
 		}
 		if (Keyboard.keyDown("left")) {
-			x -= 4;
+			x -= 6;
 		}
 		if (Keyboard.keyDown("right")) {
-			x += 4;
+			x += 6;
 		}
 		if (Keyboard.keyJustDown("z")) {
 			alarm[0] = 1;
@@ -42,9 +44,9 @@ public class PlayerShipBW extends DynamicObject {
 
 	@Override
 	public void alarm0(WorldMiddleman world) {
-		world.createInstance("player_bullet_bw", x, y - 8, 10);
+		world.createInstance("player_bullet_basic_bw", x, y - 8, 10);
 		if (Keyboard.keyDown("z")) {
-			alarm[0] = 60;
+			alarm[0] = 7;
 		}
 	}
 }
