@@ -23,8 +23,7 @@ public class EnemyShipParentBW extends DynamicObject {
 				if (health <= 0) {
 					world.instanceDestroy(instanceID);
 					world.createInstance("explosion_small_bw", x, y, depth);
-					Sound.stopSound("small_explosion_bw");
-					Sound.playSound("small_explosion_bw");
+					Sound.playMusic("small_explosion_bw");
 				}
 			}
 		}

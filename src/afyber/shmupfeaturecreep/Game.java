@@ -1,6 +1,7 @@
 package afyber.shmupfeaturecreep;
 
 import afyber.shmupfeaturecreep.engine.Registry;
+import afyber.shmupfeaturecreep.engine.audio.Sound;
 import afyber.shmupfeaturecreep.engine.rooms.ObjectCreationReference;
 import afyber.shmupfeaturecreep.engine.rooms.Room;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
@@ -26,7 +27,7 @@ public class Game {
 	private Game() {}
 
 	public static void gameStart(WorldMiddleman world) {
-		// for the future
+		Sound.setMusicGain("small_explosion_bw", 0.65);
 	}
 
 	public static void registerObjects() {
