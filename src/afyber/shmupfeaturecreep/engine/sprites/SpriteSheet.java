@@ -3,7 +3,7 @@ package afyber.shmupfeaturecreep.engine.sprites;
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.errors.SpriteSheetNotDefinedError;
-import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
+import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import ar.com.hjg.pngj.PngReaderInt;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class SpriteSheet {
 			imageReader = new PngReaderInt(MainClass.class.getResourceAsStream(imageName + ".png"));
 		}
 		catch (Exception e) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sprite-sheet image:", e);
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite-sheet image:", e);
 			throw new SpriteSheetNotDefinedError();
 		}
 
@@ -35,7 +35,7 @@ public class SpriteSheet {
 		}
 		catch (Exception e) {
 			imageReader.close();
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sprite-sheet image:", e);
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite-sheet image:", e);
 			throw new SpriteSheetNotDefinedError();
 		}
 
@@ -43,7 +43,7 @@ public class SpriteSheet {
 			setupSprites(GeneralUtil.readResourceAsLineArray(imageName + "_info.txt"), out);
 		}
 		catch (IOException e) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load sprite-sheet caused IOException", e);
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Attempting to load sprite-sheet caused IOException", e);
 			throw new SpriteSheetNotDefinedError();
 		}
 	}
@@ -96,7 +96,7 @@ public class SpriteSheet {
 			if (Character.isAlphabetic(currentLine.charAt(0))) {
 				if (currentSprite != null) {
 					if (currentName == null) {
-						MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sprite definition");
+						MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite definition");
 					}
 					else {
 						map.put(currentName, currentSprite);
@@ -138,7 +138,7 @@ public class SpriteSheet {
 		// fixes a bug
 		if (currentSprite != null) {
 			if (currentName == null) {
-				MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sprite definition");
+				MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite definition");
 			}
 			else {
 				map.put(currentName, currentSprite);

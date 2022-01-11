@@ -1,6 +1,5 @@
 package afyber.shmupfeaturecreep.game.stage1;
 
-import afyber.shmupfeaturecreep.engine.RandomUtil;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
@@ -15,7 +14,9 @@ public class WaveControllerBW extends DynamicObject {
 	@Override
 	public void update(WorldMiddleman world) {
 		if (Keyboard.keyJustDown("x")) {
-			world.createInstance("enemy_ship_cannon_fodder_bw", RandomUtil.randInt(16, 626), -16, 0);
+			for (int i = 32; i <= 626; i += 64) {
+				world.createInstance("enemy_ship_cannon_fodder_bw", i, -16, 0);
+			}
 		}
 	}
 }

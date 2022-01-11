@@ -13,7 +13,7 @@ public class EnemyShipCannonFodderBW extends EnemyShipParentBW {
 	public EnemyShipCannonFodderBW(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "enemy_ship_cannon_fodder_bw";
-		collision = new RectangleCollision(-2, -1, -2, -2);
+		collision = new RectangleCollision(0, -3, 0, -6);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class EnemyShipCannonFodderBW extends EnemyShipParentBW {
 		timer--;
 		if (timer <= 0) {
 			world.createParticle("small_enemy_thrust_bw", x + RandomUtil.randInt(-9, 9), y - 8);
-			timer = (int)(RandomUtil.randInt(12, 30) / speed);
+			timer = (int)(RandomUtil.randInt(6, 30) / speed);
 		}
 	}
 }

@@ -2,5 +2,10 @@ package afyber.shmupfeaturecreep.engine.world;
 
 public interface Collision {
 
-	CollisionType getType();
+	Type getType();
+
+	enum Type {
+		SPRITE,
+		RECT
+	}
 }

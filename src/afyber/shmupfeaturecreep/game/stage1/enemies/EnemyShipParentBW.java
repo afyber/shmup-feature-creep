@@ -1,5 +1,6 @@
 package afyber.shmupfeaturecreep.game.stage1.enemies;
 
+import afyber.shmupfeaturecreep.Game;
 import afyber.shmupfeaturecreep.engine.audio.Sound;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
@@ -20,12 +21,17 @@ public class EnemyShipParentBW extends DynamicObject {
 			world.instanceDestroy(collision);
 			if (health != -100) {
 				health--;
-				if (health <= 0) {
-					world.instanceDestroy(instanceID);
-					world.createInstance("explosion_small_bw", x, y, depth);
-					Sound.playMusic("small_explosion_bw");
-				}
 			}
+		}
+
+		if (health <= 0) {
+			world.instanceDestroy(instanceID);
+			world.createInstance("explosion_small_bw", x, y, depth);
+			Sound.playMusic("small_explosion_bw");
+		}
+
+		if (x < -128 || x > Game.WINDOW_WIDTH + 128 || y < -128 || y > Game.WINDOW_HEIGHT + 128) {
+			world.instanceDestroy(instanceID);
 		}
 	}
 }

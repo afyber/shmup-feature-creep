@@ -5,7 +5,7 @@ import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.Registry;
 import afyber.shmupfeaturecreep.engine.errors.ObjectNotDefinedError;
-import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
+import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import afyber.shmupfeaturecreep.engine.particle.Particle;
 import afyber.shmupfeaturecreep.engine.particle.ParticleRegistry;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
@@ -155,7 +155,7 @@ public class World {
 							case 8 -> object.alarm8(worldMiddleman);
 							case 9 -> object.alarm9(worldMiddleman);
 							case 10 -> object.alarm10(worldMiddleman);
-							default -> MainClass.LOGGER.log(LoggingLevel.WARNING, "Something has gone very wrong in the alarm code");
+							default -> MainClass.LOGGER.log(EngineLogger.Level.WARNING, "Something has gone very wrong in the alarm code");
 						}
 					}
 				}
@@ -195,17 +195,17 @@ public class World {
 				gameObjectsCreatedThisFrame.add(newObject);
 				return newObject;
 			} catch (NoSuchMethodException e) {
-				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in NoSuchMethodException:", e);
+				MainClass.LOGGER.log(EngineLogger.Level.WARNING, "Attempt to create DynamicObject resulted in NoSuchMethodException:", e);
 			} catch (InvocationTargetException e) {
-				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in InvocationTargetException:", e);
+				MainClass.LOGGER.log(EngineLogger.Level.WARNING, "Attempt to create DynamicObject resulted in InvocationTargetException:", e);
 			} catch (InstantiationException e) {
-				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in InstantiationException:", e);
+				MainClass.LOGGER.log(EngineLogger.Level.WARNING, "Attempt to create DynamicObject resulted in InstantiationException:", e);
 			} catch (IllegalAccessException e) {
-				MainClass.LOGGER.log(LoggingLevel.WARNING, "Attempt to create DynamicObject resulted in IllegalAccessException:", e);
+				MainClass.LOGGER.log(EngineLogger.Level.WARNING, "Attempt to create DynamicObject resulted in IllegalAccessException:", e);
 			}
 		}
 		else {
-			MainClass.LOGGER.log(LoggingLevel.WARNING, "Object name \"" + classRef + "\" is not registered, unable to create");
+			MainClass.LOGGER.log(EngineLogger.Level.WARNING, "Object name \"" + classRef + "\" is not registered, unable to create");
 			throw new ObjectNotDefinedError();
 		}
 		return null;
@@ -381,19 +381,19 @@ public class World {
 	}
 
 	private boolean isColliding(DynamicObject caller, DynamicObject other) {
-		if (caller.collision.getType() == CollisionType.SPRITE) {
-			if (other.collision.getType() == CollisionType.SPRITE) {
+		if (caller.collision.getType() == Collision.Type.SPRITE) {
+			if (other.collision.getType() == Collision.Type.SPRITE) {
 				return isCollidingPrecise(caller, other);
 			}
-			else if (other.collision.getType() == CollisionType.RECT) {
+			else if (other.collision.getType() == Collision.Type.RECT) {
 				return isCollidingSemiPrecise(caller, other);
 			}
 		}
-		else if (caller.collision.getType() == CollisionType.RECT) {
-			if (other.collision.getType() == CollisionType.SPRITE) {
+		else if (caller.collision.getType() == Collision.Type.RECT) {
+			if (other.collision.getType() == Collision.Type.SPRITE) {
 				return isCollidingSemiPrecise(other, caller);
 			}
-			else if (other.collision.getType() == CollisionType.RECT) {
+			else if (other.collision.getType() == Collision.Type.RECT) {
 				return isCollidingImprecise(caller, other);
 			}
 		}

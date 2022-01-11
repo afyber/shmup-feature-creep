@@ -13,6 +13,7 @@ import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 import afyber.shmupfeaturecreep.game.stage1.*;
 import afyber.shmupfeaturecreep.game.stage1.enemies.EnemyShipCannonFodderBW;
 import afyber.shmupfeaturecreep.game.stage1.enemies.EnemyShipParentBW;
+import afyber.shmupfeaturecreep.game.stage1.enemies.EnemyShipSmallCannonBW;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,7 @@ public class Game {
 
 		Registry.registerObject(new EnemyShipParentBW(0,0,0,-1));
 		Registry.registerObjectAsChildOf(new EnemyShipCannonFodderBW(0,0,0,-1), "enemy_ship_parent_bw");
+		Registry.registerObjectAsChildOf(new EnemyShipSmallCannonBW(0,0,0,-1), "enemy_ship_parent_bw");
 
 		Registry.registerObject(new ExplosionSmallBW(0,0,0,-1));
 

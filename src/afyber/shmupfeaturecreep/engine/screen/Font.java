@@ -3,7 +3,7 @@ package afyber.shmupfeaturecreep.engine.screen;
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.errors.SpriteSheetNotDefinedError;
-import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
+import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import ar.com.hjg.pngj.PngReaderInt;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class Font {
 		try {
 			 fileContents = GeneralUtil.readResourceAsLineArray(fileName + "_info.txt");
 		} catch (IOException e) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Error loading font definition");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Error loading font definition");
 			throw new SpriteSheetNotDefinedError();
 		}
 
@@ -29,7 +29,7 @@ public class Font {
 			PngReaderInt reader = new PngReaderInt(MainClass.class.getResourceAsStream(fileName + ".png"));
 			fontImageData = setupSpriteSheetData(reader);
 		} catch (Exception e) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Error loading font image");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Error loading font image");
 			throw new SpriteSheetNotDefinedError();
 		}
 

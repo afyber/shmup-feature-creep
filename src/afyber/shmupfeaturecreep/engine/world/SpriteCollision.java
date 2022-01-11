@@ -9,8 +9,8 @@ public class SpriteCollision implements Collision {
 	}
 
 	@Override
-	public CollisionType getType() {
-		return CollisionType.SPRITE;
+	public Type getType() {
+		return Type.SPRITE;
 	}
 
 	public String getSpriteName() {

@@ -13,8 +13,8 @@ public class RectangleCollision implements Collision {
 	}
 
 	@Override
-	public CollisionType getType() {
-		return CollisionType.RECT;
+	public Type getType() {
+		return Type.RECT;
 	}
 
 	public int getMargin(int index) {

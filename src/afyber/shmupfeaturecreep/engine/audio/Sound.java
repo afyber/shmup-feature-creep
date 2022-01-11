@@ -32,7 +32,7 @@ import afyber.shmupfeaturecreep.engine.audio.music.*;
 import afyber.shmupfeaturecreep.engine.audio.sounds.SoundDataReference;
 import afyber.shmupfeaturecreep.engine.audio.sounds.SoundInstance;
 import afyber.shmupfeaturecreep.engine.errors.SoundsNotDefinedError;
-import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
+import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
@@ -66,13 +66,13 @@ public class Sound {
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, FORMAT);
 
 		if (!AudioSystem.isLineSupported(info)) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Unsupported audio output, no audio will be available!");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Unsupported audio output, no audio will be available!");
 			return;
 		}
 
 		soundLine = tryGetLine();
 		if (soundLine == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't get audio data line, no audio will be available!");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't get audio data line, no audio will be available!");
 			return;
 		}
 
@@ -115,7 +115,7 @@ public class Sound {
 			lines = GeneralUtil.readResourceAsLineArray("/sounds.txt");
 		}
 		catch (IOException e) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't load sounds.txt");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sounds.txt");
 			throw new SoundsNotDefinedError();
 		}
 
@@ -146,7 +146,7 @@ public class Sound {
 		SoundDataReference sound = loadSound(fileName, soundName);
 
 		if (sound == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Registering sound with null sound reference");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Registering sound with null sound reference");
 			return;
 		}
 
@@ -157,7 +157,7 @@ public class Sound {
 		MusicParent music = loadMusic(fileName);
 
 		if (music == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Registering music with null music reference");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Registering music with null music reference");
 			return;
 		}
 
@@ -168,7 +168,7 @@ public class Sound {
 		LoopParent loop = loadBasicLoop(introFileName, loopFileName);
 
 		if (loop == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Registering loop with null loop reference");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Registering loop with null loop reference");
 			return;
 		}
 
@@ -179,7 +179,7 @@ public class Sound {
 		LoopParent loop = loadComplexLoop(introFileName, introLoopFileName, loopLoopFileName);
 
 		if (loop == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Registering loop with null loop reference");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Registering loop with null loop reference");
 			return;
 		}
 
@@ -400,7 +400,7 @@ public class Sound {
 		URL url = MainClass.class.getResource(fileName);
 
 		if (url == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "URL was null when loading sound");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "URL was null when loading sound");
 			return null;
 		}
 
@@ -411,7 +411,7 @@ public class Sound {
 		AudioInputStream stream = getValidAudioInputStream(url);
 
 		if (stream == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't get correctly formatted audio stream when loading sound");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't get correctly formatted audio stream when loading sound");
 			return null;
 		}
 
@@ -426,7 +426,7 @@ public class Sound {
 		}
 
 		if (data == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't read sound data from stream");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't read sound data from stream");
 			return null;
 		}
 
@@ -437,7 +437,7 @@ public class Sound {
 		URL url = MainClass.class.getResource(fileName);
 
 		if (url == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "URL was null when loading music");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "URL was null when loading music");
 			return null;
 		}
 
@@ -448,7 +448,7 @@ public class Sound {
 		AudioInputStream stream = getValidAudioInputStream(url);
 
 		if (stream == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't get correctly formatted audio stream when loading music");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't get correctly formatted audio stream when loading music");
 			return null;
 		}
 
@@ -463,7 +463,7 @@ public class Sound {
 		}
 
 		if (data == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Couldn't read music data from stream");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't read music data from stream");
 			return null;
 		}
 
@@ -475,7 +475,7 @@ public class Sound {
 		URL url2 = MainClass.class.getResource(loopFileName);
 
 		if (url1 == null || url2 == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load basic loop with null file reference");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Attempting to load basic loop with null file reference");
 			return null;
 		}
 
@@ -487,7 +487,7 @@ public class Sound {
 		AudioInputStream stream2 = getValidAudioInputStream(loopFile);
 
 		if (stream1 == null || stream2 == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load basic loop with null audio stream");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Attempting to load basic loop with null audio stream");
 			return null;
 		}
 
@@ -511,7 +511,7 @@ public class Sound {
 		}
 
 		if (data1 == null || data2 == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "An oopsie whoopsie happened when loading the audio data for a basic loop (too many channels?)");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "An oopsie whoopsie happened when loading the audio data for a basic loop (too many channels?)");
 			return null;
 		}
 
@@ -524,7 +524,7 @@ public class Sound {
 		URL url3 = MainClass.class.getResource(loopLoopFileName);
 
 		if (url1 == null || url2 == null || url3 == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load complex loop with null file reference");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Attempting to load complex loop with null file reference");
 			return null;
 		}
 
@@ -537,7 +537,7 @@ public class Sound {
 		AudioInputStream loopLoopStream = getValidAudioInputStream(loopLoopFile);
 
 		if (introStream == null || introLoopStream == null || loopLoopStream == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempting to load complex loop with null audio stream");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Attempting to load complex loop with null audio stream");
 			return null;
 		}
 
@@ -569,7 +569,7 @@ public class Sound {
 		}
 
 		if (data1 == null || data2 == null || data3 == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Null audio data when loading a complex loop (too many channels?)");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Null audio data when loading a complex loop (too many channels?)");
 			return null;
 		}
 
@@ -581,7 +581,7 @@ public class Sound {
 		try (stream) {
 			data = getBytes(stream);
 		} catch (IOException e) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "IOException reading bytes from audio stream", e);
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "IOException reading bytes from audio stream", e);
 		}
 
 		return data;
@@ -606,7 +606,7 @@ public class Sound {
 			data[0] = left;
 			data[1] = right;
 		} catch (IOException e) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "IOException reading bytes from audio stream", e);
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "IOException reading bytes from audio stream", e);
 		}
 
 		return data;
@@ -649,11 +649,11 @@ public class Sound {
 			}
 		}
 		catch (UnsupportedAudioFileException e) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Unsupported audio file-type");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Unsupported audio file-type");
 			return null;
 		}
 		catch (IOException e) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "IOException when getting audio stream");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "IOException when getting audio stream");
 			return null;
 		}
 

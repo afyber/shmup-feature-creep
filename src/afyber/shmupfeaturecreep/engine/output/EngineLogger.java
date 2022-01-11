@@ -8,16 +8,16 @@ import java.nio.file.StandardOpenOption;
 public class EngineLogger {
 
 	private final String filename;
-	private LoggingLevel lowestAllowedLevel;
+	private Level lowestAllowedLevel;
 	private boolean writeToFile;
 
 	public EngineLogger(String filename, boolean writeToFile) {
 		this.filename = filename;
-		this.lowestAllowedLevel = LoggingLevel.WARNING;
+		this.lowestAllowedLevel = Level.WARNING;
 		setWriteToFile(writeToFile);
 	}
 
-	public void log(LoggingLevel level, String msg) {
+	public void log(Level level, String msg) {
 		try {
 			String message = "[" + level.name() + "] " + msg + "\n";
 			System.out.print(message);
@@ -31,7 +31,7 @@ public class EngineLogger {
 		}
 	}
 
-	public void log(LoggingLevel level, String msg, Throwable e) {
+	public void log(Level level, String msg, Throwable e) {
 		try {
 			String message = "[" + level.name() + "] " + msg + "\n" + e.toString() + "\n";
 			System.out.print(message);
@@ -45,11 +45,11 @@ public class EngineLogger {
 		}
 	}
 
-	public void setLoggingLevel(LoggingLevel level) {
+	public void setLoggingLevel(Level level) {
 		this.lowestAllowedLevel = level;
 	}
 
-	public LoggingLevel getLoggingLevel() {
+	public Level getLoggingLevel() {
 		return this.lowestAllowedLevel;
 	}
 
@@ -62,6 +62,23 @@ public class EngineLogger {
 				System.out.println("Either the log file already exists or the program doesn't have the ability to create a file");
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public enum Level {
+		DEBUG(0),
+		INFO(1),
+		WARNING(2),
+		ERROR(3);
+
+		private final int value;
+
+		Level(int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
 		}
 	}
 }

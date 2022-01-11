@@ -4,5 +4,12 @@ public interface DrawRequest {
 
 	int depth();
 
-	DrawRequestType getType();
+	Type getType();
+
+	enum Type {
+		SPRITE,
+		RECT,
+		LINE,
+		TEXT
+	}
 }

@@ -7,7 +7,6 @@ import afyber.shmupfeaturecreep.engine.audio.Sound;
 import afyber.shmupfeaturecreep.engine.errors.RoomNotDefinedError;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
-import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
 import afyber.shmupfeaturecreep.engine.screen.Screen;
 import afyber.shmupfeaturecreep.engine.world.World;
 
@@ -19,9 +18,9 @@ public class MainClass {
 
 	public static void main(String[] args) {
 		if (Game.DEBUG) {
-			LOGGER.setLoggingLevel(LoggingLevel.DEBUG);
+			LOGGER.setLoggingLevel(EngineLogger.Level.DEBUG);
 		}
-		LOGGER.log(LoggingLevel.DEBUG, "Program start");
+		LOGGER.log(EngineLogger.Level.DEBUG, "Program start");
 
 		boolean splashScreen = MainClass.class.getResource("/splashscreen.png") != null;
 		if (splashScreen) {
@@ -50,13 +49,13 @@ public class MainClass {
 			 world = new World(Registry.getRoom("roomStart"));
 		}
 		else {
-			LOGGER.log(LoggingLevel.ERROR, "The room registry does not contain \"roomStart\"");
+			LOGGER.log(EngineLogger.Level.ERROR, "The room registry does not contain \"roomStart\"");
 			throw new RoomNotDefinedError();
 		}
 
 		world.gameStart();
 
-		LOGGER.log(LoggingLevel.DEBUG, "Main loop start");
+		LOGGER.log(EngineLogger.Level.DEBUG, "Main loop start");
 
 		// ======== MAIN LOOP ========
 		while (!Screen.isWindowClosed()) {
@@ -67,7 +66,7 @@ public class MainClass {
 					world = new World(Registry.getRoom(world.getRoomChangeRequestName()));
 				}
 				else {
-					LOGGER.log(LoggingLevel.ERROR, "Couldn't load room \"" + world.getRoomChangeRequestName() + "\" after call to changeRoom");
+					LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load room \"" + world.getRoomChangeRequestName() + "\" after call to changeRoom");
 					throw new RoomNotDefinedError();
 				}
 			}
@@ -103,10 +102,10 @@ public class MainClass {
 			Timing.calculateTimeAndWaitThread();
 		}
 
-		LOGGER.log(LoggingLevel.DEBUG, "Main loop end");
+		LOGGER.log(EngineLogger.Level.DEBUG, "Main loop end");
 
 		Sound.shutdown();
 
-		LOGGER.log(LoggingLevel.DEBUG, "Program end");
+		LOGGER.log(EngineLogger.Level.DEBUG, "Program end");
 	}
 }

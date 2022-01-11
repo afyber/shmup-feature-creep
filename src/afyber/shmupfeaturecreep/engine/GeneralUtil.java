@@ -1,7 +1,7 @@
 package afyber.shmupfeaturecreep.engine;
 
 import afyber.shmupfeaturecreep.MainClass;
-import afyber.shmupfeaturecreep.engine.output.LoggingLevel;
+import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +42,7 @@ public class GeneralUtil {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "InterruptedException occurred waiting in the main thread", e);
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "InterruptedException occurred waiting in the main thread", e);
 			Thread.currentThread().interrupt();
 		}
 	}
@@ -73,7 +73,7 @@ public class GeneralUtil {
 	public static String readResourceToString(String fileName) throws IOException {
 		try (InputStream stream = MainClass.class.getResourceAsStream(fileName)) {
 			if (stream == null) {
-				MainClass.LOGGER.log(LoggingLevel.ERROR, "No such internal resource: \"" + fileName + "\"");
+				MainClass.LOGGER.log(EngineLogger.Level.ERROR, "No such internal resource: \"" + fileName + "\"");
 				throw new IOException();
 			}
 			return readInputStreamToString(stream);
@@ -82,7 +82,7 @@ public class GeneralUtil {
 
 	public static String readInputStreamToString(InputStream stream) throws IOException {
 		if (stream == null) {
-			MainClass.LOGGER.log(LoggingLevel.ERROR, "Attempt to read string from null stream");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Attempt to read string from null stream");
 			throw new IOException();
 		}
 		byte[] allBytes = stream.readAllBytes();
