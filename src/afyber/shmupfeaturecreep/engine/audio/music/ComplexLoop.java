@@ -30,30 +30,30 @@ public class ComplexLoop extends LoopParent {
 		if (playingState.get() == 0) {
 			retur = readFrameFromArray(dataIntro, introChannels);
 
-			bytePos += 2;
+			framePos += pitch;
 
-			if (bytePos >= dataIntro[0].length) {
-				bytePos = 0;
+			if (getBytePos() >= dataIntro[0].length) {
+				framePos = 0;
 				playingState.set(1);
 			}
 		}
 		else if (playingState.get() == 1) {
 			retur = readFrameFromArray(dataIntroLoop, introLoopChannels);
 
-			bytePos += 2;
+			framePos += pitch;
 
-			if (bytePos >= dataIntroLoop[0].length) {
-				bytePos = 0;
+			if (getBytePos() >= dataIntroLoop[0].length) {
+				framePos = 0;
 				playingState.set(2);
 			}
 		}
 		else if (playingState.get() == 2) {
 			retur = readFrameFromArray(dataLoopLoop, loopLoopChannels);
 
-			bytePos += 2;
+			framePos += pitch;
 
-			if (bytePos >= dataLoopLoop[0].length) {
-				bytePos = 0;
+			if (getBytePos() >= dataLoopLoop[0].length) {
+				framePos = 0;
 			}
 		}
 
@@ -62,24 +62,28 @@ public class ComplexLoop extends LoopParent {
 
 	@Override
 	public void skipFrames(int frames) {
-		bytePos += frames;
+		framePos += frames;
 
 		if (playingState.get() == 0) {
-			if (bytePos >= dataIntro[0].length) {
-				bytePos -= dataIntro[0].length;
+			if (getBytePos() >= dataIntro[0].length) {
+				framePos -= dataIntro[0].length / 2.0;
 				playingState.set(1);
 			}
 		}
 		if (playingState.get() == 1) {
-			if (bytePos >= dataIntroLoop[0].length) {
-				bytePos -= dataIntroLoop[0].length;
+			if (getBytePos() >= dataIntroLoop[0].length) {
+				framePos -= dataIntroLoop[0].length / 2.0;
 				playingState.set(2);
 			}
 		}
 		if (playingState.get() == 2) {
-			while (bytePos >= dataLoopLoop[0].length) {
-				bytePos -= dataLoopLoop[0].length;
+			while (getBytePos() >= dataLoopLoop[0].length) {
+				framePos -= dataLoopLoop[0].length / 2.0;
 			}
+		}
+
+		if (framePos < 0) {
+			framePos = 0;
 		}
 	}
 

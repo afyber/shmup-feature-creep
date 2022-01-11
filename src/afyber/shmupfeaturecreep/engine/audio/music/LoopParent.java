@@ -24,14 +24,14 @@ public abstract class LoopParent extends AudioParent {
 	@Override
 	public void play() {
 		playingState.set(0);
-		bytePos = 0;
+		framePos = 0;
 		playing.set(true);
 	}
 
 	@Override
 	public void stop() {
 		playingState.set(0);
-		bytePos = 0;
+		framePos = 0;
 		playing.set(false);
 	}
 }

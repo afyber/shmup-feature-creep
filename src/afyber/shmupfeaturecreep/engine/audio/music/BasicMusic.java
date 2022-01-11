@@ -15,14 +15,11 @@ public class BasicMusic extends MusicParent {
 	public int[] readFrame() {
 		int[] retur = readFrameFromArray(data, channels);
 
-		bytePos += 2;
+		framePos += pitch;
 
-		if (bytePos >= data[0].length) {
-			if (loop.get()) {
-				bytePos = 0;
-			}
-			else {
-				bytePos = 0;
+		if (getBytePos() >= data[0].length) {
+			framePos = 0;
+			if (!loop.get()) {
 				playing.set(false);
 			}
 		}
@@ -32,16 +29,20 @@ public class BasicMusic extends MusicParent {
 
 	@Override
 	public void skipFrames(int frames) {
-		bytePos += frames * 2;
+		framePos += frames;
 
-		if (bytePos > data[0].length) {
+		if (getBytePos() > data[0].length) {
 			if (loop.get()) {
 				do {
-					bytePos -= data[0].length;
-				} while(bytePos > data[0].length);
+					framePos -= data[0].length / 2.0;
+				} while(getBytePos() > data[0].length);
+
+				if (framePos < 0) {
+					framePos = 0;
+				}
 			}
 			else {
-				bytePos = 0;
+				framePos = 0;
 				playing.set(false);
 			}
 		}

@@ -27,6 +27,10 @@ public class RandomUtil {
 		return random() * bound;
 	}
 
+	public static boolean randBool() {
+		return random.nextBoolean();
+	}
+
 	public static void setSeed(long seed) {
 		random.setSeed(seed);
 	}

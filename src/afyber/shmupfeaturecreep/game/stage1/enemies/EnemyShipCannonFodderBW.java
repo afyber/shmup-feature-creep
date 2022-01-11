@@ -30,10 +30,10 @@ public class EnemyShipCannonFodderBW extends EnemyShipParentBW {
 		speed = MathUtil.interpolateExp(speed, 4, 30, 0.1);
 		y += speed;
 
-		timer++;
-		if (timer >= 24 / speed) {
+		timer--;
+		if (timer <= 0) {
 			world.createParticle("small_enemy_thrust_bw", x + RandomUtil.randInt(-9, 9), y - 8);
-			timer = 0;
+			timer = (int)(RandomUtil.randInt(12, 30) / speed);
 		}
 	}
 }

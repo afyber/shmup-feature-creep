@@ -15,6 +15,8 @@ public class SoundInstance extends AudioParent {
 	@Override
 	public int[] readFrame() {
 		int[] frame = null;
+		int bytePos = getBytePos();
+
 		if (dataRef.getChannels() == 1) {
 			frame = new int[1];
 			frame[0] = dataRef.readByte(0, bytePos + 1) << 8 | dataRef.readByte(0, bytePos) & 0xFF;
@@ -25,9 +27,9 @@ public class SoundInstance extends AudioParent {
 			frame[1] = dataRef.readByte(1, bytePos + 1) << 8 | dataRef.readByte(1, bytePos) & 0xFF;
 		}
 
-		bytePos += 2;
+		framePos++;
 
-		if (bytePos >= dataRef.getDataLength()) {
+		if (getBytePos() >= dataRef.getDataLength()) {
 			playing.set(false);
 		}
 
@@ -36,9 +38,9 @@ public class SoundInstance extends AudioParent {
 
 	@Override
 	public void skipFrames(int frames) {
-		bytePos += frames * 2;
+		framePos += frames;
 
-		if (bytePos >= dataRef.getDataLength()) {
+		if (getBytePos() >= dataRef.getDataLength()) {
 			playing.set(false);
 		}
 	}

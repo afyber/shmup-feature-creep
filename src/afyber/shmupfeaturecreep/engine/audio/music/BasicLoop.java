@@ -26,19 +26,19 @@ public class BasicLoop extends LoopParent {
 		if (playingState.get() == 0) {
 			retur = readFrameFromArray(dataIntro, introChannels);
 
-			bytePos += 2;
+			framePos += pitch;
 
-			if (bytePos >= dataIntro[0].length) {
-				bytePos = 0;
+			if (getBytePos() >= dataIntro[0].length) {
+				framePos = 0;
 				playingState.set(1);
 			}
 		} else if (playingState.get() == 1) {
 			retur = readFrameFromArray(dataLoop, loopChannels);
 
-			bytePos += 2;
+			framePos += pitch;
 
-			if (bytePos >= dataLoop[0].length) {
-				bytePos = 0;
+			if (getBytePos() >= dataLoop[0].length) {
+				framePos = 0;
 			}
 		}
 
@@ -47,18 +47,22 @@ public class BasicLoop extends LoopParent {
 
 	@Override
 	public void skipFrames(int frames) {
-		bytePos += frames * 2;
+		framePos += frames;
 
 		if (playingState.get() == 0) {
-			if (bytePos >= dataIntro[0].length) {
-				bytePos -= dataIntro[0].length;
+			if (getBytePos() >= dataIntro[0].length) {
+				framePos -= dataIntro[0].length / 2.0;
 				playingState.set(1);
 			}
 		}
 		if (playingState.get() == 1) {
-			while (bytePos >= dataLoop[0].length) {
-				bytePos -= dataLoop[0].length;
+			while (getBytePos() >= dataLoop[0].length) {
+				framePos -= dataLoop[0].length / 2.0;
 			}
+		}
+
+		if (framePos < 0) {
+			framePos = 0;
 		}
 	}
 

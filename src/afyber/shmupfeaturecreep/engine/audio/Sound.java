@@ -303,6 +303,23 @@ public class Sound {
 		}
 	}
 
+	public static void setMusicPitch(String soundName, double pitch) {
+		if (!ready) {
+			return;
+		}
+
+		if (pitch < 0.0) {
+			throw new IllegalArgumentException();
+		}
+
+		if (allMusic.containsKey(soundName)) {
+			allMusic.get(soundName).setPitch(pitch);
+		}
+		if (allLoops.containsKey(soundName)) {
+			allLoops.get(soundName).setPitch(pitch);
+		}
+	}
+
 	public static void playSound(String soundName) {
 		if (!ready) {
 			return;
@@ -356,6 +373,24 @@ public class Sound {
 			for (SoundInstance sound: mixer.playingSounds) {
 				if (sound.getSoundRefName().equals(soundName)) {
 					sound.setPanning(pan);
+				}
+			}
+		}
+	}
+
+	public static void setSoundPitch(String soundName, double pitch) {
+		if (!ready) {
+			return;
+		}
+
+		if (allSounds.containsKey(soundName)) {
+			if (pitch < 0) {
+				throw new IllegalArgumentException();
+			}
+
+			for (SoundInstance sound: mixer.playingSounds) {
+				if (sound.getSoundRefName().equals(soundName)) {
+					sound.setPitch(pitch);
 				}
 			}
 		}
