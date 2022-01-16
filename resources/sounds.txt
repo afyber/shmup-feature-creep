@@ -1,1 +1,2 @@
 music:small_explosion_bw.wav:small_explosion_bw
+player_hit.wav:player_hit

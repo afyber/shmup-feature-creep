@@ -31,23 +31,13 @@ public class Particle {
 
 	public void update() {
 		physics.update(this);
-		switch (this.fadeRule) {
-			case LINEAR -> {
-				alpha = 1.0 - ((double)lived / lifetime);
-			}
-			case SQUARE -> {
-				alpha = 1.0 - (Math.pow(lived, 2) / Math.pow(lifetime, 2));
-			}
-			case CUBE -> {
-				alpha = 1.0 - (Math.pow(lived, 3) / Math.pow(lifetime, 3));
-			}
-			case FIFTH -> {
-				alpha = 1.0 - (Math.pow(lived, 5) / Math.pow(lifetime, 5));
-			}
-			case TENTH -> {
-				alpha = 1.0 - (Math.pow(lived, 10) / Math.pow(lifetime, 10));
-			}
-		}
+		alpha = switch (this.fadeRule) {
+			case LINEAR -> 1.0 - ((double)lived / lifetime);
+			case SQUARE -> 1.0 - (Math.pow(lived, 2) / Math.pow(lifetime, 2));
+			case CUBE -> 1.0 - (Math.pow(lived, 3) / Math.pow(lifetime, 3));
+			case FIFTH -> 1.0 - (Math.pow(lived, 5) / Math.pow(lifetime, 5));
+			case TENTH -> 1.0 - (Math.pow(lived, 10) / Math.pow(lifetime, 10));
+		};
 	}
 
 	public void draw() {

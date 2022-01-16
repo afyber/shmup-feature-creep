@@ -1,6 +1,7 @@
 package afyber.shmupfeaturecreep.game.stage1;
 
 import afyber.shmupfeaturecreep.Game;
+import afyber.shmupfeaturecreep.engine.audio.Sound;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.world.RectangleCollision;
@@ -8,6 +9,9 @@ import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 import afyber.shmupfeaturecreep.game.stage1.enemies.EnemyShipParentBW;
 
 public class PlayerShipBW extends DynamicObject {
+
+	public int iFrames;
+	public int health;
 
 	public PlayerShipBW(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
@@ -20,6 +24,8 @@ public class PlayerShipBW extends DynamicObject {
 		collision = new RectangleCollision(-16, -16, -16, -14);
 		imageXScale = 3;
 		imageYScale = 3;
+		iFrames = 0;
+		health = 5;
 	}
 
 	@Override
@@ -46,12 +52,29 @@ public class PlayerShipBW extends DynamicObject {
 			if (enemy.health != -100) {
 				enemy.health = 0;
 			}
+			if (iFrames == 0) {
+				iFrames = 110;
+				health--;
+				Sound.playSound("player_hit");
+				Sound.setSoundGain("player_hit", 1.2);
+			}
+		}
+
+		if (iFrames > 0) {
+			iFrames--;
 		}
 	}
 
 	@Override
 	public void draw(WorldMiddleman world) {
-		drawSelf();
+		if (iFrames > 0) {
+			if ((iFrames / 10) % 2 == 0) {
+				drawSelf();
+			}
+		}
+		else {
+			drawSelf();
+		}
 	}
 
 	@Override
