@@ -12,6 +12,9 @@ public class PlayerShipBW extends DynamicObject {
 
 	public int iFrames;
 	public int health;
+	public int powerUp;
+	public int speedPowerUp;
+	public int fireRatePowerUp;
 
 	public PlayerShipBW(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
@@ -26,21 +29,31 @@ public class PlayerShipBW extends DynamicObject {
 		imageYScale = 3;
 		iFrames = 0;
 		health = 5;
+		powerUp = 2;
+		speedPowerUp = 0;
+		fireRatePowerUp = 0;
 	}
 
 	@Override
 	public void update(WorldMiddleman world) {
+		int moveFactor = 6;
+		if (speedPowerUp == 1) {
+			moveFactor = 7;
+		}
+		if (speedPowerUp == 2) {
+			moveFactor = 8;
+		}
 		if (Keyboard.keyDown("up")) {
-			y = Math.max(y - 6, 0);
+			y = Math.max(y - moveFactor, 0);
 		}
 		if (Keyboard.keyDown("down")) {
-			y = Math.min(y + 6, Game.WINDOW_HEIGHT);
+			y = Math.min(y + moveFactor, Game.WINDOW_HEIGHT);
 		}
 		if (Keyboard.keyDown("left")) {
-			x = Math.max(x - 6, 0);
+			x = Math.max(x - moveFactor, 0);
 		}
 		if (Keyboard.keyDown("right")) {
-			x = Math.min(x + 6, Game.WINDOW_WIDTH);
+			x = Math.min(x + moveFactor, Game.WINDOW_WIDTH);
 		}
 		if (Keyboard.keyJustDown("z") && alarm[0] == 0) {
 			alarm[0] = 2;
@@ -50,7 +63,7 @@ public class PlayerShipBW extends DynamicObject {
 		if (collision > -1) {
 			EnemyShipParentBW enemy = (EnemyShipParentBW)world.getObject(collision);
 			if (enemy.health != -100) {
-				enemy.health = 0;
+				enemy.health -= 10;
 			}
 			if (iFrames == 0) {
 				iFrames = 110;
@@ -79,9 +92,31 @@ public class PlayerShipBW extends DynamicObject {
 
 	@Override
 	public void alarm0(WorldMiddleman world) {
-		world.createInstance("player_bullet_basic_bw", x, y - 16, 10);
+		int nextFire = 6;
+		if (fireRatePowerUp == 1) {
+			nextFire = 5;
+		}
+		else if (fireRatePowerUp == 2) {
+			nextFire = 4;
+		}
+		else if (fireRatePowerUp == 3) {
+			nextFire = 3;
+		}
+		if (powerUp == 0) {
+			world.createInstance("player_bullet_basic_bw", x, y - 16, 10);
+		}
+		else if (powerUp == 1) {
+			world.createInstance("player_bullet_basic_bw", x - 13, y + 12, 10);
+			world.createInstance("player_bullet_basic_bw", x + 12, y + 12, 10);
+		}
+		else if (powerUp == 2) {
+			world.createInstance("player_bullet_basic_bw", x - 9, y + 8, 10);
+			world.createInstance("player_bullet_basic_bw", x + 8, y + 8, 10);
+			world.createInstance("player_bullet_basic_bw", x - 18, y + 12, 10);
+			world.createInstance("player_bullet_basic_bw", x + 17, y + 12, 10);
+		}
 		if (Keyboard.keyDown("z")) {
-			alarm[0] = 6;
+			alarm[0] = nextFire;
 		}
 	}
 }

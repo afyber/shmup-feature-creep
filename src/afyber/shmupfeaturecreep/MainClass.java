@@ -37,6 +37,8 @@ public class MainClass {
 
 		Keyboard.clearKeys();
 
+		Game.gameStart();
+
 		// NOTE: This fixes an audio bug where audio that plays on game start skips a few thousand frames DO NOT REMOVE IT
 		GeneralUtil.sleepHandlingInterrupt(200);
 
@@ -52,8 +54,6 @@ public class MainClass {
 			LOGGER.log(EngineLogger.Level.ERROR, "The room registry does not contain \"roomStart\"");
 			throw new RoomNotDefinedError();
 		}
-
-		world.gameStart();
 
 		LOGGER.log(EngineLogger.Level.DEBUG, "Main loop start");
 

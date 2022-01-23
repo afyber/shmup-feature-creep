@@ -2,5 +2,15 @@ package afyber.shmupfeaturecreep.game;
 
 public enum EnemyTag {
 	TOP_TO_BOTTOM,
+	TOP_TO_SIDE,
 	NO_BULLET,
+	ONE_BULLET,
+	TWO_BULLET,
+	THREE_BULLET,
+	FOUR_BULLET,
+	BULLETS,
+	ONE_TIME_BULLETS,
+	TWO_TIME_BULLETS,
+	THREE_TIME_BULLETS,
+	CONSTANT_BULLETS,
 }

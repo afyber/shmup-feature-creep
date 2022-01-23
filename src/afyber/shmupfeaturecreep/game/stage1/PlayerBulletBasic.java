@@ -18,6 +18,6 @@ public class PlayerBulletBasic extends PlayerBulletParentBW {
 
 	@Override
 	public void update(WorldMiddleman world) {
-		y -= 11;
+		y -= 14;
 	}
 }

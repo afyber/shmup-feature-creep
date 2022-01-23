@@ -1,6 +1,5 @@
 package afyber.shmupfeaturecreep.engine.world;
 
-import afyber.shmupfeaturecreep.Game;
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.Registry;
@@ -66,10 +65,6 @@ public class World {
 
 	public void changeRoom(String roomName) {
 		roomChange = roomName;
-	}
-
-	public void gameStart() {
-		Game.gameStart(worldMiddleman);
 	}
 
 	public void destroyAll() {

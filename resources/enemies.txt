@@ -1,0 +1,1 @@
+enemy_ship_cannon_fodder_bw,BW,0.1,TOP_TO_BOTTOM,NO_BULLET
