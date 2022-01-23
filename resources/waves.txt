@@ -1,3 +1,4 @@
 bw
 four_and_four_easy.txt
 four_and_four_middle.txt
+six_in_a_row_1.txt

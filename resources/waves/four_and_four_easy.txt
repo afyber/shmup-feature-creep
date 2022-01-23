@@ -1,9 +1,9 @@
-framesToNext:160
+framesToNext:220
 {
 [0.0-0.5]
 [
 TOP_TO_BOTTOM:REQUIRED
-NO_BULLET:REQUIRED
+NO_BULLETS:REQUIRED
 ]
 [
 [128,-16,0]

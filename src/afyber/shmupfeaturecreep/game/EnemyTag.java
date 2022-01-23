@@ -1,14 +1,22 @@
 package afyber.shmupfeaturecreep.game;
 
 public enum EnemyTag {
+	// How does it move?
 	TOP_TO_BOTTOM,
 	TOP_TO_SIDE,
-	NO_BULLET,
+
+	// Does it have bullets?
+	NO_BULLETS,
+	BULLETS,
+
+	// How many bullets?
 	ONE_BULLET,
 	TWO_BULLET,
 	THREE_BULLET,
 	FOUR_BULLET,
-	BULLETS,
+	MANY_BULLETS,
+
+	// How many times do bullets fire?
 	ONE_TIME_BULLETS,
 	TWO_TIME_BULLETS,
 	THREE_TIME_BULLETS,

@@ -131,7 +131,7 @@ public class WaveController extends DynamicObject {
 
 			if (enemyRatings.isEmpty()) {
 				// lol no that's not allowed
-				MainClass.LOGGER.log(EngineLogger.Level.ERROR, "No enemy exists to satisfy wave slot requirements");
+				MainClass.LOGGER.log(EngineLogger.Level.WARNING, "No enemy exists to satisfy wave slot requirements");
 				return;
 			}
 			else if (enemyRatings.size() >= 5) {
