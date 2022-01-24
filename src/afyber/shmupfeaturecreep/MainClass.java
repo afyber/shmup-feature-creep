@@ -14,6 +14,7 @@ import java.awt.*;
 
 public class MainClass {
 
+	// TODO: REMEMBER TO CHANGE THIS TO                                                                              true
 	public static final EngineLogger LOGGER = new EngineLogger(System.currentTimeMillis() + ".txt", false);
 
 	public static void main(String[] args) {
@@ -33,11 +34,9 @@ public class MainClass {
 
 		Game.registerRooms();
 
-		Timing.setIdealFrameTimeMillis((long)Math.ceil(1000.0/Game.IDEAL_FPS));
-
-		Keyboard.clearKeys();
-
 		Game.gameStart();
+
+		Timing.setIdealFrameTimeMillis((long)Math.ceil(1000.0/Game.IDEAL_FPS));
 
 		// NOTE: This fixes an audio bug where audio that plays on game start skips a few thousand frames DO NOT REMOVE IT
 		GeneralUtil.sleepHandlingInterrupt(200);
@@ -45,6 +44,8 @@ public class MainClass {
 		if (!splashScreen) {
 			Screen.setupScreen(Game.GAME_NAME_NICE, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT, false);
 		}
+
+		Keyboard.clearKeys();
 
 		World world;
 		if (Registry.hasRoom("roomStart")) {

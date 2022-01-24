@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 public class KeyboardHandler implements KeyListener {
 	
-	private final HashMap<Integer, String> keyMap = new HashMap<>();
+	static final HashMap<Integer, String> keyMap = new HashMap<>();
 	
 	public KeyboardHandler() {
 		super();
