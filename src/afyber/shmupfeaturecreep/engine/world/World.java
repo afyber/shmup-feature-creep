@@ -200,7 +200,7 @@ public class World {
 			}
 		}
 		else {
-			MainClass.LOGGER.log(EngineLogger.Level.WARNING, "Object name \"" + classRef + "\" is not registered, unable to create");
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Object name \"" + classRef + "\" is not registered, unable to create");
 			throw new ObjectNotDefinedError();
 		}
 		return null;
@@ -305,7 +305,7 @@ public class World {
 		SpriteInformation spriteInfo = Screen.getScaledSpriteInfo(spriteCollision.getSpriteName(), 0, sprite.imageXScale, sprite.imageYScale);
 		SpriteInformation rectInfo = Screen.getScaledSpriteInfo(rect.sprite, (int)rect.spriteIndex, rect.imageXScale, rect.imageYScale);
 
-		if (rectInfo == null || spriteInfo == null) {
+		if (spriteInfo == null) {
 			return false;
 		}
 
@@ -313,10 +313,24 @@ public class World {
 		int spriteCorner1Y = (int)Math.round(sprite.y - spriteInfo.originY());
 		int spriteCorner2X = spriteCorner1X + spriteInfo.dataWidth();
 		int spriteCorner2Y = spriteCorner1Y + spriteInfo.dataHeight();
-		int rectCorner1X = (int)Math.round(rect.x - rectInfo.originX()) - rectCollision.getMargin(0);
-		int rectCorner1Y = (int)Math.round(rect.y - rectInfo.originY()) - rectCollision.getMargin(1);
-		int rectCorner2X = rectCorner1X + rectInfo.dataWidth() + rectCollision.getMargin(2);
-		int rectCorner2Y = rectCorner1Y + rectInfo.dataHeight() + rectCollision.getMargin(3);
+		int rectCorner1X;
+		int rectCorner1Y;
+		int rectCorner2X;
+		int rectCorner2Y;
+		if (rectInfo == null) {
+			rectCorner1X = (int)Math.round(rect.x) - rectCollision.getMargin(0);
+			rectCorner1Y = (int)Math.round(rect.y) - rectCollision.getMargin(1);
+			rectCorner2X = (int)Math.round(rect.x) + rectCollision.getMargin(2);
+			rectCorner2Y = (int)Math.round(rect.y) + rectCollision.getMargin(3);
+		}
+		else {
+			int calcX = (int)Math.round(rect.x - rectInfo.originX());
+			int calcY = (int)Math.round(rect.y - rectInfo.originY());
+			rectCorner1X = calcX - rectCollision.getMargin(0);
+			rectCorner1Y = calcY - rectCollision.getMargin(1);
+			rectCorner2X = calcX + rectInfo.dataWidth() + rectCollision.getMargin(2);
+			rectCorner2Y = calcY + rectCollision.getMargin(3);
+		}
 
 		if (GeneralUtil.areRectanglesIntersecting(spriteCorner1X, spriteCorner1Y, spriteCorner2X, spriteCorner2Y,
 				rectCorner1X, rectCorner1Y, rectCorner2X, rectCorner2Y)) {
@@ -358,18 +372,42 @@ public class World {
 		SpriteInformation callerInfo = Screen.getScaledSpriteInfo(caller.sprite, (int)caller.spriteIndex, caller.imageXScale, caller.imageYScale);
 		SpriteInformation otherInfo = Screen.getScaledSpriteInfo(other.sprite, (int)other.spriteIndex, other.imageXScale, other.imageYScale);
 
-		if (otherInfo == null || callerInfo == null) {
-			return false;
+		int callerCorner1X;
+		int callerCorner1Y;
+		int callerCorner2X;
+		int callerCorner2Y;
+		if (callerInfo == null) {
+			callerCorner1X = (int)Math.round(caller.x) - callerCollision.getMargin(0);
+			callerCorner1Y = (int)Math.round(caller.y) - callerCollision.getMargin(1);
+			callerCorner2X = (int)Math.round(caller.x) + callerCollision.getMargin(2);
+			callerCorner2Y = (int)Math.round(caller.y) + callerCollision.getMargin(3);
 		}
-
-		int callerCorner1X = (int)Math.round(caller.x - callerInfo.originX()) - callerCollision.getMargin(0);
-		int callerCorner1Y = (int)Math.round(caller.y - callerInfo.originY()) - callerCollision.getMargin(1);
-		int callerCorner2X = callerCorner1X + callerInfo.dataWidth() + callerCollision.getMargin(2);
-		int callerCorner2Y = callerCorner1Y + callerInfo.dataHeight() + callerCollision.getMargin(3);
-		int otherCorner1X = (int)Math.round(other.x - otherInfo.originX()) - otherCollision.getMargin(0);
-		int otherCorner1Y = (int)Math.round(other.y - otherInfo.originY()) - otherCollision.getMargin(1);
-		int otherCorner2X = otherCorner1X + otherInfo.dataWidth() + otherCollision.getMargin(2);
-		int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight() + otherCollision.getMargin(3);
+		else {
+			int calcX = (int)Math.round(caller.x - callerInfo.originX());
+			int calcY = (int)Math.round(caller.y - callerInfo.originY());
+			callerCorner1X = calcX - callerCollision.getMargin(0);
+			callerCorner1Y = calcY - callerCollision.getMargin(1);
+			callerCorner2X = calcX + callerInfo.dataWidth() + callerCollision.getMargin(2);
+			callerCorner2Y = calcY + callerInfo.dataHeight() + callerCollision.getMargin(3);
+		}
+		int otherCorner1X;
+		int otherCorner1Y;
+		int otherCorner2X;
+		int otherCorner2Y;
+		if (otherInfo == null) {
+			otherCorner1X = (int)Math.round(other.x) - otherCollision.getMargin(0);
+			otherCorner1Y = (int)Math.round(other.y) - otherCollision.getMargin(1);
+			otherCorner2X = (int)Math.round(other.x) + otherCollision.getMargin(2);
+			otherCorner2Y = (int)Math.round(other.y) + otherCollision.getMargin(3);
+		}
+		else {
+			int calcX = (int)Math.round(other.x - otherInfo.originX());
+			int calcY = (int)Math.round(other.y - otherInfo.originY());
+			otherCorner1X = calcX - otherCollision.getMargin(0);
+			otherCorner1Y = calcY - otherCollision.getMargin(1);
+			otherCorner2X = calcX + otherInfo.dataWidth() + otherCollision.getMargin(2);
+			otherCorner2Y = calcY + otherInfo.dataHeight() + otherCollision.getMargin(3);
+		}
 
 		return GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
 				otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y);

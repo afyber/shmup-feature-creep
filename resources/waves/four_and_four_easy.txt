@@ -1,4 +1,4 @@
-framesToNext:220
+framesToNext:200
 {
 [0.0-0.5]
 [

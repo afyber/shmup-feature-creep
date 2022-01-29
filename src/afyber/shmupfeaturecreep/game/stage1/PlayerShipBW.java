@@ -24,7 +24,7 @@ public class PlayerShipBW extends DynamicObject {
 	@Override
 	public void create(WorldMiddleman world) {
 		sprite = "player_ship_bw_1";
-		collision = new RectangleCollision(-16, -16, -16, -14);
+		collision = new RectangleCollision(-10, -10, -10, -10);
 		imageXScale = 3;
 		imageYScale = 3;
 		iFrames = 0;
@@ -70,6 +70,12 @@ public class PlayerShipBW extends DynamicObject {
 				health--;
 				Sound.playSound("player_hit_bw");
 			}
+		}
+		collision = world.isColliding(this, "enemy_bullet_parent_bw");
+		if (collision > -1 && iFrames == 0) {
+			iFrames = 110;
+			health--;
+			Sound.playSound("player_hit_bw");
 		}
 
 		if (iFrames > 0) {

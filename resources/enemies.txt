@@ -1,1 +1,2 @@
-enemy_ship_cannon_fodder_bw,BW,0.1,TOP_TO_BOTTOM,NO_BULLETS
+enemy_ship_cannon_fodder_bw,BW,0.2,TOP_TO_BOTTOM,NO_BULLETS
+enemy_ship_small_cannon_bw,BW,0.5,TOP_TO_SIDE,BULLETS,ONE_BULLET,THREE_TIME_BULLETS
