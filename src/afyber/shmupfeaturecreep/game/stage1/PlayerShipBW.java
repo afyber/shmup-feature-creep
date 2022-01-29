@@ -24,7 +24,7 @@ public class PlayerShipBW extends DynamicObject {
 	@Override
 	public void create(WorldMiddleman world) {
 		sprite = "player_ship_bw_1";
-		collision = new RectangleCollision(-10, -10, -10, -10);
+		collision = new RectangleCollision(-12, -9, -12, -6);
 		imageXScale = 3;
 		imageYScale = 3;
 		iFrames = 0;

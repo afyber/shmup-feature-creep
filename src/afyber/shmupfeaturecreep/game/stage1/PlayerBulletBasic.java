@@ -8,7 +8,7 @@ public class PlayerBulletBasic extends PlayerBulletParentBW {
 	public PlayerBulletBasic(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "player_bullet_basic_bw";
-		collision = new RectangleCollision(1, 0, 1, 0);
+		collision = new RectangleCollision(3, 0, 3, 0);
 	}
 
 	@Override

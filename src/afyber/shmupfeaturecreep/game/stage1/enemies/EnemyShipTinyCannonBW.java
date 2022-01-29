@@ -39,16 +39,16 @@ public class EnemyShipTinyCannonBW extends EnemyShipParentBW {
 
 		timer--;
 		if (timer <= 0) {
-			world.createParticle("small_enemy_thrust_bw", x + RandomUtil.randInt(-9, 9), y - 8);
+			world.createParticle("small_enemy_thrust_bw", x + RandomUtil.randInt(-6, 6), y - 8);
 			timer = (int)(RandomUtil.randInt(6, 30) / speed);
 		}
 	}
 
 	@Override
 	public void alarm4(WorldMiddleman world) {
-		DynamicObject bul = world.createInstance("enemy_small_bullet_bw", x, y, depth);
+		DynamicObject bul = world.createInstance("enemy_small_bullet_bw", x + (left ? 6 : -6), y - 3, depth);
 		((EnemySmallBulletBW)bul).direction = left ? 65 : 115;
-		((EnemySmallBulletBW)bul).speed = 3;
-		alarm[4] = 45;
+		((EnemySmallBulletBW)bul).speed = 5;
+		alarm[4] = 50;
 	}
 }
