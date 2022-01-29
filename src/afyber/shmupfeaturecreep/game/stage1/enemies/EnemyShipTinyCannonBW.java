@@ -11,7 +11,7 @@ public class EnemyShipTinyCannonBW extends EnemyShipParentBW {
 
 	public double speed;
 	public int timer;
-	public boolean left;
+	public boolean left = false;
 
 	public EnemyShipTinyCannonBW(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
@@ -27,7 +27,7 @@ public class EnemyShipTinyCannonBW extends EnemyShipParentBW {
 		}
 		imageXScale = left ? 3 : -3;
 		imageYScale = 3;
-		health = 3;
+		health = 4;
 		speed = 1;
 		alarm[4] = 45;
 	}
@@ -49,6 +49,6 @@ public class EnemyShipTinyCannonBW extends EnemyShipParentBW {
 		DynamicObject bul = world.createInstance("enemy_small_bullet_bw", x + (left ? 6 : -6), y - 3, depth);
 		((EnemySmallBulletBW)bul).direction = left ? 65 : 115;
 		((EnemySmallBulletBW)bul).speed = 5;
-		alarm[4] = 50;
+		alarm[4] = 48;
 	}
 }

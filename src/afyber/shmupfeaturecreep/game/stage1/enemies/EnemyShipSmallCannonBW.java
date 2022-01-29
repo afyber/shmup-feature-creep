@@ -2,7 +2,6 @@ package afyber.shmupfeaturecreep.game.stage1.enemies;
 
 import afyber.shmupfeaturecreep.Game;
 import afyber.shmupfeaturecreep.engine.MathUtil;
-import afyber.shmupfeaturecreep.engine.RandomUtil;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.world.RectangleCollision;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
@@ -75,16 +74,6 @@ public class EnemyShipSmallCannonBW extends EnemyShipParentBW {
 		if (con > 4) {
 			speed = MathUtil.interpolateExp(speed, 4, 30, 0.1);
 			x += left ? -speed : speed;
-		}
-
-		if (con < 4) {
-			timer--;
-			if (timer <= 0) {
-				world.createParticle("small_enemy_thrust_bw", x + RandomUtil.randInt(-9, 9), y - 8);
-				if (speed != 0) {
-					timer = (int)(RandomUtil.randInt(6, 30) / speed);
-				}
-			}
 		}
 	}
 
