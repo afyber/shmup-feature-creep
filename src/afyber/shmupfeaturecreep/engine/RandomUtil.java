@@ -1,5 +1,6 @@
 package afyber.shmupfeaturecreep.engine;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -39,15 +40,11 @@ public class RandomUtil {
 		random.setSeed(System.currentTimeMillis());
 	}
 
-	public static String choose(String... args) {
+	public static <T> T choose(T... args) {
 		return args[randInt(args.length)];
 	}
 
-	public static int choose(Integer... args) {
-		return args[randInt(args.length)];
-	}
-
-	public static double choose(Double... args) {
-		return args[randInt(args.length)];
+	public static <T> T choose(List<T> list) {
+		return list.get(randInt(list.size()));
 	}
 }

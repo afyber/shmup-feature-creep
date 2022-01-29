@@ -12,3 +12,5 @@ explosion_small_bw:5
 4:59,0,12,12,7,7
 enemy_ship_small_cannon_bw:1
 0:0,13,16,16,9,9
+enemy_ship_tiny_cannon_bw:1
+0:16,12,8,15,3,7

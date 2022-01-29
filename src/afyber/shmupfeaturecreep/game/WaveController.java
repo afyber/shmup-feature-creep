@@ -18,7 +18,8 @@ public class WaveController extends DynamicObject {
 	private final ArrayList<EnemyWaveReference> availableEnemies = new ArrayList<>();
 	private final ArrayList<Wave> availableWaves = new ArrayList<>();
 	private final ArrayList<EnemyWaveQueueState> queuedEnemies = new ArrayList<>();
-	public int timeToNextWave = 0;
+	private int timeToNextWave = 0;
+	private int lastWaveIndex = -1;
 
 	public WaveController(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
@@ -32,9 +33,9 @@ public class WaveController extends DynamicObject {
 			availableEnemies.addAll(allEnemies);
 		}
 		else {
-			Wave.Stage availableStage = Wave.Stage.valueOf(Global.getStringGlobal("stage"));
+			WaveProperties.Stage availableStage = WaveProperties.Stage.valueOf(Global.getStringGlobal("stage"));
 			for (Wave wave: allWaves) {
-				if (wave.stage() == availableStage) {
+				if (wave.properties().stage() == availableStage) {
 					availableWaves.add(wave);
 				}
 			}
@@ -49,7 +50,17 @@ public class WaveController extends DynamicObject {
 	@Override
 	public void update(WorldMiddleman world) {
 		if (timeToNextWave <= 0) {
-			queueWave(availableWaves.get(RandomUtil.randInt(availableWaves.size())));
+			int tmp = RandomUtil.randInt(availableWaves.size());
+			if (lastWaveIndex >= 0) {
+				// handle wave-choosing properties
+				if (!availableWaves.get(lastWaveIndex).properties().repeatable()) {
+					while (tmp == lastWaveIndex) {
+						tmp = RandomUtil.randInt(availableWaves.size());
+					}
+				}
+			}
+			queueWave(availableWaves.get(tmp));
+			lastWaveIndex = tmp;
 		}
 		else {
 			for (EnemyWaveQueueState state: queuedEnemies) {
@@ -64,7 +75,7 @@ public class WaveController extends DynamicObject {
 	}
 
 	private void queueWave(Wave wave) {
-		timeToNextWave = wave.framesToNext();
+		timeToNextWave = wave.properties().framesToNext();
 
 		for (EnemyWaveSlot slot: wave.slots()) {
 			ArrayList<EnemyTag> disqualifyingTags = new ArrayList<>();

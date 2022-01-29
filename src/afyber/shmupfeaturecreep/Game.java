@@ -57,6 +57,7 @@ public class Game {
 		Registry.registerObject(new EnemyShipParentBW(0,0,0,-1));
 		Registry.registerObjectAsChildOf(new EnemyShipCannonFodderBW(0,0,0,-1), "enemy_ship_parent_bw");
 		Registry.registerObjectAsChildOf(new EnemyShipSmallCannonBW(0,0,0,-1), "enemy_ship_parent_bw");
+		Registry.registerObjectAsChildOf(new EnemyShipTinyCannonBW(0,0,0,-1), "enemy_ship_parent_bw");
 
 		Registry.registerObject(new EnemyBulletParentBW(0,0,0,-1));
 		Registry.registerObjectAsChildOf(new EnemySmallBulletBW(0,0,0,-1), "enemy_bullet_parent_bw");
@@ -84,7 +85,7 @@ public class Game {
 				for (int i = 3; i < vals.length; i++) {
 					tags[i - 3] = EnemyTag.valueOf(vals[i]);
 				}
-				WaveController.allEnemies.add(new EnemyWaveReference(vals[0], Wave.Stage.valueOf(vals[1]), Double.parseDouble(vals[2]), tags));
+				WaveController.allEnemies.add(new EnemyWaveReference(vals[0], WaveProperties.Stage.valueOf(vals[1]), Double.parseDouble(vals[2]), tags));
 			}
 		} catch (IOException e) {
 			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Enemies are not defined");
@@ -96,15 +97,15 @@ public class Game {
 		try {
 			String[] lines = GeneralUtil.readResourceAsLineArray("/waves.txt");
 
-			Wave.Stage currentStage = null;
+			WaveProperties.Stage currentStage = null;
 			for (String line: lines) {
 				if (GeneralUtil.isLineConfigViable(line)) {
 					switch (line) {
-						case "bw" -> currentStage = Wave.Stage.BW;
-						case "crt" -> currentStage = Wave.Stage.CRT;
-						case "nes" -> currentStage = Wave.Stage.NES;
-						case "snes" -> currentStage = Wave.Stage.SNES;
-						case "doom" -> currentStage = Wave.Stage.DOOM;
+						case "bw" -> currentStage = WaveProperties.Stage.BW;
+						case "crt" -> currentStage = WaveProperties.Stage.CRT;
+						case "nes" -> currentStage = WaveProperties.Stage.NES;
+						case "snes" -> currentStage = WaveProperties.Stage.SNES;
+						case "doom" -> currentStage = WaveProperties.Stage.DOOM;
 						default -> loadWave(line, currentStage);
 					}
 				}
@@ -115,13 +116,14 @@ public class Game {
 		}
 	}
 
-	private static void loadWave(String name, Wave.Stage stage) {
+	private static void loadWave(String name, WaveProperties.Stage stage) {
 		try {
 			String[] lines = GeneralUtil.readResourceAsLineArray("/waves/" + name);
 
 			// wave information
 			ArrayList<EnemyWaveSlot> enemies = new ArrayList<>();
 			int framesToNext = -1;
+			boolean repeatable = false;
 
 			// enemy slot information
 			double minRating = -1;
@@ -134,6 +136,9 @@ public class Game {
 				if (GeneralUtil.isLineConfigViable(line)) {
 					if (line.startsWith("framesToNext:")) {
 						framesToNext = Integer.parseInt(line.substring(13));
+					}
+					else if (line.startsWith("repeatable:")) {
+						repeatable = Boolean.parseBoolean(line.substring(11));
 					}
 					if (line.equals("{")) {
 						buildState = 0;
@@ -181,7 +186,7 @@ public class Game {
 				}
 			}
 
-			WaveController.allWaves.add(new Wave(enemies.toArray(new EnemyWaveSlot[0]), stage, framesToNext));
+			WaveController.allWaves.add(new Wave(enemies.toArray(new EnemyWaveSlot[0]), new WaveProperties(stage, framesToNext, repeatable)));
 		} catch (IOException e) {
 			throw new WavesNotDefinedError();
 		}

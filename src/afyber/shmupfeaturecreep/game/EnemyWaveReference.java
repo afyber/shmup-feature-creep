@@ -1,3 +1,3 @@
 package afyber.shmupfeaturecreep.game;
 
-public record EnemyWaveReference(String objectName, Wave.Stage stage, double rating, EnemyTag[] enemyTags) {}
+public record EnemyWaveReference(String objectName, WaveProperties.Stage stage, double rating, EnemyTag[] enemyTags) {}

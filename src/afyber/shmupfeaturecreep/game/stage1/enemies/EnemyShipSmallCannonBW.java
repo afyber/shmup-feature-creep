@@ -26,7 +26,7 @@ public class EnemyShipSmallCannonBW extends EnemyShipParentBW {
 		if (x < Game.WINDOW_WIDTH / 2.0) {
 			left = true;
 		}
-		health = 8;
+		health = 9;
 		imageXScale = left ? 3 : -3;
 		imageYScale = 3;
 		con = 0;

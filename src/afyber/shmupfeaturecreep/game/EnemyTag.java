@@ -9,7 +9,7 @@ public enum EnemyTag {
 	NO_BULLETS,
 	BULLETS,
 
-	// How many bullets?
+	// How many bullets at once?
 	ONE_BULLET,
 	TWO_BULLET,
 	THREE_BULLET,
