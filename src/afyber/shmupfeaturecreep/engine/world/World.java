@@ -318,10 +318,12 @@ public class World {
 		int rectCorner2X;
 		int rectCorner2Y;
 		if (rectInfo == null) {
-			rectCorner1X = (int)Math.round(rect.x) - rectCollision.getMargin(0);
-			rectCorner1Y = (int)Math.round(rect.y) - rectCollision.getMargin(1);
-			rectCorner2X = (int)Math.round(rect.x) + rectCollision.getMargin(2);
-			rectCorner2Y = (int)Math.round(rect.y) + rectCollision.getMargin(3);
+			int calcX = (int)Math.round(rect.x);
+			int calcY = (int)Math.round(rect.y);
+			rectCorner1X = calcX - rectCollision.getMargin(0);
+			rectCorner1Y = calcY - rectCollision.getMargin(1);
+			rectCorner2X = calcX + rectCollision.getMargin(2);
+			rectCorner2Y = calcY + rectCollision.getMargin(3);
 		}
 		else {
 			int calcX = (int)Math.round(rect.x - rectInfo.originX());
@@ -329,7 +331,7 @@ public class World {
 			rectCorner1X = calcX - rectCollision.getMargin(0);
 			rectCorner1Y = calcY - rectCollision.getMargin(1);
 			rectCorner2X = calcX + rectInfo.dataWidth() + rectCollision.getMargin(2);
-			rectCorner2Y = calcY + rectCollision.getMargin(3);
+			rectCorner2Y = calcY + rectInfo.dataHeight() + rectCollision.getMargin(3);
 		}
 
 		if (GeneralUtil.areRectanglesIntersecting(spriteCorner1X, spriteCorner1Y, spriteCorner2X, spriteCorner2Y,
@@ -377,10 +379,12 @@ public class World {
 		int callerCorner2X;
 		int callerCorner2Y;
 		if (callerInfo == null) {
-			callerCorner1X = (int)Math.round(caller.x) - callerCollision.getMargin(0);
-			callerCorner1Y = (int)Math.round(caller.y) - callerCollision.getMargin(1);
-			callerCorner2X = (int)Math.round(caller.x) + callerCollision.getMargin(2);
-			callerCorner2Y = (int)Math.round(caller.y) + callerCollision.getMargin(3);
+			int calcX = (int)Math.round(caller.x);
+			int calcY = (int)Math.round(caller.y);
+			callerCorner1X = calcX - callerCollision.getMargin(0);
+			callerCorner1Y = calcY - callerCollision.getMargin(1);
+			callerCorner2X = calcX + callerCollision.getMargin(2);
+			callerCorner2Y = calcY + callerCollision.getMargin(3);
 		}
 		else {
 			int calcX = (int)Math.round(caller.x - callerInfo.originX());
@@ -395,10 +399,12 @@ public class World {
 		int otherCorner2X;
 		int otherCorner2Y;
 		if (otherInfo == null) {
-			otherCorner1X = (int)Math.round(other.x) - otherCollision.getMargin(0);
-			otherCorner1Y = (int)Math.round(other.y) - otherCollision.getMargin(1);
-			otherCorner2X = (int)Math.round(other.x) + otherCollision.getMargin(2);
-			otherCorner2Y = (int)Math.round(other.y) + otherCollision.getMargin(3);
+			int calcX = (int)Math.round(other.x);
+			int calcY = (int)Math.round(other.y);
+			otherCorner1X = calcX - otherCollision.getMargin(0);
+			otherCorner1Y = calcY - otherCollision.getMargin(1);
+			otherCorner2X = calcX + otherCollision.getMargin(2);
+			otherCorner2Y = calcY + otherCollision.getMargin(3);
 		}
 		else {
 			int calcX = (int)Math.round(other.x - otherInfo.originX());
