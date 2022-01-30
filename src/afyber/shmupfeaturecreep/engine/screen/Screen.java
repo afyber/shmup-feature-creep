@@ -273,10 +273,10 @@ public class Screen {
 
 	private static void applySpriteRequestToFrame(SpriteSheetRegion sprite, SpriteDrawRequest request) {
 		// all this to say, if the sprite does not overlap the image, do not draw it
-		int actualX = request.x() - (int)Math.round(sprite.originX() * request.xScale());
-		int actualY = request.y() - (int)Math.round(sprite.originY() * request.yScale());
-		int actualX2 = actualX + (int)Math.round(sprite.dataWidth() * request.xScale());
-		int actualY2 = actualY + (int)Math.round(sprite.dataHeight() * request.yScale());
+		int actualX = request.x() - (int)Math.round(sprite.originX() * Math.abs(request.xScale()));
+		int actualY = request.y() - (int)Math.round(sprite.originY() * Math.abs(request.yScale()));
+		int actualX2 = actualX + (int)Math.round(sprite.dataWidth() * Math.abs(request.xScale()));
+		int actualY2 = actualY + (int)Math.round(sprite.dataHeight() * Math.abs(request.yScale()));
 		if (!GeneralUtil.areRectanglesIntersecting(actualX, actualY, actualX2, actualY2, 0, 0, image.getWidth() - 1, image.getHeight() - 1)) {
 			return;
 		}

@@ -52,6 +52,6 @@ public class BossPartCannonBW extends BossPartParentBW {
 	@Override
 	public void alarm5(WorldMiddleman world) {
 		dive = true;
-		xSpeed = left ? -4 : 4;
+		xSpeed = left ? -1 : 1;
 	}
 }

@@ -57,11 +57,12 @@ public class WaveController extends DynamicObject {
 	@Override
 	public void draw(WorldMiddleman world) {
 		if (state == 1) {
+			double scale = (timer + 360) / 120.0;
 			if (currentWave < BOSS_WAVE) {
-				drawTextExtCentered("WAVE " + currentWave, Game.WINDOW_WIDTH / 2.0, 200, (timer + 240) / 120.0, (timer + 240) / 120.0, -1, (timer + 60) / 180.0);
+				drawTextExtCentered("WAVE " + currentWave, Game.WINDOW_WIDTH / 2.0, 200, scale, scale, -1, (timer + 60) / 180.0);
 			}
 			else if (currentWave == BOSS_WAVE) {
-				drawTextExtCentered("BOSS INCOMING", Game.WINDOW_WIDTH / 2.0, 200, (timer + 240) / 120.0, (timer + 240) / 120.0, -1, Math.cos(Math.toRadians(timer * 3.0)) / 2 + 0.5);
+				drawTextExtCentered("BOSS INCOMING", Game.WINDOW_WIDTH / 2.0, 200, scale, scale, -1, Math.cos(Math.toRadians(timer * 3.0)) / 2 + 0.5);
 			}
 		}
 	}
