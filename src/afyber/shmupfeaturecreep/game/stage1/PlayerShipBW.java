@@ -62,8 +62,8 @@ public class PlayerShipBW extends DynamicObject {
 		int collision = world.isColliding(this, "enemy_ship_parent_bw");
 		if (collision > -1) {
 			EnemyShipParentBW enemy = (EnemyShipParentBW)world.getObject(collision);
-			if (enemy.health != -100) {
-				enemy.health -= 10;
+			if (enemy.health != -1000) {
+				enemy.health -= 2;
 			}
 			if (iFrames == 0) {
 				iFrames = 110;
@@ -71,6 +71,13 @@ public class PlayerShipBW extends DynamicObject {
 				Sound.playSound("player_hit_bw_1");
 				Sound.setSoundGain("player_hit_bw_1", 0.75);
 			}
+		}
+		collision = world.isColliding(this, "boss_part_parent_bw");
+		if (collision > -1 && iFrames == 0) {
+			iFrames = 110;
+			health--;
+			Sound.playSound("player_hit_bw_1");
+			Sound.setSoundGain("player_hit_bw_1", 0.75);
 		}
 		collision = world.isColliding(this, "enemy_bullet_parent_bw");
 		if (collision > -1 && iFrames == 0) {

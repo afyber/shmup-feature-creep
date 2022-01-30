@@ -1,3 +1,6 @@
 music:small_explosion_bw.wav:small_explosion_bw
 player_hit.wav:player_hit_bw
 player_hit_1.wav:player_hit_bw_1
+boss_incoming_bw.wav:boss_incoming_bw
+boss_hit_effective_bw.wav:boss_hit_effective_bw
+boss_hit_ineffective_bw.wav:boss_hit_ineffective_bw

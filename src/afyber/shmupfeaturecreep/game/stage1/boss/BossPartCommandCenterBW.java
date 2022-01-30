@@ -58,8 +58,8 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 					break;
 				}
 			}
-			if (!cannonsAlive) {
-				health = 100;
+			if (!cannonsAlive && !dying) {
+				health = 1000;
 			}
 		}
 	}
@@ -71,7 +71,7 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 		dying = true;
 		health = -1000;
 		for (DynamicObject object: world.getObjectList("boss_part_cannon_bw", false)) {
-			object.alarm[5] = 10;
+			object.alarm[5] = 20;
 		}
 	}
 

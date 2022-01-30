@@ -24,7 +24,7 @@ public class BossPartCannonBW extends BossPartParentBW {
 		left = x < 320;
 		imageXScale = left ? 3 : -3;
 		imageYScale = 3;
-		health = 100;
+		health = 700;
 	}
 
 	@Override
