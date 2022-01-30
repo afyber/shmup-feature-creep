@@ -29,7 +29,7 @@ public class PlayerShipBW extends DynamicObject {
 		imageYScale = 3;
 		iFrames = 0;
 		health = 5;
-		powerUp = 1;
+		powerUp = 0;
 		speedPowerUp = 0;
 		fireRatePowerUp = 0;
 	}

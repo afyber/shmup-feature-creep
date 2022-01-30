@@ -179,6 +179,12 @@ public class DynamicObject {
 		}
 	}
 
+	protected final void drawTextExtCentered(String message, double x, double y, double xScale, double yScale, double wrapWidth, double alpha) {
+		if (visible) {
+			Screen.drawText(message, x - Screen.getTextWidth(message, xScale, wrapWidth) / 2, y, xScale, yScale, wrapWidth, depth, alpha);
+		}
+	}
+
 	protected final void drawRect(double x1, double y1, double x2, double y2, Color color) {
 		if (visible) {
 			drawRect(x1, y1, x2, y2, color.getRGB());

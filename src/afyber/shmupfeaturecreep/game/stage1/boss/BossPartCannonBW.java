@@ -1,7 +1,6 @@
 package afyber.shmupfeaturecreep.game.stage1.boss;
 
 import afyber.shmupfeaturecreep.engine.MathUtil;
-import afyber.shmupfeaturecreep.engine.RandomUtil;
 import afyber.shmupfeaturecreep.engine.world.SpriteCollision;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
@@ -40,7 +39,6 @@ public class BossPartCannonBW extends BossPartParentBW {
 				world.instanceDestroy(instanceID);
 			}
 			speed = MathUtil.interpolateExp(speed, 10, 10, 0.25);
-			x += RandomUtil.randInt(3) - 1;
 		}
 	}
 
@@ -54,5 +52,6 @@ public class BossPartCannonBW extends BossPartParentBW {
 	@Override
 	public void alarm5(WorldMiddleman world) {
 		dive = true;
+		xSpeed = left ? -4 : 4;
 	}
 }

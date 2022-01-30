@@ -379,6 +379,51 @@ public class Screen {
 		}
 	}
 
+	/**
+	 * Just a pared down version of applyTextToFrame()
+	 */
+	public static double getTextWidth(String message, double xScale, double wrapWidth) {
+		Font font;
+		if (allFonts.containsKey(currentFont)) {
+			font = allFonts.get(currentFont);
+		}
+		else {
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Could not measure text: invalid or missing font \"" + currentFont + "\"");
+			return 0;
+		}
+
+		int biggest = 0;
+
+		int runningX = 0;
+
+		for (int i = 0; i < message.length(); i++) {
+
+			char current = message.charAt(i);
+
+			FontCharacter character = font.getCharacter(current);
+
+			if (character == null || current == ' ') {
+				if (wrapWidth != -1 && runningX != 0 && runningX + font.getSpaceWidth() > wrapWidth) {
+					runningX = 0;
+				}
+				runningX += font.getSpaceWidth();
+			}
+			else {
+				if (wrapWidth != -1 && runningX != 0 && runningX + character.imageWidth() > wrapWidth) {
+					runningX = 0;
+				}
+
+				runningX += character.xOffs() * xScale + Math.floor(character.imageWidth() * xScale) + character.nextXOffs() * xScale;
+
+				if (runningX > biggest) {
+					biggest = runningX;
+				}
+			}
+		}
+
+		return biggest;
+	}
+
 	private static void applyPixelToFrame(int x, int y, int rgbColor) {
 		applyPixelToFrameWithAlpha(x, y, rgbColor, 1);
 	}
