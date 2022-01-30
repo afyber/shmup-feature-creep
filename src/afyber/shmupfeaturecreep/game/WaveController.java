@@ -48,8 +48,13 @@ public class WaveController extends DynamicObject {
 	}
 
 	@Override
+	public void draw(WorldMiddleman world) {
+		drawTextExt("ABCDEFGHIJKLMNOPQRSTUVWXYZ,NOW I KNOW MY A, B, C'S. NEXT TIME WONT YOU SING WITH ME.(HELPHELPHELP, HELPEHLPLE)LOL ) LOL", 0, 0, 3, 3, 300, 1);
+	}
+
+	@Override
 	public void update(WorldMiddleman world) {
-		if (timeToNextWave <= 0) {
+		if (timeToNextWave <= 0 && timeToNextWave != -1000) {
 			int tmp = RandomUtil.randInt(availableWaves.size());
 			if (lastWaveIndex >= 0) {
 				// handle wave-choosing properties

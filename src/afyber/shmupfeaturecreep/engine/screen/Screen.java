@@ -202,9 +202,12 @@ public class Screen {
 		drawText(message, x, y, wrapWidth, depth, 1.0);
 	}
 	public static void drawText(String message, double x, double y, double wrapWidth, int depth, double alpha) {
+		drawText(message, x, y, 1, 1, wrapWidth, depth, alpha);
+	}
+	public static void drawText(String message, double x, double y, double xScale, double yScale, double wrapWidth, int depth, double alpha) {
 		if (isDrawing) {
 			try {
-				drawRequests.add(new TextDrawRequest(message, currentFont, (int)Math.round(x), (int)Math.round(y), (int)Math.round(wrapWidth), depth, alpha));
+				drawRequests.add(new TextDrawRequest(message, currentFont, (int)Math.round(x), (int)Math.round(y), xScale, yScale, (int)Math.round(wrapWidth), depth, alpha));
 			} catch (NullPointerException e) {
 				MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
@@ -354,7 +357,7 @@ public class Screen {
 				// The character is either an actual space, or not in the font-set, also make sure to wrap, even for whitespace
 				if (request.wrapWidth() != -1 && runningX != 0 && runningX + font.getSpaceWidth() > request.wrapWidth()) {
 					runningX = 0;
-					runningY += font.getLineHeight();
+					runningY += font.getLineHeight() * request.yScale();
 				}
 				runningX += font.getSpaceWidth();
 			}
@@ -364,12 +367,14 @@ public class Screen {
 				// if this character will go past the wrap width, and we have drawn a character this line, wrap around
 				if (request.wrapWidth() != -1 && runningX != 0 && runningX + character.imageWidth() > request.wrapWidth()) {
 					runningX = 0;
-					runningY += font.getLineHeight();
+					runningY += font.getLineHeight() * request.yScale();
 				}
 
-				applySpriteDataToFrame(character.imageData(), request.x() + runningX + character.xOffs(), request.y() + runningY + character.yOffs(), request.alpha());
+				SpriteSheetRegion scaled = scaleImageData(character.imageData(), request.xScale(), request.yScale(), 0, 0);
 
-				runningX += character.xOffs() + character.imageWidth() + character.nextXOffs();
+				applySpriteDataToFrame(scaled.data(), request.x() + runningX + (int)Math.round(character.xOffs() * request.xScale()), request.y() + runningY + (int)Math.round(character.yOffs() * request.yScale()), request.alpha());
+
+				runningX += character.xOffs() * request.xScale() + scaled.dataWidth() + character.nextXOffs() * request.xScale();
 			}
 		}
 	}
