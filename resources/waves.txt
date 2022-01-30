@@ -3,3 +3,4 @@ four_and_four_easy.txt
 four_and_four_middle.txt
 four_and_four_side_1.txt
 six_in_a_row_1.txt
+four_and_four_2.txt

@@ -68,14 +68,14 @@ public class PlayerShipBW extends DynamicObject {
 			if (iFrames == 0) {
 				iFrames = 110;
 				health--;
-				Sound.playSound("player_hit_bw");
+				Sound.playSound("player_hit_bw_1");
 			}
 		}
 		collision = world.isColliding(this, "enemy_bullet_parent_bw");
 		if (collision > -1 && iFrames == 0) {
 			iFrames = 110;
 			health--;
-			Sound.playSound("player_hit_bw");
+			Sound.playSound("player_hit_bw_1");
 		}
 
 		if (iFrames > 0) {
