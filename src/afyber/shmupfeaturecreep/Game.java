@@ -62,6 +62,8 @@ public class Game {
 		Registry.registerObjectAsChildOf(new EnemyShipSmallCannonBW(0,0,0,-1), "enemy_ship_parent_bw");
 		Registry.registerObjectAsChildOf(new EnemyShipTinyCannonBW(0,0,0,-1), "enemy_ship_parent_bw");
 
+		Registry.registerObject(new EnemyMineSmallBW(0,0,0,-1));
+
 		Registry.registerObject(new EnemyBulletParentBW(0,0,0,-1));
 		Registry.registerObjectAsChildOf(new EnemySmallBulletBW(0,0,0,-1), "enemy_bullet_parent_bw");
 
