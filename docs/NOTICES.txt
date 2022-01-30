@@ -1,4 +1,4 @@
-﻿This software (Shmup: Feature Creep) contains other projects that require the following copyright notices to be retained:
+﻿This software ("Shmup: Feature Creep") contains other projects that require the following copyright notices to be retained:
 
 
 For PNGJ:

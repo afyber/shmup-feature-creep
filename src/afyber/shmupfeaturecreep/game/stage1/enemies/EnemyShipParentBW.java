@@ -7,7 +7,7 @@ import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class EnemyShipParentBW extends DynamicObject {
 
-	public int health = -100;
+	public int health = -1000;
 
 	public EnemyShipParentBW(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
@@ -19,12 +19,12 @@ public class EnemyShipParentBW extends DynamicObject {
 		int collision = world.isColliding(this, "player_bullet_parent_bw");
 		if (collision > -1) {
 			world.instanceDestroy(collision);
-			if (health != -100) {
+			if (health != -1000) {
 				health--;
 			}
 		}
 
-		if (health <= 0) {
+		if (health <= 0 && health != -1000) {
 			world.instanceDestroy(instanceID);
 			world.createInstance("explosion_small_bw", x, y, depth);
 			Sound.playMusic("small_explosion_bw");

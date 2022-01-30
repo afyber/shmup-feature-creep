@@ -1,5 +1,6 @@
 package afyber.shmupfeaturecreep.game;
 
+import afyber.shmupfeaturecreep.Game;
 import afyber.shmupfeaturecreep.MainClass;
 import afyber.shmupfeaturecreep.engine.RandomUtil;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
@@ -14,12 +15,18 @@ public class WaveController extends DynamicObject {
 
 	public static final ArrayList<Wave> allWaves = new ArrayList<>();
 	public static final ArrayList<EnemyWaveReference> allEnemies = new ArrayList<>();
+	public static final int BOSS_WAVE = 1;
 
 	private final ArrayList<EnemyWaveReference> availableEnemies = new ArrayList<>();
 	private final ArrayList<Wave> availableWaves = new ArrayList<>();
 	private final ArrayList<EnemyWaveQueueState> queuedEnemies = new ArrayList<>();
 	private int timeToNextWave = 0;
 	private int lastWaveIndex = -1;
+	private int wavesUntilNext = -1;
+
+	private int currentWave = 0;
+	private int state = 0;
+	private int timer = -1;
 
 	public WaveController(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
@@ -49,33 +56,68 @@ public class WaveController extends DynamicObject {
 
 	@Override
 	public void draw(WorldMiddleman world) {
-		drawTextExt("ABCDEFGHIJKLMNOPQRSTUVWXYZ,NOW I KNOW MY A, B, C'S. NEXT TIME WONT YOU SING WITH ME.(HELPHELPHELP, HELPEHLPLE)LOL ) LOL", 0, 0, 3, 3, 300, 1);
+		if (state == 1) {
+			if (currentWave < BOSS_WAVE) {
+				drawTextExt("WAVE " + currentWave, Game.WINDOW_WIDTH / 2.0, 200, (timer + 240) / 120.0, (timer + 240) / 120.0, 300, (timer + 60) / 180.0);
+			}
+			else if (currentWave == BOSS_WAVE) {
+				drawTextExt("BOSS INCOMING", Game.WINDOW_WIDTH / 2.0, 200, (timer + 240) / 120.0, (timer + 240) / 120.0, 300, (timer + 60) / 180.0);
+
+			}
+		}
 	}
 
 	@Override
 	public void update(WorldMiddleman world) {
-		if (timeToNextWave <= 0 && timeToNextWave != -1000) {
-			int tmp = RandomUtil.randInt(availableWaves.size());
-			if (lastWaveIndex >= 0) {
-				// handle wave-choosing properties
-				if (!availableWaves.get(lastWaveIndex).properties().repeatable()) {
-					while (tmp == lastWaveIndex) {
-						tmp = RandomUtil.randInt(availableWaves.size());
+		switch (state) {
+			case 0 -> {
+				if (timeToNextWave <= 0 && timeToNextWave != -1000) {
+					if (wavesUntilNext <= 0) {
+						currentWave++;
+						state = 1;
+						wavesUntilNext = -1;
+						timer = 120;
+						break;
+					}
+
+					int tmp = RandomUtil.randInt(availableWaves.size());
+					if (lastWaveIndex >= 0) {
+						// handle wave-choosing properties
+						if (!availableWaves.get(lastWaveIndex).properties().repeatable()) {
+							while (tmp == lastWaveIndex) {
+								tmp = RandomUtil.randInt(availableWaves.size());
+							}
+						}
+					}
+					queueWave(availableWaves.get(tmp));
+					lastWaveIndex = tmp;
+					wavesUntilNext--;
+				} else {
+					for (EnemyWaveQueueState queueState: queuedEnemies) {
+						if (--queueState.frames <= 0) {
+							world.createInstance(queueState.objectName, queueState.x, queueState.y, 0);
+						}
+					}
+					queuedEnemies.removeIf(enemy -> enemy.frames <= 0);
+
+					timeToNextWave--;
+				}
+			}
+			case 1 -> {
+				timer--;
+				if (timer <= 0) {
+					if (currentWave < BOSS_WAVE) {
+						state = 0;
+						wavesUntilNext = RandomUtil.randInt(7, 10);
+					}
+					else if (currentWave == BOSS_WAVE) {
+						// it's boss time
+						state = 2;
+						wavesUntilNext = -1;
+						world.createInstance("boss_part_command_center_bw", 320, -128, 200);
 					}
 				}
 			}
-			queueWave(availableWaves.get(tmp));
-			lastWaveIndex = tmp;
-		}
-		else {
-			for (EnemyWaveQueueState state: queuedEnemies) {
-				if (--state.frames <= 0) {
-					world.createInstance(state.objectName, state.x, state.y, 0);
-				}
-			}
-			queuedEnemies.removeIf(enemy -> enemy.frames <= 0);
-
-			timeToNextWave--;
 		}
 	}
 

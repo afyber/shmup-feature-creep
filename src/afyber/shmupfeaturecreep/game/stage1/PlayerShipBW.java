@@ -29,7 +29,7 @@ public class PlayerShipBW extends DynamicObject {
 		imageYScale = 3;
 		iFrames = 0;
 		health = 5;
-		powerUp = 0;
+		powerUp = 1;
 		speedPowerUp = 0;
 		fireRatePowerUp = 0;
 	}
@@ -110,13 +110,13 @@ public class PlayerShipBW extends DynamicObject {
 			nextFire = 3;
 		}
 		if (powerUp == 0) {
-			world.createInstance("player_bullet_basic_bw", x - 13, y + 12, 10);
+			world.createInstance("player_bullet_basic_bw", x - 12, y + 12, 10);
 			world.createInstance("player_bullet_basic_bw", x + 12, y + 12, 10);
 		}
 		else if (powerUp == 1) {
-			world.createInstance("player_bullet_basic_bw", x - 9, y + 8, 10);
+			world.createInstance("player_bullet_basic_bw", x - 8, y + 8, 10);
 			world.createInstance("player_bullet_basic_bw", x + 8, y + 8, 10);
-			world.createInstance("player_bullet_basic_bw", x - 18, y + 12, 10);
+			world.createInstance("player_bullet_basic_bw", x - 17, y + 12, 10);
 			world.createInstance("player_bullet_basic_bw", x + 17, y + 12, 10);
 		}
 		if (Keyboard.keyDown("z")) {

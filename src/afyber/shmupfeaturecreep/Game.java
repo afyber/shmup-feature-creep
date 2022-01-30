@@ -19,6 +19,9 @@ import afyber.shmupfeaturecreep.game.stage1.ExplosionSmallBW;
 import afyber.shmupfeaturecreep.game.stage1.PlayerBulletBasic;
 import afyber.shmupfeaturecreep.game.stage1.PlayerBulletParentBW;
 import afyber.shmupfeaturecreep.game.stage1.PlayerShipBW;
+import afyber.shmupfeaturecreep.game.stage1.boss.BossPartCannonBW;
+import afyber.shmupfeaturecreep.game.stage1.boss.BossPartCommandCenterBW;
+import afyber.shmupfeaturecreep.game.stage1.boss.BossPartParentBW;
 import afyber.shmupfeaturecreep.game.stage1.enemies.*;
 
 import java.io.IOException;
@@ -63,6 +66,10 @@ public class Game {
 		Registry.registerObjectAsChildOf(new EnemySmallBulletBW(0,0,0,-1), "enemy_bullet_parent_bw");
 
 		Registry.registerObject(new ExplosionSmallBW(0,0,0,-1));
+
+		Registry.registerObject(new BossPartParentBW(0,0,0,-1));
+		Registry.registerObjectAsChildOf(new BossPartCommandCenterBW(0,0,0,-1), "boss_part_parent_bw");
+		Registry.registerObjectAsChildOf(new BossPartCannonBW(0,0,0,-1), "boss_part_parent_bw");
 
 		Registry.registerObject(new WaveController(0,0,0,-1));
 	}
