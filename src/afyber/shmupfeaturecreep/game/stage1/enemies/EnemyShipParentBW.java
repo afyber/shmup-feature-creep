@@ -1,13 +1,17 @@
 package afyber.shmupfeaturecreep.game.stage1.enemies;
 
 import afyber.shmupfeaturecreep.Game;
+import afyber.shmupfeaturecreep.engine.RandomUtil;
 import afyber.shmupfeaturecreep.engine.audio.Sound;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
+import afyber.shmupfeaturecreep.engine.world.Global;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
+import afyber.shmupfeaturecreep.game.stage1.PlayerShipBW;
 
 public class EnemyShipParentBW extends DynamicObject {
 
 	public int health = -1000;
+	public int chance = 6;
 
 	public EnemyShipParentBW(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
@@ -27,6 +31,15 @@ public class EnemyShipParentBW extends DynamicObject {
 		if (health <= 0 && health != -1000) {
 			world.instanceDestroy(instanceID);
 			world.createInstance("explosion_small_bw", x, y, depth);
+			if (RandomUtil.randInt(chance) == 0) {
+				PlayerShipBW ship = (PlayerShipBW)world.getObjectList("player_ship_bw", false).get(0);
+				if (ship.powerUp < Global.getIntGlobal("powerupsUnlock")) {
+					world.createInstance("weapon_powerup_bw", x, y, 101);
+				}
+				else if (ship.fireRatePowerUp < Global.getIntGlobal("boostsUnlock")) {
+					world.createInstance("fire_rate_powerup_bw", x, y, 101);
+				}
+			}
 			Sound.playMusic("small_explosion_bw");
 		}
 

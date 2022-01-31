@@ -73,6 +73,9 @@ public class Game {
 
 		Registry.registerObject(new ExplosionSmallBW(0,0,0,-1));
 
+		Registry.registerObject(new WeaponPowerupBW(0,0,0,-1));
+		Registry.registerObject(new FireRatePowerupBW(0,0,0,-1));
+
 		Registry.registerObject(new BossPartParentBW(0,0,0,-1));
 		Registry.registerObjectAsChildOf(new BossPartCommandCenterBW(0,0,0,-1), "boss_part_parent_bw");
 		Registry.registerObjectAsChildOf(new BossPartCannonBW(0,0,0,-1), "boss_part_parent_bw");
