@@ -69,30 +69,34 @@ public class PlayerShipBW extends DynamicObject {
 			if (enemy.health != -1000) {
 				enemy.health -= 2;
 			}
-			if (iFrames == 0) {
-				iFrames = 110;
-				health--;
-				Sound.playSound("player_hit_bw_1");
-				Sound.setSoundGain("player_hit_bw_1", 0.75);
-			}
+			hurt();
 		}
 		collision = world.isColliding(this, "boss_part_parent_bw");
-		if (collision > -1 && iFrames == 0) {
-			iFrames = 110;
-			health--;
-			Sound.playSound("player_hit_bw_1");
-			Sound.setSoundGain("player_hit_bw_1", 0.75);
+		if (collision > -1) {
+			hurt();
 		}
 		collision = world.isColliding(this, "enemy_bullet_parent_bw");
-		if (collision > -1 && iFrames == 0) {
-			iFrames = 110;
-			health--;
-			Sound.playSound("player_hit_bw_1");
-			Sound.setSoundGain("player_hit_bw_1", 0.75);
+		if (collision > -1) {
+			hurt();
 		}
 
 		if (iFrames > 0) {
 			iFrames--;
+		}
+	}
+
+	private void hurt() {
+		if (iFrames == 0) {
+			iFrames = 110;
+			health--;
+			if (powerUp > 0) {
+				powerUp--;
+			}
+			else if (fireRatePowerUp > 0) {
+				fireRatePowerUp--;
+			}
+			Sound.playSound("player_hit_bw_1");
+			Sound.setSoundGain("player_hit_bw_1", 0.75);
 		}
 	}
 

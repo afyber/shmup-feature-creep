@@ -30,6 +30,6 @@ public class FireRatePowerupBW extends DynamicObject {
 				world.instanceDestroy(instanceID);
 			}
 		}
-		y += 5;
+		y += 4;
 	}
 }
