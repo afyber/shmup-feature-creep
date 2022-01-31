@@ -2,9 +2,11 @@ package afyber.shmupfeaturecreep.game.stage1.boss;
 
 import afyber.shmupfeaturecreep.engine.MathUtil;
 import afyber.shmupfeaturecreep.engine.RandomUtil;
+import afyber.shmupfeaturecreep.engine.audio.Sound;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.world.SpriteCollision;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
+import afyber.shmupfeaturecreep.game.Fader;
 import afyber.shmupfeaturecreep.game.stage1.enemies.EnemyMineSmallBW;
 import afyber.shmupfeaturecreep.game.stage1.enemies.EnemySmallBulletBW;
 
@@ -59,6 +61,7 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 		}
 		else {
 			x = MathUtil.interpolateExp(x, initialX, 10, 1);
+			y -= 0.3;
 		}
 
 		if (health == -1000) {
@@ -81,9 +84,14 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 		spriteIndex = 0;
 		dying = true;
 		health = -1000;
+		Fader fade = ((Fader)world.createInstance("fader", 0, 0, 1100));
+		fade.rgbColor = 0xffffff;
+		fade.time = 270;
 		for (DynamicObject object: world.getObjectList("boss_part_cannon_bw", false)) {
 			object.alarm[5] = 20;
 		}
+		alarm[1] = 75;
+		alarm[2] = 10;
 		alarm[6] = -1;
 	}
 
@@ -200,5 +208,22 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 				alarm[6] = 60;
 			}
 		}
+	}
+
+	@Override
+	public void alarm1(WorldMiddleman world) {
+		alarm[1] = 90;
+		spriteIndex++;
+		if (spriteIndex >= 4) {
+			world.changeRoom("roomItsOverLol");
+		}
+	}
+
+	@Override
+	public void alarm2(WorldMiddleman world) {
+		world.createInstance("explosion_small_bw", x + RandomUtil.randInt(228) - 116, y + RandomUtil.randInt(228) - 116, 1000);
+		world.createInstance("explosion_small_bw", x + RandomUtil.randInt(228) - 116, y + RandomUtil.randInt(228) - 116, 1000);
+		Sound.playMusic("small_explosion_bw");
+		alarm[2] = RandomUtil.randInt(5, 20);
 	}
 }

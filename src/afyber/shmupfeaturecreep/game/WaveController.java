@@ -16,7 +16,7 @@ public class WaveController extends DynamicObject {
 
 	public static final ArrayList<Wave> allWaves = new ArrayList<>();
 	public static final ArrayList<EnemyWaveReference> allEnemies = new ArrayList<>();
-	public static final int BOSS_WAVE = 1;
+	public static final int BOSS_WAVE = 2;
 
 	private final ArrayList<EnemyWaveReference> availableEnemies = new ArrayList<>();
 	private final ArrayList<Wave> availableWaves = new ArrayList<>();

@@ -57,7 +57,7 @@ public class Game {
 		Global.setIntGlobal("enemiesUnlock", 0);
 		Global.setIntGlobal("powerupsUnlock", 0);
 		Global.setIntGlobal("boostsUnlock", 0);
-		Global.setIntGlobal("bossUnlock", 0);
+		Global.setIntGlobal("bossUnlock", 1);
 	}
 
 	public static void registerObjects() {
@@ -88,7 +88,11 @@ public class Game {
 
 		Registry.registerObject(new WaveController(0,0,0,-1));
 
+		Registry.registerObject(new Fader(0,0,0,-1));
+
 		Registry.registerObject(new PauseMenu(0,0,0,-1));
+
+		Registry.registerObject(new ItsOverLol(0,0,0,-1));
 	}
 
 	public static void registerRooms() {
@@ -98,6 +102,10 @@ public class Game {
 		objects.add(new ObjectCreationReference("wave_controller", 0, 0, 0, 0, 0));
 		objects.add(new ObjectCreationReference("pause_menu", 0, 0, 0, 0, 0));
 		Registry.registerRoom("roomStart", new Room(tiles, objects));
+
+		objects = new ArrayList<>();
+		objects.add(new ObjectCreationReference("its_over_lol", 0, 0, 0, 0, 0));
+		Registry.registerRoom("roomItsOverLol", new Room(tiles, objects));
 	}
 
 	public static void loadEnemies() {

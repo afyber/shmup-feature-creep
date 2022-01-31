@@ -198,4 +198,10 @@ public class DynamicObject {
 			Screen.drawRect(x1, y1, x2, y2, rgbColor, depth);
 		}
 	}
+
+	protected final void drawRectExt(double x1, double y1, double x2, double y2, int rgbColor, double alpha) {
+		if (visible) {
+			Screen.drawRect(x1, y1, x2, y2, rgbColor, depth, alpha);
+		}
+	}
 }

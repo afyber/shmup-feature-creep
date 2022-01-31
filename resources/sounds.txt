@@ -1,4 +1,5 @@
 music:small_explosion_bw.wav:small_explosion_bw
+loop:its_over_lol_intro.wav:its_over_lol.wav:its_over_lol
 player_hit.wav:player_hit_bw
 player_hit_1.wav:player_hit_bw_1
 boss_incoming_bw.wav:boss_incoming_bw

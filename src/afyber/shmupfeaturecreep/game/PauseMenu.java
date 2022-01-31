@@ -39,6 +39,9 @@ public class PauseMenu extends DynamicObject {
 		}
 
 		if (thisPaused) {
+			if (Keyboard.keyJustDown("t")) {
+				world.changeRoom("roomItsOverLol");
+			}
 			if (Keyboard.keyJustDown("down")) {
 				selection++;
 				if (selection > 2) {
@@ -54,6 +57,7 @@ public class PauseMenu extends DynamicObject {
 			if (Keyboard.keyJustDown("enter") || Keyboard.keyJustDown("z")) {
 				if (selection == 0) {
 					world.unpause();
+					thisPaused = false;
 				}
 				else if (selection == 1) {
 					// TODO: settings
