@@ -23,14 +23,16 @@ public class ItsOverLol extends DynamicObject {
 		drawTextExtCentered("THE END", Game.WINDOW_WIDTH / 2.0, 150, 9, 9, -1, 1);
 		drawTextExtCentered("OF THE DEMO", Game.WINDOW_WIDTH / 2.0, 290, 4, 4, -1, 1);
 
-		drawTextExtCentered("PROGRAMMING AND GAME DESIGN", 240, 400, 2, 2, -1, 1);
-		drawTextExtCentered("BY", 240, 430, 1, 1, -1, 1);
-		drawTextExtCentered("AFYBER", 240, 450, 3, 3, -1, 1);
+		drawTextExtCentered("PROGRAMMING", 200, 400, 2, 2, -1, 1);
+		drawTextExtCentered("AND", 200, 430, 1, 1, -1, 1);
+		drawTextExtCentered("GAME DESIGN", 200, 450, 2, 2, -1, 1);
+		drawTextExtCentered("BY", 200, 480, 1, 1, -1, 1);
+		drawTextExtCentered("AFYBER", 200, 500, 3, 3, -1, 1);
 
-		drawTextExtCentered("MUSIC", 440, 490, 2, 2, -1, 1);
-		drawTextExtCentered("BY", 440, 520, 1, 1, -1, 1);
-		drawTextExtCentered("SOMEONE", 440, 540, 3, 3, -1, 1);
-		drawTextExtCentered("AND", 440, 580, 1, 1, -1, 1);
-		drawTextExtCentered("AFYBER", 440, 600, 3, 3, -1, 1);
+		drawTextExtCentered("MUSIC", 460, 400, 2, 2, -1, 1);
+		drawTextExtCentered("BY", 460, 430, 1, 1, -1, 1);
+		drawTextExtCentered("SOMEONE", 460, 450, 3, 3, -1, 1);
+		drawTextExtCentered("AND", 460, 480, 1, 1, -1, 1);
+		drawTextExtCentered("AFYBER", 460, 500, 2, 2, -1, 1);
 	}
 }
