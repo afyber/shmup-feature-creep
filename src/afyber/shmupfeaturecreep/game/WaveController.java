@@ -57,7 +57,7 @@ public class WaveController extends DynamicObject {
 
 	@Override
 	public void draw(WorldMiddleman world) {
-		if (state == 1) {
+		if (state == 2) {
 			double scale = (timer + 360) / 120.0;
 			if (currentWave < BOSS_WAVE) {
 				drawTextExtCentered("WAVE " + currentWave, Game.WINDOW_WIDTH / 2.0, 200, scale, scale, -1, (timer + 60) / 180.0);
@@ -76,12 +76,8 @@ public class WaveController extends DynamicObject {
 					currentWave++;
 					wavesUntilNext = -1;
 					timer = 120;
-					state = -1;
+					state = 1;
 					alarm[8] = 60;
-					if (currentWave == BOSS_WAVE) {
-						Sound.playSound("boss_incoming_bw");
-						Sound.setSoundGain("boss_incoming_bw", 0.65);
-					}
 					return;
 				}
 
@@ -107,15 +103,15 @@ public class WaveController extends DynamicObject {
 
 				timeToNextWave--;
 			}
-		} else if (state == 1) {
+		} else if (state == 2) {
 			timer--;
 			if (timer <= 0) {
 				if (currentWave < BOSS_WAVE) {
 					state = 0;
-					wavesUntilNext = RandomUtil.randInt(4, 7);
+					wavesUntilNext = RandomUtil.randInt(4, 8);
 				} else if (currentWave == BOSS_WAVE) {
 					// it's boss time
-					state = 2;
+					state = 3;
 					wavesUntilNext = -1;
 					world.createInstance("boss_part_command_center_bw", 320, -128, 200);
 				}
@@ -125,7 +121,11 @@ public class WaveController extends DynamicObject {
 
 	@Override
 	public void alarm8(WorldMiddleman world) {
-		state = 1;
+		if (currentWave == BOSS_WAVE) {
+			Sound.playSound("boss_incoming_bw");
+			Sound.setSoundGain("boss_incoming_bw", 0.65);
+		}
+		state = 2;
 	}
 
 	private void queueWave(Wave wave) {

@@ -119,8 +119,10 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 		int pattern = RandomUtil.randInt(6);
 		switch (pattern) {
 			case 0 -> {
-				world.createInstance("enemy_mine_small_bw", x - 64, y + 64, 0);
-				world.createInstance("enemy_mine_small_bw", x + 64, y + 64, 0);
+				DynamicObject obj = world.createInstance("enemy_mine_small_bw", x - 64, y + 64, 0);
+				((EnemyMineSmallBW)obj).speed = 5;
+				obj = world.createInstance("enemy_mine_small_bw", x + 64, y + 64, 0);
+				((EnemyMineSmallBW)obj).speed = 5;
 				alarm[6] = 60;
 			}
 			case 1 -> {

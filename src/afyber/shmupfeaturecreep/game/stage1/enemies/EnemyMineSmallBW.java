@@ -20,7 +20,12 @@ public class EnemyMineSmallBW extends DynamicObject {
 		sprite = "enemy_mine_small_bw";
 		imageXScale = 3;
 		imageYScale = 3;
-		alarm[4] = 30;
+		if (y < 0) {
+			alarm[4] = 45;
+		}
+		else {
+			alarm[4] = 30;
+		}
 		imageSpeed = 0.1;
 	}
 
