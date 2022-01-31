@@ -123,7 +123,7 @@ public class WaveController extends DynamicObject {
 	public void alarm8(WorldMiddleman world) {
 		if (currentWave == BOSS_WAVE) {
 			Sound.playSound("boss_incoming_bw");
-			Sound.setSoundGain("boss_incoming_bw", 0.65);
+			Sound.setSoundGain("boss_incoming_bw", 0.6);
 		}
 		state = 2;
 	}

@@ -16,6 +16,8 @@ import java.util.Arrays;
  */
 public class DynamicObject {
 
+	public boolean pauseable = true;
+
 	// NOTE: Accessors are not used BECAUSE it makes the code look more like GML
 	// That might sound silly, but this is basically a GameMaker clone anyways
 	public String objectName = "";

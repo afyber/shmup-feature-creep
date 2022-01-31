@@ -74,6 +74,8 @@ public class Game {
 		Registry.registerObjectAsChildOf(new BossPartCannonBW(0,0,0,-1), "boss_part_parent_bw");
 
 		Registry.registerObject(new WaveController(0,0,0,-1));
+
+		Registry.registerObject(new PauseMenu(0,0,0,-1));
 	}
 
 	public static void registerRooms() {
@@ -81,6 +83,7 @@ public class Game {
 		ArrayList<ObjectCreationReference> objects = new ArrayList<>();
 		objects.add(new ObjectCreationReference("player_ship_bw", 320, 480, 2, 2, 100));
 		objects.add(new ObjectCreationReference("wave_controller", 0, 0, 0, 0, 0));
+		objects.add(new ObjectCreationReference("pause_menu", 0, 0, 0, 0, 0));
 		Registry.registerRoom("roomStart", new Room(tiles, objects));
 	}
 

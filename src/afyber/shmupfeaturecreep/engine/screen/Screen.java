@@ -607,6 +607,10 @@ public class Screen {
 		return isDrawing;
 	}
 
+	public static boolean windowHasFocus() {
+		return panel.hasFocus();
+	}
+
 	// NOTE: private classes
 
 	private static class CustomPanel extends JPanel {

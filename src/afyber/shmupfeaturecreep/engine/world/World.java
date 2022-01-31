@@ -44,6 +44,8 @@ public class World {
 
 	private final WorldMiddleman worldMiddleman;
 
+	private boolean paused;
+
 	public World(Room room) {
 		allTiles = new ArrayList<>();
 		allGameObjects = new ArrayList<>();
@@ -52,6 +54,8 @@ public class World {
 		allParticles = new ArrayList<>();
 
 		worldMiddleman = new WorldMiddleman(this);
+
+		paused = false;
 
 		loadRoomData(room);
 	}
@@ -68,29 +72,38 @@ public class World {
 	}
 
 	public void destroyAll() {
-		for (ObjectDestructionReference destroyRef: gameObjectsToRemove) {
-			if (destroyRef.useInstanceID()) {
-				instanceDestroy(destroyRef.objRef());
+		if (!paused) {
+			for (ObjectDestructionReference destroyRef: gameObjectsToRemove) {
+				if (destroyRef.useInstanceID()) {
+					instanceDestroy(destroyRef.objRef());
+				} else {
+					instanceDestroy(destroyRef.classRef());
+				}
 			}
-			else {
-				instanceDestroy(destroyRef.classRef());
-			}
+			gameObjectsToRemove.clear();
 		}
-		gameObjectsToRemove.clear();
 	}
 
 	public void moveAllNewlyAdded() {
-		allGameObjects.addAll(gameObjectsCreatedThisFrame);
-		gameObjectsCreatedThisFrame.clear();
+		if (!paused) {
+			allGameObjects.addAll(gameObjectsCreatedThisFrame);
+			gameObjectsCreatedThisFrame.clear();
+		}
 	}
 
 	public void physicsUpdateAll() {
 		for (DynamicObject object: allGameObjects) {
+			if (paused && object.pauseable) {
+				continue;
+			}
 			object.spriteIndex += object.imageSpeed;
 			object.x += object.xSpeed;
 			object.y += object.ySpeed;
 		}
 		for (Particle particle: allParticles) {
+			if (paused) {
+				continue;
+			}
 			particle.lived += 1;
 			particle.update();
 		}
@@ -103,15 +116,27 @@ public class World {
 			tile.draw();
 		}
 		for (DynamicObject object: allGameObjects) {
+			if (paused && object.pauseable) {
+				continue;
+			}
 			object.preDraw(worldMiddleman);
 		}
 		for (DynamicObject object: allGameObjects) {
+			if (paused && object.pauseable) {
+				continue;
+			}
 			object.draw(worldMiddleman);
 		}
 		for (DynamicObject object: allGameObjects) {
+			if (paused && object.pauseable) {
+				continue;
+			}
 			object.postDraw(worldMiddleman);
 		}
 		for (Particle particle: allParticles) {
+			if (paused) {
+				continue;
+			}
 			particle.draw();
 		}
 		Screen.setIsDrawing(false);
@@ -119,18 +144,30 @@ public class World {
 
 	public void updateAll() {
 		for (DynamicObject object: allGameObjects) {
+			if (paused && object.pauseable) {
+				continue;
+			}
 			object.preUpdate(worldMiddleman);
 		}
 		for (DynamicObject object: allGameObjects) {
+			if (paused && object.pauseable) {
+				continue;
+			}
 			object.update(worldMiddleman);
 		}
 		for (DynamicObject object: allGameObjects) {
+			if (paused && object.pauseable) {
+				continue;
+			}
 			object.postUpdate(worldMiddleman);
 		}
 	}
 
 	public void alarmAll() {
 		for (DynamicObject object: allGameObjects) {
+			if (paused && object.pauseable) {
+				continue;
+			}
 			for (int i = 0; i < 10; i++) {
 				// NOTE: here, if the alarm is > 0, subtract 1
 				if (object.alarm[i] > 0) {
@@ -542,5 +579,17 @@ public class World {
 
 	public String getRoomChangeRequestName() {
 		return roomChange;
+	}
+
+	public void pause() {
+		paused = true;
+	}
+
+	public void unpause() {
+		paused = false;
+	}
+
+	public boolean isPaused() {
+		return paused;
 	}
 }

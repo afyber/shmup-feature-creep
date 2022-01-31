@@ -139,4 +139,16 @@ public class WorldMiddleman {
 	public int isColliding(DynamicObject caller, String classRef, boolean includingChildren) {
 		return world.isColliding(caller, classRef, includingChildren);
 	}
+
+	public void pause() {
+		world.pause();
+	}
+
+	public void unpause() {
+		world.unpause();
+	}
+
+	public boolean isPaused() {
+		return world.isPaused();
+	}
 }
