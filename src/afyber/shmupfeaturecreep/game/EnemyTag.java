@@ -1,6 +1,9 @@
 package afyber.shmupfeaturecreep.game;
 
 public enum EnemyTag {
+	// Special info
+	INVINCIBLE,
+
 	// How does it move?
 	TOP_TO_BOTTOM,
 	TOP_TO_SIDE,

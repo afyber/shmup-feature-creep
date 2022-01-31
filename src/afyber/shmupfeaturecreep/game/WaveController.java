@@ -16,7 +16,7 @@ public class WaveController extends DynamicObject {
 
 	public static final ArrayList<Wave> allWaves = new ArrayList<>();
 	public static final ArrayList<EnemyWaveReference> allEnemies = new ArrayList<>();
-	public static final int BOSS_WAVE = 1;
+	public static final int BOSS_WAVE = 6;
 
 	private final ArrayList<EnemyWaveReference> availableEnemies = new ArrayList<>();
 	private final ArrayList<Wave> availableWaves = new ArrayList<>();
@@ -74,9 +74,10 @@ public class WaveController extends DynamicObject {
 			if (timeToNextWave <= 0 && timeToNextWave != -1000) {
 				if (wavesUntilNext <= 0) {
 					currentWave++;
-					state = 1;
 					wavesUntilNext = -1;
 					timer = 120;
+					state = -1;
+					alarm[8] = 60;
 					if (currentWave == BOSS_WAVE) {
 						Sound.playSound("boss_incoming_bw");
 						Sound.setSoundGain("boss_incoming_bw", 0.65);
@@ -120,6 +121,11 @@ public class WaveController extends DynamicObject {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void alarm8(WorldMiddleman world) {
+		state = 1;
 	}
 
 	private void queueWave(Wave wave) {

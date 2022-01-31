@@ -84,17 +84,21 @@ public class BossPartCannonBW extends BossPartParentBW {
 			case 2 -> {
 				DynamicObject obj = world.createInstance("enemy_mine_small_bw", left ? x + 12 : x - 12, y + 16, 0);
 				((EnemyMineSmallBW)obj).direction = 115;
+				((EnemyMineSmallBW)obj).speed = 5;
 				obj = world.createInstance("enemy_mine_small_bw", left ? x + 12 : x - 12, y + 16, 0);
 				((EnemyMineSmallBW)obj).direction = 65;
+				((EnemyMineSmallBW)obj).speed = 5;
 				world.getObject(parentObject).alarm[6] = 55;
 			}
 			case 3 -> {
 				DynamicObject obj = world.createInstance("enemy_mine_small_bw", left ? x + 12 : x - 12, y + 16, 0);
 				((EnemyMineSmallBW)obj).direction = 115;
 				((EnemyMineSmallBW)obj).offset = 45;
+				((EnemyMineSmallBW)obj).speed = 5;
 				obj = world.createInstance("enemy_mine_small_bw", left ? x + 12 : x - 12, y + 16, 0);
 				((EnemyMineSmallBW)obj).direction = 65;
 				((EnemyMineSmallBW)obj).offset = 45;
+				((EnemyMineSmallBW)obj).speed = 5;
 				world.getObject(parentObject).alarm[6] = 60;
 			}
 		}

@@ -126,9 +126,12 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 			case 1 -> {
 				DynamicObject obj = world.createInstance("enemy_mine_small_bw", x - 64, y + 64, 0);
 				((EnemyMineSmallBW)obj).direction = 110;
+				((EnemyMineSmallBW)obj).speed = 5;
 				obj = world.createInstance("enemy_mine_small_bw", x + 64, y + 64, 0);
 				((EnemyMineSmallBW)obj).direction = 70;
-				world.createInstance("enemy_mine_small_bw", x, y + 76, 0);
+				((EnemyMineSmallBW)obj).speed = 5;
+				obj = world.createInstance("enemy_mine_small_bw", x, y + 76, 0);
+				((EnemyMineSmallBW)obj).speed = 5;
 				alarm[6] = 60;
 			}
 			case 2 -> {
@@ -155,8 +158,10 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 			case 3 -> {
 				DynamicObject obj = world.createInstance("enemy_mine_small_bw", x - 64, y + 64, 0);
 				((EnemyMineSmallBW)obj).offset = 45;
+				((EnemyMineSmallBW)obj).speed = 5;
 				obj = world.createInstance("enemy_mine_small_bw", x + 64, y + 64, 0);
 				((EnemyMineSmallBW)obj).offset = 45;
+				((EnemyMineSmallBW)obj).speed = 5;
 				alarm[6] = 60;
 			}
 			case 4 -> {
@@ -183,10 +188,13 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 			case 5 -> {
 				DynamicObject obj = world.createInstance("enemy_mine_small_bw", x - 64, y + 64, 0);
 				((EnemyMineSmallBW)obj).direction = 110;
+				((EnemyMineSmallBW)obj).speed = 5;
 				obj = world.createInstance("enemy_mine_small_bw", x + 64, y + 64, 0);
 				((EnemyMineSmallBW)obj).direction = 70;
+				((EnemyMineSmallBW)obj).speed = 5;
 				obj = world.createInstance("enemy_mine_small_bw", x, y + 76, 0);
 				((EnemyMineSmallBW)obj).offset = 45;
+				((EnemyMineSmallBW)obj).speed = 5;
 				alarm[6] = 60;
 			}
 		}

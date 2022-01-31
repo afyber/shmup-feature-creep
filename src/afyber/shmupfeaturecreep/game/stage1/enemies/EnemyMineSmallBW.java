@@ -6,7 +6,7 @@ import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 public class EnemyMineSmallBW extends DynamicObject {
 
 	public double direction = 90;
-	public double speed = 5;
+	public double speed = 3;
 	public int con = 0;
 	public double offset = 0;
 
