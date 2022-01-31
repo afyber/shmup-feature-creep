@@ -72,23 +72,19 @@ public class World {
 	}
 
 	public void destroyAll() {
-		if (!paused) {
-			for (ObjectDestructionReference destroyRef: gameObjectsToRemove) {
-				if (destroyRef.useInstanceID()) {
-					instanceDestroy(destroyRef.objRef());
-				} else {
-					instanceDestroy(destroyRef.classRef());
-				}
+		for (ObjectDestructionReference destroyRef: gameObjectsToRemove) {
+			if (destroyRef.useInstanceID()) {
+				instanceDestroy(destroyRef.objRef());
+			} else {
+				instanceDestroy(destroyRef.classRef());
 			}
-			gameObjectsToRemove.clear();
 		}
+		gameObjectsToRemove.clear();
 	}
 
 	public void moveAllNewlyAdded() {
-		if (!paused) {
-			allGameObjects.addAll(gameObjectsCreatedThisFrame);
-			gameObjectsCreatedThisFrame.clear();
-		}
+		allGameObjects.addAll(gameObjectsCreatedThisFrame);
+		gameObjectsCreatedThisFrame.clear();
 	}
 
 	public void physicsUpdateAll() {

@@ -71,6 +71,7 @@ public class Screen {
 		frame.setResizable(false);
 		frame.setTitle(name);
 		// these numbers are so that the drawable area is actually the size specified
+		// TODO: figure this out better
 		frame.setSize(screenWidth + 16, screenHeight + 39);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
@@ -618,6 +619,10 @@ public class Screen {
 
 	public static boolean windowHasFocus() {
 		return panel.hasFocus();
+	}
+
+	public static void closeWindow() {
+		frame.dispose();
 	}
 
 	// NOTE: private classes

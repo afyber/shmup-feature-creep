@@ -16,7 +16,7 @@ public class WaveController extends DynamicObject {
 
 	public static final ArrayList<Wave> allWaves = new ArrayList<>();
 	public static final ArrayList<EnemyWaveReference> allEnemies = new ArrayList<>();
-	public static final int BOSS_WAVE = 6;
+	public static final int BOSS_WAVE = 2;
 
 	private final ArrayList<EnemyWaveReference> availableEnemies = new ArrayList<>();
 	private final ArrayList<Wave> availableWaves = new ArrayList<>();
@@ -27,6 +27,7 @@ public class WaveController extends DynamicObject {
 
 	private int currentWave = 0;
 	private int state = 0;
+	private boolean shopDone = false;
 	private int timer = -1;
 
 	public WaveController(double x, double y, int depth, int instanceID) {
@@ -59,10 +60,10 @@ public class WaveController extends DynamicObject {
 	public void draw(WorldMiddleman world) {
 		if (state == 2) {
 			double scale = (timer + 360) / 120.0;
-			if (currentWave < BOSS_WAVE) {
+			if (currentWave < BOSS_WAVE || shopDone) {
 				drawTextExtCentered("WAVE " + currentWave, Game.WINDOW_WIDTH / 2.0, 200, scale, scale, -1, (timer + 60) / 180.0);
 			}
-			else if (currentWave == BOSS_WAVE) {
+			else if (currentWave == BOSS_WAVE && Global.getIntGlobal("bossUnlock") > 0) {
 				drawTextExtCentered("BOSS INCOMING", Game.WINDOW_WIDTH / 2.0, 200, scale, scale, -1, Math.cos(Math.toRadians(timer * 3.0)) / 2 + 0.5);
 			}
 		}
@@ -78,6 +79,7 @@ public class WaveController extends DynamicObject {
 					timer = 120;
 					state = 1;
 					alarm[8] = 60;
+					shopDone = false;
 					return;
 				}
 
@@ -106,22 +108,36 @@ public class WaveController extends DynamicObject {
 		} else if (state == 2) {
 			timer--;
 			if (timer <= 0) {
-				if (currentWave < BOSS_WAVE) {
+				if (currentWave % BOSS_WAVE != 0 || shopDone) {
 					state = 0;
 					wavesUntilNext = RandomUtil.randInt(4, 8);
-				} else if (currentWave == BOSS_WAVE) {
-					// it's boss time
-					state = 3;
-					wavesUntilNext = -1;
-					world.createInstance("boss_part_command_center_bw", 320, -128, 200);
+				} else {
+					if (Global.getIntGlobal("bossUnlock") == 1) {
+						// it's boss time
+						state = 3;
+						wavesUntilNext = -1;
+						world.createInstance("boss_part_command_center_bw", 320, -128, 200);
+					}
+					else {
+						state = 4;
+						world.createInstance("guild_upgrade_menu_bw", 0, 0, 200);
+						// go to the upgrade menu
+					}
 				}
+			}
+		} else if (state == 4) {
+			if (!world.instanceExists("guild_upgrade_menu_bw")) {
+				alarm[8] = 40;
+				timer = 120;
+				state = -1;
+				shopDone = true;
 			}
 		}
 	}
 
 	@Override
 	public void alarm8(WorldMiddleman world) {
-		if (currentWave == BOSS_WAVE) {
+		if (currentWave == BOSS_WAVE && Global.getIntGlobal("bossUnlock") > 0) {
 			Sound.playSound("boss_incoming_bw");
 			Sound.setSoundGain("boss_incoming_bw", 0.6);
 		}

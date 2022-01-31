@@ -15,10 +15,7 @@ import afyber.shmupfeaturecreep.engine.rooms.Room;
 import afyber.shmupfeaturecreep.engine.rooms.StaticObject;
 import afyber.shmupfeaturecreep.engine.world.Global;
 import afyber.shmupfeaturecreep.game.*;
-import afyber.shmupfeaturecreep.game.stage1.ExplosionSmallBW;
-import afyber.shmupfeaturecreep.game.stage1.PlayerBulletBasic;
-import afyber.shmupfeaturecreep.game.stage1.PlayerBulletParentBW;
-import afyber.shmupfeaturecreep.game.stage1.PlayerShipBW;
+import afyber.shmupfeaturecreep.game.stage1.*;
 import afyber.shmupfeaturecreep.game.stage1.boss.BossPartCannonBW;
 import afyber.shmupfeaturecreep.game.stage1.boss.BossPartCommandCenterBW;
 import afyber.shmupfeaturecreep.game.stage1.boss.BossPartParentBW;
@@ -50,6 +47,13 @@ public class Game {
 		loadWaves();
 
 		Global.setStringGlobal("stage", "BW");
+
+		Global.setIntGlobal("guildCoins", 0);
+
+		Global.setIntGlobal("enemiesUnlock", 0);
+		Global.setIntGlobal("powerupsUnlock", 0);
+		Global.setIntGlobal("boostsUnlock", 0);
+		Global.setIntGlobal("bossUnlock", 0);
 	}
 
 	public static void registerObjects() {
@@ -72,6 +76,8 @@ public class Game {
 		Registry.registerObject(new BossPartParentBW(0,0,0,-1));
 		Registry.registerObjectAsChildOf(new BossPartCommandCenterBW(0,0,0,-1), "boss_part_parent_bw");
 		Registry.registerObjectAsChildOf(new BossPartCannonBW(0,0,0,-1), "boss_part_parent_bw");
+
+		Registry.registerObject(new GuildUpgradeMenuBW(0,0,0,-1));
 
 		Registry.registerObject(new WaveController(0,0,0,-1));
 

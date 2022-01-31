@@ -36,6 +36,10 @@ public class PlayerShipBW extends DynamicObject {
 
 	@Override
 	public void update(WorldMiddleman world) {
+		if (world.instanceExists("guild_upgrade_menu_bw")) {
+			return;
+		}
+
 		int moveFactor = 6;
 		if (speedPowerUp == 1) {
 			moveFactor = 7;
