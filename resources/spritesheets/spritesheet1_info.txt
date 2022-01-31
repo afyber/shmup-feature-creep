@@ -48,3 +48,9 @@ button_yes_bw:2
 button_no_bw:2
 0:0,170,32,16,16,8
 1:32,170,32,16,16,8
+selection_icon_bw:1
+0:24,36,3,5,2,3
+powerup_weapon_bw:1
+0:80,152,16,16,8,8
+powerup_fire_rate_bw:1
+0:96,152,16,16,8,8

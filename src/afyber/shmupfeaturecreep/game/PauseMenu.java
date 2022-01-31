@@ -72,19 +72,19 @@ public class PauseMenu extends DynamicObject {
 			drawTextExtCentered("PAUSED", Game.WINDOW_WIDTH / 2, 192, 4, 4, -1, 1);
 
 			if (selection == 0) {
-				drawTextExtCentered("    RESUME GAME", Game.WINDOW_WIDTH / 2, 296, 3, 3, -1, 1);
+				drawTextExtCentered("] RESUME GAME", Game.WINDOW_WIDTH / 2, 296, 3, 3, -1, 1);
 			}
 			else {
 				drawTextExtCentered("RESUME GAME", Game.WINDOW_WIDTH / 2, 296, 3, 3, -1, 1);
 			}
 			if (selection == 1) {
-				drawTextExtCentered("    SETTINGS", Game.WINDOW_WIDTH / 2, 360, 3, 3, -1, 1);
+				drawTextExtCentered("] SETTINGS", Game.WINDOW_WIDTH / 2, 360, 3, 3, -1, 1);
 			}
 			else {
 				drawTextExtCentered("SETTINGS", Game.WINDOW_WIDTH / 2, 360, 3, 3, -1, 1);
 			}
 			if (selection == 2) {
-				drawTextExtCentered("    QUIT", Game.WINDOW_WIDTH / 2, 424, 3, 3, -1, 1);
+				drawTextExtCentered("] QUIT", Game.WINDOW_WIDTH / 2, 424, 3, 3, -1, 1);
 			}
 			else {
 				drawTextExtCentered("QUIT", Game.WINDOW_WIDTH / 2, 424, 3, 3, -1, 1);

@@ -60,10 +60,10 @@ public class WaveController extends DynamicObject {
 	public void draw(WorldMiddleman world) {
 		if (state == 2) {
 			double scale = (timer + 360) / 120.0;
-			if (currentWave < BOSS_WAVE || shopDone) {
+			if (currentWave % BOSS_WAVE != 0 || shopDone) {
 				drawTextExtCentered("WAVE " + currentWave, Game.WINDOW_WIDTH / 2.0, 200, scale, scale, -1, (timer + 60) / 180.0);
 			}
-			else if (currentWave == BOSS_WAVE && Global.getIntGlobal("bossUnlock") > 0) {
+			else if (Global.getIntGlobal("bossUnlock") > 0) {
 				drawTextExtCentered("BOSS INCOMING", Game.WINDOW_WIDTH / 2.0, 200, scale, scale, -1, Math.cos(Math.toRadians(timer * 3.0)) / 2 + 0.5);
 			}
 		}
@@ -79,7 +79,6 @@ public class WaveController extends DynamicObject {
 					timer = 120;
 					state = 1;
 					alarm[8] = 60;
-					shopDone = false;
 					return;
 				}
 
@@ -111,6 +110,7 @@ public class WaveController extends DynamicObject {
 				if (currentWave % BOSS_WAVE != 0 || shopDone) {
 					state = 0;
 					wavesUntilNext = RandomUtil.randInt(4, 8);
+					shopDone = false;
 				} else {
 					if (Global.getIntGlobal("bossUnlock") == 1) {
 						// it's boss time

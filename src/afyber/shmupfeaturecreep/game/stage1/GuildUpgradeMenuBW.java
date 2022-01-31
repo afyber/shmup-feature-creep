@@ -91,7 +91,15 @@ public class GuildUpgradeMenuBW extends DynamicObject {
 			drawRect(170, 200, 470, 400, 0x000000);
 			drawTextExtCentered("ARE YOU SURE", Game.WINDOW_WIDTH / 2, 220, 3, 3, -1, 1);
 			draw("button_yes_bw", confirmationSelection == 0 ? 1 : 0, Game.WINDOW_WIDTH / 2, 310, 3, 3);
+			if (confirmationSelection == 0) {
+				draw("selection_icon_bw", 0, 210, 310, 3, 3);
+				draw("selection_icon_bw", 0, 430, 310, -3, 3);
+			}
 			draw("button_no_bw", confirmationSelection == 1 ? 1 : 0, Game.WINDOW_WIDTH / 2, 370, 3, 3);
+			if (confirmationSelection == 1) {
+				draw("selection_icon_bw", 0, 210, 370, 3, 3);
+				draw("selection_icon_bw", 0, 430, 370, -3, 3);
+			}
 		}
 	}
 }
