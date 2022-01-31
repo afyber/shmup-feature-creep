@@ -71,8 +71,8 @@ public class GuildUpgradeMenuBW extends DynamicObject {
 					}
 				}
 				else if (selection == 5) {
-					if (Global.getIntGlobal("guildCoins") >= 4) {
-
+					if (Global.getIntGlobal("guildCoins") >= 4 && Global.getIntGlobal("bossUnlock") == 0) {
+						confirmationDialogue = true;
 					}
 					else {
 						Sound.playSound("player_hit_bw_1");
@@ -100,15 +100,19 @@ public class GuildUpgradeMenuBW extends DynamicObject {
 				if (confirmationSelection == 0) {
 					if (selection == 0) {
 						Global.setIntGlobal("powerupsUnlock", Global.getIntGlobal("powerupsUnlock") + 1);
+						Global.setIntGlobal("guildCoins", Global.getIntGlobal("guildCoins") - 1);
 					}
 					else if (selection == 1) {
 						Global.setIntGlobal("enemiesUnlock", Global.getIntGlobal("enemiesUnlock") + 1);
+						Global.setIntGlobal("guildCoins", Global.getIntGlobal("guildCoins") - 1);
 					}
 					else if (selection == 2) {
 						Global.setIntGlobal("boostsUnlock", Global.getIntGlobal("boostsUnlock") + 1);
+						Global.setIntGlobal("guildCoins", Global.getIntGlobal("guildCoins") - 1);
 					}
 					else if (selection == 5) {
 						Global.setIntGlobal("bossUnlock", 1);
+						Global.setIntGlobal("guildCoins", Global.getIntGlobal("guildCoins") - 4);
 					}
 					world.instanceDestroy(instanceID);
 				}

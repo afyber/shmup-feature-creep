@@ -57,3 +57,5 @@ powerup_fire_rate_bw:1
 button_cancel_bw:2
 0:112,152,56,16,29,8
 1:80,168,56,16,29,8
+plus_one_coins_bw:1
+0:136,168,17,8,8,4

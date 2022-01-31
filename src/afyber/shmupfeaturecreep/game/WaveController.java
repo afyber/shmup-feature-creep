@@ -78,6 +78,7 @@ public class WaveController extends DynamicObject {
 					wavesUntilNext = -1;
 					timer = 120;
 					state = 1;
+					world.createParticle("plus_one_coins_bw", Game.WINDOW_WIDTH / 2.0, 160);
 					alarm[8] = 60;
 					return;
 				}

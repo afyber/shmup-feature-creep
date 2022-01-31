@@ -9,6 +9,8 @@ import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import afyber.shmupfeaturecreep.engine.particle.Particle;
 import afyber.shmupfeaturecreep.engine.particle.ParticleRegistry;
 import afyber.shmupfeaturecreep.engine.particle.physics.FrictionVelocity;
+import afyber.shmupfeaturecreep.engine.particle.physics.VectorVelocity;
+import afyber.shmupfeaturecreep.engine.particle.render.SpriteRenderer;
 import afyber.shmupfeaturecreep.engine.particle.render.SquareRenderer;
 import afyber.shmupfeaturecreep.engine.rooms.ObjectCreationReference;
 import afyber.shmupfeaturecreep.engine.rooms.Room;
@@ -41,6 +43,8 @@ public class Game {
 		Sound.setMusicGain("small_explosion_bw", 0.65);
 
 		ParticleRegistry.registerParticle("small_enemy_thrust_bw", new Particle(-1, -1, 30, new FrictionVelocity(270, 3, 0.15), new SquareRenderer(3, 0xffffff), Particle.FadeRule.LINEAR, -100));
+
+		ParticleRegistry.registerParticle("plus_one_coins_bw", new Particle(-1, -1, 60, new VectorVelocity(270, 1), new SpriteRenderer("plus_one_coins_bw", 0, 3, 3), Particle.FadeRule.CUBE, 300));
 
 		loadEnemies();
 
