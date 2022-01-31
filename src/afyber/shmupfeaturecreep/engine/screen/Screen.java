@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -297,7 +298,7 @@ public class Screen {
 		}
 	}
 
-	private static void applySpriteDataToFrame(int[][] data, int x, int y, double alpha) {
+	public static void applySpriteDataToFrame(int[][] data, int x, int y, double alpha) {
 		// less efficient sometimes, faster other times
 
 		for (int i = 0; i < data.length; i++) {
@@ -446,6 +447,14 @@ public class Screen {
 	private static void copyFrameToImage() {
 		CompactFrameArray singleArray = GeneralUtil.arrayOfArraysToSingleArray(currentFrame);
 		image.setRGB(0, 0, screenWidth, screenHeight, singleArray.a(), 0, singleArray.dataWidth());
+	}
+
+	public static int[][] screenShot() {
+		int[][] copy = new int[currentFrame.length][];
+		for (int i = 0; i < currentFrame.length; i++) {
+			copy[i] = Arrays.copyOf(currentFrame[i], currentFrame[i].length);
+		}
+		return copy;
 	}
 
 	public static SpriteSheetRegion scaleImageData(int[][] data, double xScale, double yScale, int originX, int originY) {
