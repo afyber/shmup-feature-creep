@@ -27,8 +27,8 @@ public class WeaponPowerupBW extends DynamicObject {
 			PlayerShipBW ship = ((PlayerShipBW)world.getObject(collision));
 			if (ship.powerUp < Global.getIntGlobal("powerupsUnlock")) {
 				ship.powerUp++;
-				world.instanceDestroy(instanceID);
 			}
+			world.instanceDestroy(instanceID);
 		}
 		y += 4;
 	}

@@ -16,7 +16,7 @@ public class WaveController extends DynamicObject {
 
 	public static final ArrayList<Wave> allWaves = new ArrayList<>();
 	public static final ArrayList<EnemyWaveReference> allEnemies = new ArrayList<>();
-	public static final int BOSS_WAVE = 2;
+	public static final int BOSS_WAVE = 3;
 
 	private final ArrayList<EnemyWaveReference> availableEnemies = new ArrayList<>();
 	private final ArrayList<Wave> availableWaves = new ArrayList<>();
@@ -78,9 +78,6 @@ public class WaveController extends DynamicObject {
 		if (state == 0) {
 			if (timeToNextWave <= 0 && timeToNextWave != -1000) {
 				if (wavesUntilNext <= 0) {
-					if (currentWave != 0) {
-						world.createParticle("plus_one_coins_bw", Game.WINDOW_WIDTH / 2.0, 160);
-					}
 					currentWave++;
 					wavesUntilNext = -1;
 					timer = 120;
@@ -145,7 +142,10 @@ public class WaveController extends DynamicObject {
 
 	@Override
 	public void alarm8(WorldMiddleman world) {
-		if (currentWave == BOSS_WAVE && Global.getIntGlobal("bossUnlock") > 0) {
+		if (currentWave % BOSS_WAVE == 0) {
+			world.createParticle("plus_one_coins_bw", Game.WINDOW_WIDTH / 2.0, 160);
+		}
+		if (currentWave % BOSS_WAVE == 0 && Global.getIntGlobal("bossUnlock") > 0) {
 			Sound.playSound("boss_incoming_bw");
 			Sound.setSoundGain("boss_incoming_bw", 0.6);
 		}

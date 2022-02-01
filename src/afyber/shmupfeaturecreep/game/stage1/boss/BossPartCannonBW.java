@@ -55,7 +55,7 @@ public class BossPartCannonBW extends BossPartParentBW {
 		health = -1000;
 		PlayerShipBW player = ((PlayerShipBW)world.getObjectList("player_ship_bw", false).get(0));
 		if (player.powerUp < Global.getIntGlobal("powerupsUnlock")) {
-			if (RandomUtil.randInt(6) != 1) {
+			if (RandomUtil.randInt(10) != 1) {
 				world.createInstance("weapon_powerup_bw", x + 12, y + 16, 1100);
 			}
 		}

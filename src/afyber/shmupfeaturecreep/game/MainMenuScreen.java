@@ -1,7 +1,6 @@
 package afyber.shmupfeaturecreep.game;
 
 import afyber.shmupfeaturecreep.Game;
-import afyber.shmupfeaturecreep.engine.audio.Sound;
 import afyber.shmupfeaturecreep.engine.input.Keyboard;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.screen.Screen;
@@ -39,7 +38,6 @@ public class MainMenuScreen extends DynamicObject {
 			if (Keyboard.keyJustDown("enter") || Keyboard.keyJustDown("z")) {
 				if (selection == 0) {
 					alarm[0] = 60;
-					Sound.playSound("boss_hit_ineffective_bw");
 				}
 				if (selection == 1) {
 					// TODO: settings menu

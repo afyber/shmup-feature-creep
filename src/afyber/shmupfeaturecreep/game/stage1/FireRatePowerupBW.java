@@ -27,8 +27,8 @@ public class FireRatePowerupBW extends DynamicObject {
 			PlayerShipBW ship = ((PlayerShipBW)world.getObject(collision));
 			if (ship.fireRatePowerUp < Global.getIntGlobal("boostsUnlock")) {
 				ship.fireRatePowerUp++;
-				world.instanceDestroy(instanceID);
 			}
+			world.instanceDestroy(instanceID);
 		}
 		y += 4;
 	}

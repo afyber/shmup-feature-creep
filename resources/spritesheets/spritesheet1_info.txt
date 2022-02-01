@@ -64,3 +64,5 @@ player_bullet_missile_bw:1
 enemy_mine_medium_bw:2
 0:64,59,16,16,8,8
 1:0,186,16,16,8,8
+enemy_ship_bullet_sponge_bw:1
+0:16,186,17,14,9,7
