@@ -84,9 +84,6 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 		spriteIndex = 0;
 		dying = true;
 		health = -1000;
-		Fader fade = ((Fader)world.createInstance("fader", 0, 0, 1100));
-		fade.rgbColor = 0xffffff;
-		fade.time = 270;
 		for (DynamicObject object: world.getObjectList("boss_part_cannon_bw", false)) {
 			object.alarm[5] = 20;
 		}
@@ -214,6 +211,11 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 	public void alarm1(WorldMiddleman world) {
 		alarm[1] = 90;
 		spriteIndex++;
+		if (!world.instanceExists("fader")) {
+			Fader fade = ((Fader)world.createInstance("fader", 0, 0, 1100));
+			fade.rgbColor = 0xffffff;
+			fade.time = 200;
+		}
 		if (spriteIndex >= 4) {
 			world.changeRoom("roomItsOverLol");
 		}

@@ -14,6 +14,7 @@ public class ItsOverLol extends DynamicObject {
 
 	@Override
 	public void create(WorldMiddleman world) {
+		Sound.stopAllSounds();
 		Sound.playMusic("its_over_lol");
 	}
 
@@ -31,8 +32,8 @@ public class ItsOverLol extends DynamicObject {
 
 		drawTextExtCentered("MUSIC", 460, 400, 2, 2, -1, 1);
 		drawTextExtCentered("BY", 460, 430, 1, 1, -1, 1);
-		drawTextExtCentered("SOMEONE", 460, 450, 3, 3, -1, 1);
-		drawTextExtCentered("AND", 460, 480, 1, 1, -1, 1);
-		drawTextExtCentered("AFYBER", 460, 500, 2, 2, -1, 1);
+		drawTextExtCentered("D.TAY.WQ", 460, 450, 3, 3, -1, 1);
+		drawTextExtCentered("AND", 460, 490, 1, 1, -1, 1);
+		drawTextExtCentered("AFYBER", 460, 510, 2, 2, -1, 1);
 	}
 }

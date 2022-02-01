@@ -16,6 +16,8 @@ public class PlayerShipBW extends DynamicObject {
 	public int speedPowerUp;
 	public int fireRatePowerUp;
 
+	public int bulletCounter;
+
 	public PlayerShipBW(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "player_ship_bw";
@@ -129,10 +131,24 @@ public class PlayerShipBW extends DynamicObject {
 			world.createInstance("player_bullet_basic_bw", x + 12, y + 12, 10);
 		}
 		else if (powerUp == 1) {
-			world.createInstance("player_bullet_basic_bw", x - 8, y + 8, 10);
-			world.createInstance("player_bullet_basic_bw", x + 8, y + 8, 10);
+			world.createInstance("player_bullet_basic_bw", x - 6, y + 8, 10);
+			world.createInstance("player_bullet_basic_bw", x + 6, y + 8, 10);
 			world.createInstance("player_bullet_basic_bw", x - 17, y + 12, 10);
 			world.createInstance("player_bullet_basic_bw", x + 17, y + 12, 10);
+		}
+		else if (powerUp == 2) {
+			world.createInstance("player_bullet_basic_bw", x - 6, y + 8, 10);
+			world.createInstance("player_bullet_basic_bw", x + 6, y + 8, 10);
+			world.createInstance("player_bullet_basic_bw", x - 17, y + 12, 10);
+			world.createInstance("player_bullet_basic_bw", x + 17, y + 12, 10);
+			bulletCounter++;
+			if (bulletCounter == 3) {
+				world.createInstance("player_bullet_missile_bw", x - 48, y + 15, 10);
+			}
+			else if (bulletCounter >= 7) {
+				world.createInstance("player_bullet_missile_bw", x + 48, y + 15, 10);
+				bulletCounter = 0;
+			}
 		}
 		if (Keyboard.keyDown("z")) {
 			alarm[0] = nextFire;

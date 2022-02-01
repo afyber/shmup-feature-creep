@@ -12,7 +12,7 @@ public class GuildUpgradeMenuBW extends DynamicObject {
 	public int selection = 0;
 	public boolean confirmationDialogue = false;
 	public int confirmationSelection = 1;
-	public int maxPowerup = 3;
+	public int maxPowerup = 2;
 	public int maxEnemies = 2;
 	public int maxBoosts = 2;
 

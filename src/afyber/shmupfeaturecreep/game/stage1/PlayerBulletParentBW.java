@@ -6,6 +6,8 @@ import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class PlayerBulletParentBW extends DynamicObject {
 
+	public int damage = 1;
+
 	public PlayerBulletParentBW(double x, double y, int depth, int instanceID) {
 		super(x, y, depth, instanceID);
 		objectName = "player_bullet_parent_bw";

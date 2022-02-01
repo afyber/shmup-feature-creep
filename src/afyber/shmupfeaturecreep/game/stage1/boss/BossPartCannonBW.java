@@ -3,8 +3,10 @@ package afyber.shmupfeaturecreep.game.stage1.boss;
 import afyber.shmupfeaturecreep.engine.MathUtil;
 import afyber.shmupfeaturecreep.engine.RandomUtil;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
+import afyber.shmupfeaturecreep.engine.world.Global;
 import afyber.shmupfeaturecreep.engine.world.SpriteCollision;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
+import afyber.shmupfeaturecreep.game.stage1.PlayerShipBW;
 import afyber.shmupfeaturecreep.game.stage1.enemies.EnemyMineSmallBW;
 import afyber.shmupfeaturecreep.game.stage1.enemies.EnemySmallBulletBW;
 
@@ -51,6 +53,12 @@ public class BossPartCannonBW extends BossPartParentBW {
 		spriteIndex = 1;
 		disabled = true;
 		health = -1000;
+		PlayerShipBW player = ((PlayerShipBW)world.getObjectList("player_ship_bw", false).get(0));
+		if (player.powerUp < Global.getIntGlobal("powerupsUnlock")) {
+			if (RandomUtil.randInt(6) != 1) {
+				world.createInstance("weapon_powerup_bw", x + 12, y + 16, 1100);
+			}
+		}
 	}
 
 	@Override

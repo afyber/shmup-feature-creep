@@ -6,6 +6,7 @@ import afyber.shmupfeaturecreep.engine.audio.Sound;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.world.Global;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
+import afyber.shmupfeaturecreep.game.stage1.PlayerBulletParentBW;
 import afyber.shmupfeaturecreep.game.stage1.PlayerShipBW;
 
 public class EnemyShipParentBW extends DynamicObject {
@@ -24,7 +25,7 @@ public class EnemyShipParentBW extends DynamicObject {
 		if (collision > -1) {
 			world.instanceDestroy(collision);
 			if (health != -1000) {
-				health--;
+				health -= ((PlayerBulletParentBW)world.getObject(collision)).damage;
 			}
 		}
 

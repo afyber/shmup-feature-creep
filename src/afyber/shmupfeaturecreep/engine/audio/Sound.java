@@ -338,6 +338,14 @@ public class Sound {
 		mixer.playingSounds.removeIf(sound -> sound.getSoundRefName().equals(soundName));
 	}
 
+	public static void stopAllSounds() {
+		if (!ready) {
+			return;
+		}
+
+		mixer.playingSounds.clear();
+	}
+
 	public static void setSoundGain(String soundName, double gain) {
 		if (!ready) {
 			return;
