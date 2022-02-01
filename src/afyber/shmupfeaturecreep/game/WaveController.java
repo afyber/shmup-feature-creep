@@ -42,16 +42,20 @@ public class WaveController extends DynamicObject {
 			availableEnemies.addAll(allEnemies);
 		}
 		else {
-			WaveProperties.Stage availableStage = WaveProperties.Stage.valueOf(Global.getStringGlobal("stage"));
-			for (Wave wave: allWaves) {
-				if (wave.properties().stage() == availableStage) {
-					availableWaves.add(wave);
-				}
+			refresh();
+		}
+	}
+
+	private void refresh() {
+		WaveProperties.Stage availableStage = WaveProperties.Stage.valueOf(Global.getStringGlobal("stage"));
+		for (Wave wave: allWaves) {
+			if (wave.properties().stage() == availableStage && Global.getIntGlobal("enemiesUnlock") >= wave.batch()) {
+				availableWaves.add(wave);
 			}
-			for (EnemyWaveReference reference: allEnemies) {
-				if (reference.stage() == availableStage) {
-					availableEnemies.add(reference);
-				}
+		}
+		for (EnemyWaveReference reference: allEnemies) {
+			if (reference.stage() == availableStage && Global.getIntGlobal("enemiesUnlock") >= reference.batch()) {
+				availableEnemies.add(reference);
 			}
 		}
 	}
@@ -134,6 +138,7 @@ public class WaveController extends DynamicObject {
 				timer = 120;
 				state = 1;
 				shopDone = true;
+				refresh();
 			}
 		}
 	}
@@ -147,8 +152,13 @@ public class WaveController extends DynamicObject {
 		state = 2;
 	}
 
+	@Override
+	public void alarm10(WorldMiddleman world) {
+		world.changeRoom("roomGameOver");
+	}
+
 	private void queueWave(Wave wave) {
-		timeToNextWave = wave.properties().framesToNext();
+		ArrayList<EnemyWaveQueueState> toQueue = new ArrayList<>();
 
 		for (EnemyWaveSlot slot: wave.slots()) {
 			ArrayList<EnemyTag> disqualifyingTags = new ArrayList<>();
@@ -229,9 +239,12 @@ public class WaveController extends DynamicObject {
 
 			// add all enemies in this slot to the queue
 			for (EnemyTimeSpacePosition position: slot.positions()) {
-				queuedEnemies.add(new EnemyWaveQueueState(stringChoice, position.x(), position.y(), position.frames()));
+				toQueue.add(new EnemyWaveQueueState(stringChoice, position.x(), position.y(), position.frames()));
 			}
 		}
+
+		timeToNextWave = wave.properties().framesToNext();
+		queuedEnemies.addAll(toQueue);
 	}
 
 	private record EnemyRating(String objectName, double rating) {}

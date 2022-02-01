@@ -1,5 +1,6 @@
 framesToNext:220
 repeatable:true
+batch:1
 {
 [0.0-0.5]
 [

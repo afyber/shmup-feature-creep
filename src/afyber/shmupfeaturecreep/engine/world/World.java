@@ -164,7 +164,7 @@ public class World {
 			if (paused && object.pauseable) {
 				continue;
 			}
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 11; i++) {
 				// NOTE: here, if the alarm is > 0, subtract 1
 				if (object.alarm[i] > 0) {
 					object.alarm[i] -= 1;

@@ -57,7 +57,7 @@ public class Game {
 		Global.setIntGlobal("enemiesUnlock", 0);
 		Global.setIntGlobal("powerupsUnlock", 0);
 		Global.setIntGlobal("boostsUnlock", 0);
-		Global.setIntGlobal("bossUnlock", 1);
+		Global.setIntGlobal("bossUnlock", 0);
 	}
 
 	public static void registerObjects() {
@@ -71,7 +71,8 @@ public class Game {
 		Registry.registerObjectAsChildOf(new EnemyShipSmallCannonBW(0,0,0,-1), "enemy_ship_parent_bw");
 		Registry.registerObjectAsChildOf(new EnemyShipTinyCannonBW(0,0,0,-1), "enemy_ship_parent_bw");
 
-		Registry.registerObject(new EnemyMineSmallBW(0,0,0,-1));
+		Registry.registerObjectAsChildOf(new EnemyMineSmallBW(0,0,0,-1), "enemy_ship_parent_bw");
+		Registry.registerObjectAsChildOf(new EnemyMineMediumBW(0,0,0,-1), "enemy_ship_parent_bw");
 
 		Registry.registerObject(new EnemyBulletParentBW(0,0,0,-1));
 		Registry.registerObjectAsChildOf(new EnemySmallBulletBW(0,0,0,-1), "enemy_bullet_parent_bw");
@@ -92,6 +93,8 @@ public class Game {
 		Registry.registerObject(new Fader(0,0,0,-1));
 
 		Registry.registerObject(new PauseMenu(0,0,0,-1));
+		Registry.registerObject(new GameOverScreen(0,0,0,-1));
+		Registry.registerObject(new MainMenuScreen(0,0,0,-1));
 
 		Registry.registerObject(new ItsOverLol(0,0,0,-1));
 	}
@@ -99,10 +102,18 @@ public class Game {
 	public static void registerRooms() {
 		ArrayList<StaticObject> tiles = new ArrayList<>();
 		ArrayList<ObjectCreationReference> objects = new ArrayList<>();
+		objects.add(new ObjectCreationReference("main_menu_screen", 0, 0, 0, 0, 0));
+		Registry.registerRoom("roomStart", new Room(tiles, objects));
+
+		objects = new ArrayList<>();
+		objects.add(new ObjectCreationReference("game_over_screen", 0, 0, 0, 0, 0));
+		Registry.registerRoom("roomGameOver", new Room(tiles, objects));
+
+		objects = new ArrayList<>();
 		objects.add(new ObjectCreationReference("player_ship_bw", 320, 480, 2, 2, 100));
 		objects.add(new ObjectCreationReference("wave_controller", 0, 0, 0, 0, 0));
 		objects.add(new ObjectCreationReference("pause_menu", 0, 0, 0, 0, 0));
-		Registry.registerRoom("roomStart", new Room(tiles, objects));
+		Registry.registerRoom("roomBattle", new Room(tiles, objects));
 
 		objects = new ArrayList<>();
 		objects.add(new ObjectCreationReference("its_over_lol", 0, 0, 0, 0, 0));
@@ -115,11 +126,11 @@ public class Game {
 
 			for (String line: lines) {
 				String[] vals = line.split(",");
-				EnemyTag[] tags = new EnemyTag[vals.length - 3];
-				for (int i = 3; i < vals.length; i++) {
-					tags[i - 3] = EnemyTag.valueOf(vals[i]);
+				EnemyTag[] tags = new EnemyTag[vals.length - 4];
+				for (int i = 4; i < vals.length; i++) {
+					tags[i - 4] = EnemyTag.valueOf(vals[i]);
 				}
-				WaveController.allEnemies.add(new EnemyWaveReference(vals[0], WaveProperties.Stage.valueOf(vals[1]), Double.parseDouble(vals[2]), tags));
+				WaveController.allEnemies.add(new EnemyWaveReference(vals[0], WaveProperties.Stage.valueOf(vals[1]), Integer.parseInt(vals[2]), Double.parseDouble(vals[3]), tags));
 			}
 		} catch (IOException e) {
 			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Enemies are not defined");
@@ -158,6 +169,7 @@ public class Game {
 			ArrayList<EnemyWaveSlot> enemies = new ArrayList<>();
 			int framesToNext = -1;
 			boolean repeatable = false;
+			int batch = 0;
 
 			// enemy slot information
 			double minRating = -1;
@@ -173,6 +185,9 @@ public class Game {
 					}
 					else if (line.startsWith("repeatable:")) {
 						repeatable = Boolean.parseBoolean(line.substring(11));
+					}
+					if (line.startsWith("batch:")) {
+						batch = Integer.parseInt(line.substring(6));
 					}
 					if (line.equals("{")) {
 						buildState = 0;
@@ -220,7 +235,7 @@ public class Game {
 				}
 			}
 
-			WaveController.allWaves.add(new Wave(enemies.toArray(new EnemyWaveSlot[0]), new WaveProperties(stage, framesToNext, repeatable)));
+			WaveController.allWaves.add(new Wave(enemies.toArray(new EnemyWaveSlot[0]), new WaveProperties(stage, framesToNext, repeatable), batch));
 		} catch (IOException e) {
 			throw new WavesNotDefinedError();
 		}

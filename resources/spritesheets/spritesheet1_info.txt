@@ -61,3 +61,6 @@ plus_one_coins_bw:1
 0:136,168,17,8,8,4
 player_bullet_missile_bw:1
 0:71,0,6,9,3,5
+enemy_mine_medium_bw:2
+0:64,59,16,16,8,8
+1:0,186,16,16,8,8

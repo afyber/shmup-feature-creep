@@ -32,11 +32,11 @@ public class PauseMenu extends DynamicObject {
 				thisPaused = true;
 			}
 		}
-		if (!Screen.windowHasFocus() && !world.isPaused()) {
+		/*if (!Screen.windowHasFocus() && !world.isPaused()) {
 			background = Screen.screenShot();
 			world.pause();
 			thisPaused = true;
-		}
+		}*/
 
 		if (thisPaused) {
 			if (Keyboard.keyJustDown("down")) {

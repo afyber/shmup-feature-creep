@@ -1,4 +1,5 @@
 framesToNext:220
+batch:1
 {
 [0.0-0.5]
 [

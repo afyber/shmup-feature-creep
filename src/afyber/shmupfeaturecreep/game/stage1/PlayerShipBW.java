@@ -31,9 +31,9 @@ public class PlayerShipBW extends DynamicObject {
 		imageYScale = 3;
 		iFrames = 0;
 		health = 5;
-		powerUp = 1;
+		powerUp = 0;
 		speedPowerUp = 0;
-		fireRatePowerUp = 2;
+		fireRatePowerUp = 0;
 	}
 
 	@Override
@@ -80,6 +80,11 @@ public class PlayerShipBW extends DynamicObject {
 		collision = world.isColliding(this, "enemy_bullet_parent_bw");
 		if (collision > -1) {
 			hurt();
+		}
+
+		if (health <= 0) {
+			world.getObjectList("wave_controller", false).get(0).alarm[10] = 60;
+			world.instanceDestroy(instanceID);
 		}
 
 		if (iFrames > 0) {
@@ -153,5 +158,10 @@ public class PlayerShipBW extends DynamicObject {
 		if (Keyboard.keyDown("z")) {
 			alarm[0] = nextFire;
 		}
+	}
+
+	@Override
+	public void alarm10(WorldMiddleman world) {
+		world.changeRoom("roomGameOver");
 	}
 }
