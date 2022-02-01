@@ -1,6 +1,7 @@
 package afyber.shmupfeaturecreep.game.stage1.enemies;
 
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
+import afyber.shmupfeaturecreep.engine.world.RectangleCollision;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 
 public class EnemyMineMediumBW extends EnemyShipParentBW {
@@ -17,6 +18,7 @@ public class EnemyMineMediumBW extends EnemyShipParentBW {
 	@Override
 	public void create(WorldMiddleman world) {
 		sprite = "enemy_mine_medium_bw";
+		collision = new RectangleCollision(-6, -6, -6, -6);
 		imageXScale = 3;
 		imageYScale = 3;
 		if (y < 0) {

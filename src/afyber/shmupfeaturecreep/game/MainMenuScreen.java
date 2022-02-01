@@ -53,13 +53,15 @@ public class MainMenuScreen extends DynamicObject {
 
 	@Override
 	public void draw(WorldMiddleman world) {
-		drawTextExtCentered("SHMUP", Game.WINDOW_WIDTH / 2.0, 80, 8, 8, -1, 1);
+		drawTextExtCentered("SHMUP", Game.WINDOW_WIDTH / 2.0, 80, 7, 9, -1, 1);
 		drawTextExtCentered("FEATURE CREEP", Game.WINDOW_WIDTH / 2.0, 180, 4, 4, -1, 1);
 		if (alarm[0] < 15 || alarm[0] < 45 && alarm[0] >= 30) {
 			drawTextExtCentered("START GAME", Game.WINDOW_WIDTH / 2.0, 340, 3, 3, -1, 1);
 		}
-		draw("selection_icon_bw", 0, Game.WINDOW_WIDTH / 2.0 - 140, 354, 3, 3);
-		draw("selection_icon_bw", 0, Game.WINDOW_WIDTH / 2.0 + 140, 354, -3, 3);
+		drawTextExtCentered("SETTINGS", Game.WINDOW_WIDTH / 2.0, 380, 3, 3, -1, 1);
+		drawTextExtCentered("QUIT GAME", Game.WINDOW_WIDTH / 2.0, 420, 3, 3, -1, 1);
+		draw("selection_icon_bw", 0, Game.WINDOW_WIDTH / 2.0 - 140, 354 + selection * 40, 3, 3);
+		draw("selection_icon_bw", 0, Game.WINDOW_WIDTH / 2.0 + 140, 354 + selection * 40, -3, 3);
 	}
 
 	@Override
