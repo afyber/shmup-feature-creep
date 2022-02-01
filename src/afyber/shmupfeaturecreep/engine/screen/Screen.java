@@ -11,6 +11,7 @@ import afyber.shmupfeaturecreep.engine.sprites.SpriteInformation;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheet;
 import afyber.shmupfeaturecreep.engine.sprites.SpriteSheetRegion;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -70,6 +71,11 @@ public class Screen {
 		frame.add(panel);
 		frame.setResizable(false);
 		frame.setTitle(name);
+		try {
+			frame.setIconImage(ImageIO.read(MainClass.class.getResourceAsStream("/icon.png")));
+		} catch (Exception e) {
+			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load window icon image");
+		}
 		// these numbers are so that the drawable area is actually the size specified
 		// TODO: figure this out better
 		frame.setSize(screenWidth + 16, screenHeight + 39);
