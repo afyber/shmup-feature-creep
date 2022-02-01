@@ -8,6 +8,7 @@ import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.world.Global;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
+import afyber.shmupfeaturecreep.game.stage1.PlayerShipBW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +17,7 @@ public class WaveController extends DynamicObject {
 
 	public static final ArrayList<Wave> allWaves = new ArrayList<>();
 	public static final ArrayList<EnemyWaveReference> allEnemies = new ArrayList<>();
-	public static final int BOSS_WAVE = 3;
+	public static final int BOSS_WAVE = 4;
 
 	private final ArrayList<EnemyWaveReference> availableEnemies = new ArrayList<>();
 	private final ArrayList<Wave> availableWaves = new ArrayList<>();
@@ -70,6 +71,14 @@ public class WaveController extends DynamicObject {
 			else if (Global.getIntGlobal("bossUnlock") > 0) {
 				drawTextExtCentered("BOSS INCOMING", Game.WINDOW_WIDTH / 2.0, 200, scale, scale, -1, Math.cos(Math.toRadians(timer * 3.0)) / 2 + 0.5);
 			}
+		}
+		draw("health_icon_bw", 0, 580, 620, 3, 3);
+		if (world.instanceExists("player_ship_bw")) {
+			PlayerShipBW ship = ((PlayerShipBW)world.getObjectList("player_ship_bw", false).get(0));
+			drawTextExt(String.valueOf(ship.health), 606, 606, 3, 3, -1, 1);
+		}
+		else {
+			drawTextExt("0", 606, 606, 3, 3, -1, 1);
 		}
 	}
 
@@ -142,7 +151,7 @@ public class WaveController extends DynamicObject {
 
 	@Override
 	public void alarm8(WorldMiddleman world) {
-		if (currentWave % BOSS_WAVE == 0) {
+		if (currentWave % BOSS_WAVE == 0 && !shopDone) {
 			world.createParticle("plus_one_coins_bw", Game.WINDOW_WIDTH / 2.0, 160);
 		}
 		if (currentWave % BOSS_WAVE == 0 && Global.getIntGlobal("bossUnlock") > 0) {
