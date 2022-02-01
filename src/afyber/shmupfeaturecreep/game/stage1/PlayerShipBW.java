@@ -121,6 +121,10 @@ public class PlayerShipBW extends DynamicObject {
 
 	@Override
 	public void alarm0(WorldMiddleman world) {
+		if (world.instanceExists("guild_upgrade_menu_bw")) {
+			return;
+		}
+
 		int nextFire = 6;
 		if (fireRatePowerUp == 1) {
 			nextFire = 5;
@@ -158,10 +162,5 @@ public class PlayerShipBW extends DynamicObject {
 		if (Keyboard.keyDown("z")) {
 			alarm[0] = nextFire;
 		}
-	}
-
-	@Override
-	public void alarm10(WorldMiddleman world) {
-		world.changeRoom("roomGameOver");
 	}
 }
