@@ -48,13 +48,13 @@ public abstract class AudioParent {
 	}
 
 	public void play() {
-		framePos = 0;
 		playing.set(true);
+		framePos = 0;
 	}
 
 	public void stop() {
-		framePos = 0;
 		playing.set(false);
+		framePos = 0;
 	}
 
 	public void pause() {

@@ -45,6 +45,7 @@ public class WaveController extends DynamicObject {
 		else {
 			refresh();
 		}
+		alarm[9] = 60;
 	}
 
 	private void refresh() {
@@ -154,11 +155,16 @@ public class WaveController extends DynamicObject {
 		if (currentWave % BOSS_WAVE == 0 && !shopDone) {
 			world.createParticle("plus_one_coins_bw", Game.WINDOW_WIDTH / 2.0, 160);
 		}
-		if (currentWave % BOSS_WAVE == 0 && Global.getIntGlobal("bossUnlock") > 0) {
-			Sound.playSound("boss_incoming_bw");
-			Sound.setSoundGain("boss_incoming_bw", 0.6);
+		if (currentWave % BOSS_WAVE == 0 && Global.getIntGlobal("bossUnlock") > 0 && !shopDone) {
+			Sound.stopMusic("level_theme_bw");
+			Sound.playMusic("boss_theme_bw");
 		}
 		state = 2;
+	}
+
+	@Override
+	public void alarm9(WorldMiddleman world) {
+		Sound.playMusic("level_theme_bw");
 	}
 
 	@Override
