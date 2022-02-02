@@ -21,7 +21,7 @@ public class EnemyShipBulletSpongeBW extends EnemyShipParentBW {
 		collision = new RectangleCollision(-3, -3, -3, -6);
 		imageXScale = 3;
 		imageYScale = 3;
-		health = 18;
+		health = 16;
 	}
 
 	@Override

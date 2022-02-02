@@ -71,7 +71,7 @@ public class GuildUpgradeMenuBW extends DynamicObject {
 					}
 				}
 				else if (selection == 5) {
-					if (Global.getIntGlobal("guildCoins") >= 4 && Global.getIntGlobal("bossUnlock") == 0) {
+					if (Global.getIntGlobal("guildCoins") >= 3 && Global.getIntGlobal("bossUnlock") == 0) {
 						confirmationDialogue = true;
 					}
 					else {
