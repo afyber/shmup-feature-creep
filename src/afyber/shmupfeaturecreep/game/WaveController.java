@@ -46,6 +46,8 @@ public class WaveController extends DynamicObject {
 			refresh();
 		}
 		alarm[9] = 60;
+		Sound.stopMusic("level_theme_bw");
+		Sound.stopMusic("boss_theme_bw");
 	}
 
 	private void refresh() {

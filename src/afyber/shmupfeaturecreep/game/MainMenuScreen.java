@@ -21,7 +21,8 @@ public class MainMenuScreen extends DynamicObject {
 
 	@Override
 	public void create(WorldMiddleman world) {
-
+		Sound.stopMusic("level_theme_bw");
+		Sound.stopMusic("boss_theme_bw");
 	}
 
 	@Override

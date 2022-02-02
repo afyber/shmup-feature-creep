@@ -14,6 +14,8 @@ public class ItsOverLol extends DynamicObject {
 
 	@Override
 	public void create(WorldMiddleman world) {
+		Sound.stopMusic("level_theme_bw");
+		Sound.stopMusic("boss_theme_bw");
 		Sound.stopAllSounds();
 		Sound.playMusic("its_over_lol");
 	}
