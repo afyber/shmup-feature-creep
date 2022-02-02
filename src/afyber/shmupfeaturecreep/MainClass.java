@@ -14,8 +14,7 @@ import java.awt.*;
 
 public class MainClass {
 
-	// TODO: REMEMBER TO CHANGE THIS TO                                                                              true
-	public static final EngineLogger LOGGER = new EngineLogger(System.currentTimeMillis() + ".txt", false);
+	public static final EngineLogger LOGGER = new EngineLogger("log " + System.currentTimeMillis() + ".txt", true);
 
 	public static void main(String[] args) {
 		if (Game.DEBUG) {
