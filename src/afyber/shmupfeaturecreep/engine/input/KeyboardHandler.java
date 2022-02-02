@@ -46,6 +46,7 @@ public class KeyboardHandler implements KeyListener {
 		keyMap.put(KeyEvent.VK_DOWN, "down");
 		keyMap.put(KeyEvent.VK_LEFT, "left");
 		keyMap.put(KeyEvent.VK_RIGHT, "right");
+		keyMap.put(KeyEvent.VK_SHIFT, "shift");
 		keyMap.put(KeyEvent.VK_ESCAPE, "escape");
 		keyMap.put(KeyEvent.VK_ENTER, "enter");
 		keyMap.put(KeyEvent.VK_BACK_SPACE, "backspace");

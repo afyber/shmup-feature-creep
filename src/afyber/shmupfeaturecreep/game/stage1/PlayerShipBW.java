@@ -13,8 +13,7 @@ public class PlayerShipBW extends DynamicObject {
 	public int iFrames;
 	public int health;
 	public int powerUp;
-	public int speedPowerUp;
-	public int fireRatePowerUp;
+	public int boostPowerUp;
 
 	public int bulletCounter;
 
@@ -32,8 +31,7 @@ public class PlayerShipBW extends DynamicObject {
 		iFrames = 0;
 		health = 5;
 		powerUp = 0;
-		speedPowerUp = 0;
-		fireRatePowerUp = 0;
+		boostPowerUp = 0;
 	}
 
 	@Override
@@ -43,11 +41,14 @@ public class PlayerShipBW extends DynamicObject {
 		}
 
 		int moveFactor = 6;
-		if (speedPowerUp == 1) {
+		if (boostPowerUp == 1) {
 			moveFactor = 7;
 		}
-		if (speedPowerUp == 2) {
+		if (boostPowerUp == 2) {
 			moveFactor = 8;
+		}
+		if (Keyboard.keyDown("shift")) {
+			moveFactor /= 2;
 		}
 		if (Keyboard.keyDown("up")) {
 			y = Math.max(y - moveFactor, 0);
@@ -99,8 +100,8 @@ public class PlayerShipBW extends DynamicObject {
 			if (powerUp > 0) {
 				powerUp--;
 			}
-			else if (fireRatePowerUp > 0) {
-				fireRatePowerUp--;
+			else if (boostPowerUp > 0) {
+				boostPowerUp--;
 			}
 			Sound.playSound("player_hit_bw_1");
 			Sound.setSoundGain("player_hit_bw_1", 0.75);
@@ -126,13 +127,13 @@ public class PlayerShipBW extends DynamicObject {
 		}
 
 		int nextFire = 6;
-		if (fireRatePowerUp == 1) {
+		if (boostPowerUp == 1) {
 			nextFire = 5;
 		}
-		else if (fireRatePowerUp == 2) {
+		else if (boostPowerUp == 2) {
 			nextFire = 4;
 		}
-		else if (fireRatePowerUp == 3) {
+		else if (boostPowerUp == 3) {
 			nextFire = 3;
 		}
 		if (powerUp == 0) {

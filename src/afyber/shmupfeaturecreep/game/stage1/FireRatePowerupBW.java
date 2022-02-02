@@ -25,8 +25,8 @@ public class FireRatePowerupBW extends DynamicObject {
 		int collision = world.isColliding(this, "player_ship_bw");
 		if (collision > -1) {
 			PlayerShipBW ship = ((PlayerShipBW)world.getObject(collision));
-			if (ship.fireRatePowerUp < Global.getIntGlobal("boostsUnlock")) {
-				ship.fireRatePowerUp++;
+			if (ship.boostPowerUp < Global.getIntGlobal("boostsUnlock")) {
+				ship.boostPowerUp++;
 			}
 			world.instanceDestroy(instanceID);
 		}

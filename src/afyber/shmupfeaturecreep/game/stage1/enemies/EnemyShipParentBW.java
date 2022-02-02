@@ -37,7 +37,7 @@ public class EnemyShipParentBW extends DynamicObject {
 				if (ship.powerUp < Global.getIntGlobal("powerupsUnlock") && !world.instanceExists("weapon_powerup_bw")) {
 					world.createInstance("weapon_powerup_bw", x, y, 101);
 				}
-				else if (ship.fireRatePowerUp < Global.getIntGlobal("boostsUnlock") && !world.instanceExists("fire_rate_powerup_bw")) {
+				else if (ship.boostPowerUp < Global.getIntGlobal("boostsUnlock") && !world.instanceExists("fire_rate_powerup_bw")) {
 					world.createInstance("fire_rate_powerup_bw", x, y, 101);
 				}
 			}
