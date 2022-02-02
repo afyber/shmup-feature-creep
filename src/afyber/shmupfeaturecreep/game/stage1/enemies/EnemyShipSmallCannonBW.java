@@ -10,7 +10,6 @@ public class EnemyShipSmallCannonBW extends EnemyShipParentBW {
 
 	public boolean left = false;
 	public double speed = 1;
-	public int timer;
 	public int con;
 
 	public EnemyShipSmallCannonBW(double x, double y, int depth, int instanceID) {

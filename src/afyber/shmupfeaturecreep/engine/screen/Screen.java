@@ -32,6 +32,9 @@ public class Screen {
 	private static int screenWidth;
 	private static int screenHeight;
 
+	private static int imageWidth;
+	private static int imageHeight;
+
 	private static JFrame frame;
 	private static CustomPanel panel;
 	private static BufferedImage image;
@@ -54,6 +57,8 @@ public class Screen {
 	public static void setupScreen(String name, int width, int height, boolean splashScreen) {
 		screenWidth = width;
 		screenHeight = height;
+		imageWidth = width;
+		imageHeight = height;
 		// Window setup
 		image = new BufferedImage(width, height, Image.SCALE_DEFAULT);
 		frame = new JFrame() {
@@ -453,7 +458,7 @@ public class Screen {
 
 	private static void copyFrameToImage() {
 		CompactFrameArray singleArray = GeneralUtil.arrayOfArraysToSingleArray(currentFrame);
-		image.setRGB(0, 0, screenWidth, screenHeight, singleArray.a(), 0, singleArray.dataWidth());
+		image.setRGB(0, 0, imageWidth, imageHeight, singleArray.a(), 0, singleArray.dataWidth());
 	}
 
 	public static int[][] screenShot() {
@@ -462,6 +467,12 @@ public class Screen {
 			copy[i] = Arrays.copyOf(currentFrame[i], currentFrame[i].length);
 		}
 		return copy;
+	}
+
+	public static void changeScreenSize(int width, int height) {
+		screenWidth = width;
+		screenHeight = height;
+		frame.setSize(width + 16, height + 39);
 	}
 
 	public static SpriteSheetRegion scaleImageData(int[][] data, double xScale, double yScale, int originX, int originY) {
