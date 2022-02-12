@@ -1,3 +1,3 @@
 package afyber.shmupfeaturecreep.game;
 
-public record Wave(EnemyWaveSlot[] slots, WaveProperties properties, int batch) {}
+public record Wave(EnemyWaveSlot[] slots, WaveProperties properties) {}

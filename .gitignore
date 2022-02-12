@@ -1,4 +1,7 @@
 /out/
+/output/
+/outputprep/
+/external files/
 /*.txt
 .idea/
 *.ipr

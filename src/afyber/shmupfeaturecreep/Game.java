@@ -174,6 +174,7 @@ public class Game {
 			int framesToNext = -1;
 			boolean repeatable = false;
 			int batch = 0;
+			double difficulty = -1;
 
 			// enemy slot information
 			double minRating = -1;
@@ -190,8 +191,11 @@ public class Game {
 					else if (line.startsWith("repeatable:")) {
 						repeatable = Boolean.parseBoolean(line.substring(11));
 					}
-					if (line.startsWith("batch:")) {
+					else if (line.startsWith("batch:")) {
 						batch = Integer.parseInt(line.substring(6));
+					}
+					else if (line.startsWith("difficulty:")) {
+						difficulty = Double.parseDouble(line.substring(11));
 					}
 					if (line.equals("{")) {
 						buildState = 0;
@@ -239,7 +243,7 @@ public class Game {
 				}
 			}
 
-			WaveController.allWaves.add(new Wave(enemies.toArray(new EnemyWaveSlot[0]), new WaveProperties(stage, framesToNext, repeatable), batch));
+			WaveController.allWaves.add(new Wave(enemies.toArray(new EnemyWaveSlot[0]), new WaveProperties(stage, framesToNext, repeatable, batch, difficulty)));
 		} catch (IOException e) {
 			throw new WavesNotDefinedError();
 		}
