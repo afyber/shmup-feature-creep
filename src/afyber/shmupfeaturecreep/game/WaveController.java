@@ -53,7 +53,7 @@ public class WaveController extends DynamicObject {
 	private void refresh() {
 		WaveProperties.Stage availableStage = WaveProperties.Stage.valueOf(Global.getStringGlobal("stage"));
 		for (Wave wave: allWaves) {
-			if (wave.properties().stage() == availableStage && Global.getIntGlobal("enemiesUnlock") >= wave.batch()) {
+			if (wave.properties().stage() == availableStage && Global.getIntGlobal("enemiesUnlock") >= wave.properties().batch()) {
 				availableWaves.add(wave);
 			}
 		}

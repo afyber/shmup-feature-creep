@@ -1,6 +1,8 @@
 package afyber.shmupfeaturecreep.engine.output;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -33,7 +35,9 @@ public class EngineLogger {
 
 	public void log(Level level, String msg, Throwable e) {
 		try {
-			String message = "[" + level.name() + "] " + msg + "\n" + e.toString() + "\n";
+			StringWriter writer = new StringWriter();
+			e.printStackTrace(new PrintWriter(writer));
+			String message = "[" + level.name() + "] " + msg + "\n" + writer;
 			System.out.print(message);
 			if (writeToFile && level.getValue() >= lowestAllowedLevel.getValue()) {
 				Files.writeString(Path.of(filename), message, StandardOpenOption.APPEND);
