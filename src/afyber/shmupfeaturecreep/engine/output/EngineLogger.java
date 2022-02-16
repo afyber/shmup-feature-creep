@@ -9,7 +9,7 @@ import java.nio.file.StandardOpenOption;
 
 public class EngineLogger {
 
-	private static String LOGS_DIR = "./logs/";
+	private static final String LOGS_DIR = "./logs/";
 
 	private final String filename;
 	private Level lowestAllowedLevel;
@@ -33,6 +33,8 @@ public class EngineLogger {
 			}
 		}
 		catch (IOException e) {
+			// do not attempt to write to file again
+			writeToFile = false;
 			System.out.println("IOException when attempting to log");
 			e.printStackTrace();
 		}
@@ -52,6 +54,7 @@ public class EngineLogger {
 			}
 		}
 		catch (IOException ex) {
+			writeToFile = false;
 			System.out.println("IOError when attempting to log");
 			ex.printStackTrace();
 		}
