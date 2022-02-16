@@ -1,6 +1,6 @@
 package afyber.shmupfeaturecreep.engine.sprites;
 
-import afyber.shmupfeaturecreep.MainClass;
+import afyber.shmupfeaturecreep.Main;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.errors.SpriteSheetsNotDefinedError;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
@@ -22,10 +22,10 @@ public class SpriteSheet {
 	public static void loadSpriteSheet(String imageName, Map<String, Sprite> out) {
 		PngReaderInt imageReader;
 		try {
-			imageReader = new PngReaderInt(MainClass.class.getResourceAsStream(imageName + ".png"));
+			imageReader = new PngReaderInt(Main.class.getResourceAsStream(imageName + ".png"));
 		}
 		catch (Exception e) {
-			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite-sheet image:", e);
+			Main.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite-sheet image:", e);
 			throw new SpriteSheetsNotDefinedError();
 		}
 
@@ -35,7 +35,7 @@ public class SpriteSheet {
 		}
 		catch (Exception e) {
 			imageReader.close();
-			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite-sheet image:", e);
+			Main.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite-sheet image:", e);
 			throw new SpriteSheetsNotDefinedError();
 		}
 
@@ -43,13 +43,13 @@ public class SpriteSheet {
 			setupSprites(GeneralUtil.readResourceAsLineArray(imageName + "_info.txt"), out);
 		}
 		catch (IOException e) {
-			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Attempting to load sprite-sheet caused IOException", e);
+			Main.LOGGER.log(EngineLogger.Level.ERROR, "Attempting to load sprite-sheet caused IOException", e);
 			throw new SpriteSheetsNotDefinedError();
 		}
 	}
 
 	public static SpriteSheetRegion loadSingleImage(String imageName) {
-		PngReaderInt imageReader = new PngReaderInt(MainClass.class.getResourceAsStream(imageName));
+		PngReaderInt imageReader = new PngReaderInt(Main.class.getResourceAsStream(imageName));
 		imageData = new int[imageReader.imgInfo.rows][imageReader.imgInfo.cols];
 
 		for (int i = 0; i < imageData.length; i++) {
@@ -96,7 +96,7 @@ public class SpriteSheet {
 			if (Character.isAlphabetic(currentLine.charAt(0))) {
 				if (currentSprite != null) {
 					if (currentName == null) {
-						MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite definition");
+						Main.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite definition");
 					}
 					else {
 						map.put(currentName, currentSprite);
@@ -138,7 +138,7 @@ public class SpriteSheet {
 		// fixes a bug
 		if (currentSprite != null) {
 			if (currentName == null) {
-				MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite definition");
+				Main.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite definition");
 			}
 			else {
 				map.put(currentName, currentSprite);

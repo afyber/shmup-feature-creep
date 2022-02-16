@@ -11,18 +11,21 @@ import afyber.shmupfeaturecreep.engine.screen.Screen;
 import afyber.shmupfeaturecreep.engine.world.World;
 
 import java.awt.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-public class MainClass {
+public class Main {
+	private Main() {}
 
-	public static final EngineLogger LOGGER = new EngineLogger("log " + System.currentTimeMillis() + ".txt", false);
+	public static final EngineLogger LOGGER = new EngineLogger("Log " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh-mm-ss")) + ".txt", true);
 
-	public static void main(String[] args) {
+	public static void mainLoop() {
 		if (Game.DEBUG) {
 			LOGGER.setLoggingLevel(EngineLogger.Level.DEBUG);
 		}
 		LOGGER.log(EngineLogger.Level.DEBUG, "Program start");
 
-		boolean splashScreen = MainClass.class.getResource("/splashscreen.png") != null;
+		boolean splashScreen = Main.class.getResource("/splashscreen.png") != null;
 		if (splashScreen) {
 			Screen.setupScreen(Game.GAME_NAME_NICE, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT, true);
 		}

@@ -1,6 +1,6 @@
 package afyber.shmupfeaturecreep.engine.world;
 
-import afyber.shmupfeaturecreep.MainClass;
+import afyber.shmupfeaturecreep.Main;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.Registry;
 import afyber.shmupfeaturecreep.engine.errors.ObjectNotDefinedError;
@@ -183,7 +183,7 @@ public class World {
 							case 8 -> object.alarm8(worldMiddleman);
 							case 9 -> object.alarm9(worldMiddleman);
 							case 10 -> object.alarm10(worldMiddleman);
-							default -> MainClass.LOGGER.log(EngineLogger.Level.WARNING, "Something has gone very wrong in the alarm code");
+							default -> Main.LOGGER.log(EngineLogger.Level.WARNING, "Something has gone very wrong in the alarm code");
 						}
 					}
 				}
@@ -223,17 +223,17 @@ public class World {
 				gameObjectsCreatedThisFrame.add(newObject);
 				return newObject;
 			} catch (NoSuchMethodException e) {
-				MainClass.LOGGER.log(EngineLogger.Level.WARNING, "Attempt to create DynamicObject resulted in NoSuchMethodException:", e);
+				Main.LOGGER.log(EngineLogger.Level.WARNING, "Attempt to create DynamicObject resulted in NoSuchMethodException:", e);
 			} catch (InvocationTargetException e) {
-				MainClass.LOGGER.log(EngineLogger.Level.WARNING, "Attempt to create DynamicObject resulted in InvocationTargetException:", e);
+				Main.LOGGER.log(EngineLogger.Level.WARNING, "Attempt to create DynamicObject resulted in InvocationTargetException:", e);
 			} catch (InstantiationException e) {
-				MainClass.LOGGER.log(EngineLogger.Level.WARNING, "Attempt to create DynamicObject resulted in InstantiationException:", e);
+				Main.LOGGER.log(EngineLogger.Level.WARNING, "Attempt to create DynamicObject resulted in InstantiationException:", e);
 			} catch (IllegalAccessException e) {
-				MainClass.LOGGER.log(EngineLogger.Level.WARNING, "Attempt to create DynamicObject resulted in IllegalAccessException:", e);
+				Main.LOGGER.log(EngineLogger.Level.WARNING, "Attempt to create DynamicObject resulted in IllegalAccessException:", e);
 			}
 		}
 		else {
-			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Object name \"" + classRef + "\" is not registered, unable to create");
+			Main.LOGGER.log(EngineLogger.Level.ERROR, "Object name \"" + classRef + "\" is not registered, unable to create");
 			throw new ObjectNotDefinedError();
 		}
 		return null;

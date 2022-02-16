@@ -50,6 +50,9 @@ public class Game {
 
 		loadWaves();
 
+		Global.setStringGlobal("stageMusic", "");
+		Global.setStringGlobal("bossMusic", "");
+
 		Global.setStringGlobal("stage", "BW");
 
 		Global.setIntGlobal("guildCoins", 0);
@@ -137,7 +140,7 @@ public class Game {
 				WaveController.allEnemies.add(new EnemyWaveReference(vals[0], WaveProperties.Stage.valueOf(vals[1]), Integer.parseInt(vals[2]), Double.parseDouble(vals[3]), tags));
 			}
 		} catch (IOException e) {
-			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Enemies are not defined");
+			Main.LOGGER.log(EngineLogger.Level.ERROR, "Enemies are not defined");
 			throw new EnemiesNotDefinedError();
 		}
 	}
@@ -149,22 +152,26 @@ public class Game {
 			WaveProperties.Stage currentStage = null;
 			for (String line: lines) {
 				if (GeneralUtil.isLineConfigViable(line)) {
-					switch (line) {
-						case "bw" -> currentStage = WaveProperties.Stage.BW;
-						case "crt" -> currentStage = WaveProperties.Stage.CRT;
-						case "nes" -> currentStage = WaveProperties.Stage.NES;
-						case "snes" -> currentStage = WaveProperties.Stage.SNES;
-						case "doom" -> currentStage = WaveProperties.Stage.DOOM;
-						default -> loadWave(line, currentStage);
+					boolean stageName = false;
+					for (WaveProperties.Stage stage: WaveProperties.Stage.values()) {
+						if (stage.toString().equals(line.toUpperCase())) {
+							currentStage = WaveProperties.Stage.valueOf(line.toUpperCase());
+							stageName = true;
+							break;
+						}
+					}
+					if (!stageName) {
+						loadWave(line, currentStage);
 					}
 				}
 			}
 		} catch (IOException e) {
-			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Waves are not defined");
+			Main.LOGGER.log(EngineLogger.Level.ERROR, "Waves are not defined");
 			throw new WavesNotDefinedError();
 		}
 	}
 
+	// FIXME: Rewrite with on-demand retrieval of next line (Iterator?)
 	private static void loadWave(String name, WaveProperties.Stage stage) {
 		try {
 			String[] lines = GeneralUtil.readResourceAsLineArray("/waves/" + name);

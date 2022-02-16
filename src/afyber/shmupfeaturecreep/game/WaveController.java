@@ -1,7 +1,7 @@
 package afyber.shmupfeaturecreep.game;
 
 import afyber.shmupfeaturecreep.Game;
-import afyber.shmupfeaturecreep.MainClass;
+import afyber.shmupfeaturecreep.Main;
 import afyber.shmupfeaturecreep.engine.RandomUtil;
 import afyber.shmupfeaturecreep.engine.audio.Sound;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
@@ -242,7 +242,7 @@ public class WaveController extends DynamicObject {
 
 			if (enemyRatings.isEmpty()) {
 				// lol no that's not allowed
-				MainClass.LOGGER.log(EngineLogger.Level.WARNING, "No enemy exists to satisfy wave slot requirements");
+				Main.LOGGER.log(EngineLogger.Level.WARNING, "No enemy exists to satisfy wave slot requirements");
 				return;
 			}
 			else if (enemyRatings.size() >= 5) {

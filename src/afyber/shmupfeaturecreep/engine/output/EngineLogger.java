@@ -9,22 +9,27 @@ import java.nio.file.StandardOpenOption;
 
 public class EngineLogger {
 
+	private static String LOGS_DIR = "./logs/";
+
 	private final String filename;
 	private Level lowestAllowedLevel;
 	private boolean writeToFile;
 
 	public EngineLogger(String filename, boolean writeToFile) {
-		this.filename = filename;
+		this.filename = LOGS_DIR + filename;
 		this.lowestAllowedLevel = Level.WARNING;
-		setWriteToFile(writeToFile);
+		this.writeToFile = writeToFile;
 	}
 
 	public void log(Level level, String msg) {
 		try {
-			String message = "[" + level.name() + "] " + msg + "\n";
-			System.out.print(message);
-			if (writeToFile && level.getValue() >= lowestAllowedLevel.getValue()) {
-				Files.writeString(Path.of(filename), message, StandardOpenOption.APPEND);
+			if (level.getValue() >= lowestAllowedLevel.getValue()) {
+				String message = "[" + level.name() + "] " + msg + "\n";
+				System.out.print(message);
+				if (writeToFile) {
+					ensureFilePresence();
+					Files.writeString(Path.of(filename), message, StandardOpenOption.APPEND);
+				}
 			}
 		}
 		catch (IOException e) {
@@ -35,12 +40,15 @@ public class EngineLogger {
 
 	public void log(Level level, String msg, Throwable e) {
 		try {
-			StringWriter writer = new StringWriter();
-			e.printStackTrace(new PrintWriter(writer));
-			String message = "[" + level.name() + "] " + msg + "\n" + writer;
-			System.out.print(message);
-			if (writeToFile && level.getValue() >= lowestAllowedLevel.getValue()) {
-				Files.writeString(Path.of(filename), message, StandardOpenOption.APPEND);
+			if (level.getValue() >= lowestAllowedLevel.getValue()) {
+				StringWriter writer = new StringWriter();
+				e.printStackTrace(new PrintWriter(writer));
+				String message = "[" + level.name() + "] " + msg + "\n" + writer;
+				System.out.print(message);
+				if (writeToFile) {
+					ensureFilePresence();
+					Files.writeString(Path.of(filename), message, StandardOpenOption.APPEND);
+				}
 			}
 		}
 		catch (IOException ex) {
@@ -53,18 +61,13 @@ public class EngineLogger {
 		this.lowestAllowedLevel = level;
 	}
 
-	public Level getLoggingLevel() {
-		return this.lowestAllowedLevel;
-	}
-
-	public void setWriteToFile(boolean val) {
-		writeToFile = val;
+	private void ensureFilePresence() {
 		if (writeToFile) {
 			try {
+				Files.createDirectories(Path.of(LOGS_DIR));
 				Files.createFile(Path.of(filename));
 			} catch (IOException e) {
-				System.out.println("Either the log file already exists or the program doesn't have the ability to create a file");
-				e.printStackTrace();
+				// the file already exists or cannot be accessed
 			}
 		}
 	}

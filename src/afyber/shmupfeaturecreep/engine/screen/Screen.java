@@ -1,6 +1,6 @@
 package afyber.shmupfeaturecreep.engine.screen;
 
-import afyber.shmupfeaturecreep.MainClass;
+import afyber.shmupfeaturecreep.Main;
 import afyber.shmupfeaturecreep.engine.CompactFrameArray;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.errors.SpriteSheetsNotDefinedError;
@@ -65,7 +65,7 @@ public class Screen {
 			@Override
 			public void dispose() {
 				super.dispose();
-				MainClass.LOGGER.log(EngineLogger.Level.DEBUG, "Window dispose called");
+				Main.LOGGER.log(EngineLogger.Level.DEBUG, "Window dispose called");
 				windowClosed = true;
 			}
 		};
@@ -77,9 +77,9 @@ public class Screen {
 		frame.setResizable(false);
 		frame.setTitle(name);
 		try {
-			frame.setIconImage(ImageIO.read(MainClass.class.getResourceAsStream("/icon.png")));
+			frame.setIconImage(ImageIO.read(Main.class.getResourceAsStream("/icon.png")));
 		} catch (Exception e) {
-			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load window icon image");
+			Main.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load window icon image");
 		}
 		// these numbers are so that the drawable area is actually the size specified
 		// TODO: figure this out better
@@ -153,7 +153,7 @@ public class Screen {
 			try {
 				drawRequests.add(new SpriteDrawRequest(spriteName, (int)spriteIndex, (int)Math.round(x), (int)Math.round(y), xScale, yScale, depth, alpha));
 			} catch (NullPointerException e) {
-				MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Draw attempted before 'drawRequests' initialized", e);
+				Main.LOGGER.log(EngineLogger.Level.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
 		}
 	}
@@ -183,7 +183,7 @@ public class Screen {
 				}
 				drawRequests.add(new RectangleDrawRequest((int)Math.round(x1), (int)Math.round(y1), (int)Math.round(x2), (int)Math.round(y2), rgbColor, depth, alpha));
 			} catch (NullPointerException e) {
-				MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Draw attempted before 'drawRequests' initialized", e);
+				Main.LOGGER.log(EngineLogger.Level.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
 		}
 	}
@@ -203,7 +203,7 @@ public class Screen {
 			try {
 				drawRequests.add(new LineDrawRequest((int)Math.round(x1), (int)Math.round(y1), (int)Math.round(x2), (int)Math.round(y2), (int)Math.floor(width), rgbColor, depth, alpha));
 			} catch (NullPointerException e) {
-				MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Draw attempted before 'drawRequests' initialized", e);
+				Main.LOGGER.log(EngineLogger.Level.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
 		}
 	}
@@ -222,7 +222,7 @@ public class Screen {
 			try {
 				drawRequests.add(new TextDrawRequest(message, currentFont, (int)Math.round(x), (int)Math.round(y), xScale, yScale, (int)Math.round(wrapWidth), depth, alpha));
 			} catch (NullPointerException e) {
-				MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Draw attempted before 'drawRequests' initialized", e);
+				Main.LOGGER.log(EngineLogger.Level.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
 		}
 	}
@@ -353,7 +353,7 @@ public class Screen {
 			font = allFonts.get(request.font());
 		}
 		else {
-			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Could not draw text: invalid or missing font \"" + request.font() + "\"");
+			Main.LOGGER.log(EngineLogger.Level.ERROR, "Could not draw text: invalid or missing font \"" + request.font() + "\"");
 			return;
 		}
 
@@ -401,7 +401,7 @@ public class Screen {
 			font = allFonts.get(currentFont);
 		}
 		else {
-			MainClass.LOGGER.log(EngineLogger.Level.ERROR, "Could not measure text: invalid or missing font \"" + currentFont + "\"");
+			Main.LOGGER.log(EngineLogger.Level.ERROR, "Could not measure text: invalid or missing font \"" + currentFont + "\"");
 			return 0;
 		}
 
