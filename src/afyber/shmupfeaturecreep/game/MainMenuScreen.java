@@ -101,6 +101,7 @@ public class MainMenuScreen extends DynamicObject {
 	public void draw(WorldMiddleman world) {
 		drawTextExtCentered("SHMUP", Game.WINDOW_WIDTH / 2.0, 80, 8, 9, -1, 1);
 		drawTextExtCentered("FEATURE CREEP", Game.WINDOW_WIDTH / 2.0, 180, 4, 4, -1, 1);
+		drawTextExtCentered("| TO MOVE z TO SHOOT ~ TO SLOWDOWN", Game.WINDOW_WIDTH / 2.0, 560,2, 2, -1, 1);
 		if (alarm[0] < 15 || alarm[0] < 45 && alarm[0] >= 30) {
 			drawTextExtCentered("START GAME", Game.WINDOW_WIDTH / 2.0, 340, 3, 3, -1, 1);
 		}
