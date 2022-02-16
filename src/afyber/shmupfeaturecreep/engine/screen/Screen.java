@@ -639,7 +639,9 @@ public class Screen {
 	}
 
 	public static void closeWindow() {
-		frame.dispose();
+		if (!windowClosed) {
+			frame.dispose();
+		}
 	}
 
 	// NOTE: private classes

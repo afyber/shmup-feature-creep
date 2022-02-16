@@ -17,7 +17,7 @@ public class EngineLogger {
 
 	public EngineLogger(String filename, boolean writeToFile) {
 		this.filename = LOGS_DIR + filename;
-		this.lowestAllowedLevel = Level.WARNING;
+		this.lowestAllowedLevel = Level.INFO;
 		this.writeToFile = writeToFile;
 	}
 
