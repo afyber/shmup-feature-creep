@@ -103,12 +103,22 @@ public class MainMenuScreen extends DynamicObject {
 		drawTextExtCentered("FEATURE CREEP", Game.WINDOW_WIDTH / 2.0, 180, 4, 4, -1, 1);
 		drawTextExtCentered("| TO MOVE z TO SHOOT ~ TO SLOWDOWN", Game.WINDOW_WIDTH / 2.0, 560,2, 2, -1, 1);
 		if (alarm[0] < 15 || alarm[0] < 45 && alarm[0] >= 30) {
-			drawTextExtCentered("START GAME", Game.WINDOW_WIDTH / 2.0, 340, 3, 3, -1, 1);
+			if (selection == 0) {
+				drawTextExtCentered("] START GAME [", Game.WINDOW_WIDTH / 2.0, 340, 3, 3, -1, 1);
+			} else {
+				drawTextExtCentered("START GAME", Game.WINDOW_WIDTH / 2.0, 340, 3, 3, -1, 1);
+			}
 		}
-		drawTextExtCentered("SETTINGS", Game.WINDOW_WIDTH / 2.0, 380, 3, 3, -1, 1);
-		drawTextExtCentered("QUIT GAME", Game.WINDOW_WIDTH / 2.0, 420, 3, 3, -1, 1);
-		draw("selection_icon_bw", 0, Game.WINDOW_WIDTH / 2.0 - 140, 354 + selection * 40, 3, 3);
-		draw("selection_icon_bw", 0, Game.WINDOW_WIDTH / 2.0 + 140, 354 + selection * 40, -3, 3);
+		if (selection == 1) {
+			drawTextExtCentered("] SETTINGS [", Game.WINDOW_WIDTH / 2.0, 380, 3, 3, -1, 1);
+		} else {
+			drawTextExtCentered("SETTINGS", Game.WINDOW_WIDTH / 2.0, 380, 3, 3, -1, 1);
+		}
+		if (selection == 2) {
+			drawTextExtCentered("] QUIT GAME [", Game.WINDOW_WIDTH / 2.0, 420, 3, 3, -1, 1);
+		} else {
+			drawTextExtCentered("QUIT GAME", Game.WINDOW_WIDTH / 2.0, 420, 3, 3, -1, 1);
+		}
 		if (settingsMenu) {
 			drawRectExt(0, 0, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT, 0x000000, 0.5);
 			drawRect(160, 200, 480, 450, 0xffffff);
