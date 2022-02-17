@@ -12,12 +12,13 @@ import afyber.shmupfeaturecreep.game.stage1.PlayerShipBW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class WaveController extends DynamicObject {
 
-	public static final ArrayList<Wave> allWaves = new ArrayList<>();
-	public static final ArrayList<EnemyWaveReference> allEnemies = new ArrayList<>();
-	public static final int BOSS_WAVE = 4;
+	public static final List<Wave> allWaves = new ArrayList<>();
+	public static final List<EnemyWaveReference> allEnemies = new ArrayList<>();
+	public static final int BOSS_WAVE = 1;
 
 	private final ArrayList<EnemyWaveReference> availableEnemies = new ArrayList<>();
 	private final ArrayList<Wave> availableWaves = new ArrayList<>();
@@ -46,12 +47,14 @@ public class WaveController extends DynamicObject {
 			refresh();
 		}
 		alarm[9] = 60;
-		Sound.stopMusic("level_theme_bw");
-		Sound.stopMusic("boss_theme_bw");
+		Sound.stopMusic(Global.getStringGlobal("level_theme"));
+		Sound.stopMusic(Global.getStringGlobal("boss_theme"));
 	}
 
 	private void refresh() {
 		WaveProperties.Stage availableStage = WaveProperties.Stage.valueOf(Global.getStringGlobal("stage"));
+		Global.setStringGlobal("level_theme", "level_theme_" + availableStage.toString().toLowerCase());
+		Global.setStringGlobal("boss_theme", "boss_theme_" + availableStage.toString().toLowerCase());
 		for (Wave wave: allWaves) {
 			if (wave.properties().stage() == availableStage && Global.getIntGlobal("enemiesUnlock") >= wave.properties().batch()) {
 				availableWaves.add(wave);
@@ -158,15 +161,15 @@ public class WaveController extends DynamicObject {
 			world.createParticle("plus_one_coins_bw", Game.WINDOW_WIDTH / 2.0, 160);
 		}
 		if (currentWave % BOSS_WAVE == 0 && Global.getIntGlobal("bossUnlock") > 0 && !shopDone) {
-			Sound.stopMusic("level_theme_bw");
-			Sound.playMusic("boss_theme_bw");
+			Sound.stopMusic(Global.getStringGlobal("level_theme"));
+			Sound.playMusic(Global.getStringGlobal("boss_theme"));
 		}
 		state = 2;
 	}
 
 	@Override
 	public void alarm9(WorldMiddleman world) {
-		Sound.playMusic("level_theme_bw");
+		Sound.playMusic(Global.getStringGlobal("level_theme"));
 	}
 
 	@Override

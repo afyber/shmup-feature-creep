@@ -37,7 +37,7 @@ public class Game {
 
 	public static final int IDEAL_FPS = 60;
 
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	public static void gameStart() {
 		Sound.setMusicGain("small_explosion_bw", 0.65);
@@ -60,7 +60,7 @@ public class Game {
 		Global.setIntGlobal("enemiesUnlock", 0);
 		Global.setIntGlobal("powerupsUnlock", 0);
 		Global.setIntGlobal("boostsUnlock", 0);
-		Global.setIntGlobal("bossUnlock", 0);
+		Global.setIntGlobal("bossUnlock", 1);
 
 		Global.setIntGlobal("settingsScreenSize", 0);
 		Global.setIntGlobal("settingsVolume", 10);

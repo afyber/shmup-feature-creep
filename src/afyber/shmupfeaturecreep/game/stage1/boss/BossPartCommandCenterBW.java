@@ -7,6 +7,7 @@ import afyber.shmupfeaturecreep.engine.rooms.DynamicObject;
 import afyber.shmupfeaturecreep.engine.world.SpriteCollision;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 import afyber.shmupfeaturecreep.game.Fader;
+import afyber.shmupfeaturecreep.game.stage1.enemies.EnemyMineMediumBW;
 import afyber.shmupfeaturecreep.game.stage1.enemies.EnemyMineSmallBW;
 import afyber.shmupfeaturecreep.game.stage1.enemies.EnemySmallBulletBW;
 
@@ -121,7 +122,7 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 	}
 
 	private void attack(WorldMiddleman world) {
-		int pattern = RandomUtil.randInt(6);
+		int pattern = RandomUtil.randInt(9);
 		switch (pattern) {
 			case 0 -> {
 				DynamicObject obj = world.createInstance("enemy_mine_small_bw", x - 64, y + 64, 0);
@@ -179,16 +180,16 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 				((EnemySmallBulletBW)obj).direction = 91;
 				((EnemySmallBulletBW)obj).speed = 5;
 				obj = world.createInstance("enemy_small_bullet_bw", x + 16, y + 73, 0);
-				((EnemySmallBulletBW)obj).direction = 84;
+				((EnemySmallBulletBW)obj).direction = 83;
 				((EnemySmallBulletBW)obj).speed = 5;
 				obj = world.createInstance("enemy_small_bullet_bw", x - 16, y + 73, 0);
-				((EnemySmallBulletBW)obj).direction = 96;
+				((EnemySmallBulletBW)obj).direction = 97;
 				((EnemySmallBulletBW)obj).speed = 5;
 				obj = world.createInstance("enemy_small_bullet_bw", x + 32, y + 70, 0);
-				((EnemySmallBulletBW)obj).direction = 79;
+				((EnemySmallBulletBW)obj).direction = 77;
 				((EnemySmallBulletBW)obj).speed = 5;
 				obj = world.createInstance("enemy_small_bullet_bw", x - 32, y + 70, 0);
-				((EnemySmallBulletBW)obj).direction = 101;
+				((EnemySmallBulletBW)obj).direction = 102;
 				((EnemySmallBulletBW)obj).speed = 5;
 				alarm[6] = 30;
 			}
@@ -200,6 +201,47 @@ public class BossPartCommandCenterBW extends BossPartParentBW {
 				((EnemyMineSmallBW)obj).direction = 70;
 				((EnemyMineSmallBW)obj).speed = 5;
 				obj = world.createInstance("enemy_mine_small_bw", x, y + 76, 0);
+				((EnemyMineSmallBW)obj).offset = 45;
+				((EnemyMineSmallBW)obj).speed = 5;
+				alarm[6] = 60;
+			}
+			case 6 -> {
+				DynamicObject obj = world.createInstance("enemy_mine_medium_bw", x - 64, y + 64, 0);
+				((EnemyMineMediumBW)obj).direction = 110;
+				((EnemyMineMediumBW)obj).speed = 5;
+				obj = world.createInstance("enemy_mine_medium_bw", x + 64, y + 64, 0);
+				((EnemyMineMediumBW)obj).direction = 70;
+				((EnemyMineMediumBW)obj).speed = 5;
+				obj = world.createInstance("enemy_mine_medium_bw", x, y + 76, 0);
+				((EnemyMineMediumBW)obj).speed = 5;
+				alarm[6] = 80;
+			}
+			case 7 -> {
+				DynamicObject obj = world.createInstance("enemy_mine_medium_bw", x - 64, y + 64, 0);
+				((EnemyMineMediumBW)obj).direction = 110;
+				((EnemyMineMediumBW)obj).speed = 5;
+				obj = world.createInstance("enemy_mine_medium_bw", x + 64, y + 64, 0);
+				((EnemyMineMediumBW)obj).direction = 70;
+				((EnemyMineMediumBW)obj).speed = 5;
+				obj = world.createInstance("enemy_mine_small_bw", x - 48, y + 70, 0);
+				((EnemyMineSmallBW)obj).offset = 45;
+				((EnemyMineSmallBW)obj).speed = 5;
+				obj = world.createInstance("enemy_mine_small_bw", x + 48, y + 70, 0);
+				((EnemyMineSmallBW)obj).offset = 45;
+				((EnemyMineSmallBW)obj).speed = 5;
+				alarm[6] = 60;
+			}
+			case 8 -> {
+				DynamicObject obj = world.createInstance("enemy_mine_medium_bw", x - 48, y + 64, 0);
+				((EnemyMineMediumBW)obj).speed = 5;
+				obj = world.createInstance("enemy_mine_medium_bw", x + 48, y + 64, 0);
+				((EnemyMineMediumBW)obj).speed = 5;
+				obj = world.createInstance("enemy_mine_small_bw", x - 64, y + 64, 0);
+				((EnemyMineSmallBW)obj).direction = 110;
+				((EnemyMineSmallBW)obj).offset = 45;
+				((EnemyMineSmallBW)obj).speed = 5;
+				obj = world.createInstance("enemy_mine_small_bw", x + 64, y + 64, 0);
+				((EnemyMineSmallBW)obj).direction = 70;
 				((EnemyMineSmallBW)obj).offset = 45;
 				((EnemyMineSmallBW)obj).speed = 5;
 				alarm[6] = 60;

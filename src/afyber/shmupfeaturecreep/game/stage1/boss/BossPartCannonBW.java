@@ -7,6 +7,7 @@ import afyber.shmupfeaturecreep.engine.world.Global;
 import afyber.shmupfeaturecreep.engine.world.SpriteCollision;
 import afyber.shmupfeaturecreep.engine.world.WorldMiddleman;
 import afyber.shmupfeaturecreep.game.stage1.PlayerShipBW;
+import afyber.shmupfeaturecreep.game.stage1.enemies.EnemyMineMediumBW;
 import afyber.shmupfeaturecreep.game.stage1.enemies.EnemyMineSmallBW;
 import afyber.shmupfeaturecreep.game.stage1.enemies.EnemySmallBulletBW;
 
@@ -44,7 +45,7 @@ public class BossPartCannonBW extends BossPartParentBW {
 			if (y < -128) {
 				world.instanceDestroy(instanceID);
 			}
-			speed = MathUtil.interpolateExp(speed, 10, 10, 0.25);
+			speed = MathUtil.interpolateExp(speed, 8, 10, 0.25);
 		}
 	}
 
@@ -68,7 +69,7 @@ public class BossPartCannonBW extends BossPartParentBW {
 	}
 
 	public void attack(WorldMiddleman world) {
-		int pattern = RandomUtil.randInt(4);
+		int pattern = RandomUtil.randInt(5);
 		switch (pattern) {
 			case 0 -> {
 				DynamicObject obj = world.createInstance("enemy_small_bullet_bw", left ? x + 12 : x - 12, y + 16, 0);
@@ -108,6 +109,11 @@ public class BossPartCannonBW extends BossPartParentBW {
 				((EnemyMineSmallBW)obj).offset = 45;
 				((EnemyMineSmallBW)obj).speed = 5;
 				world.getObject(parentObject).alarm[6] = 60;
+			}
+			case 4 -> {
+				DynamicObject obj = world.createInstance("enemy_mine_medium_bw", left ? x + 12 : x - 12, y + 16, 0);
+				((EnemyMineMediumBW)obj).speed = 4;
+				world.getObject(parentObject).alarm[6] = 55;
 			}
 		}
 	}
