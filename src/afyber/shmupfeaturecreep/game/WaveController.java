@@ -18,7 +18,7 @@ public class WaveController extends DynamicObject {
 
 	public static final List<Wave> allWaves = new ArrayList<>();
 	public static final List<EnemyWaveReference> allEnemies = new ArrayList<>();
-	public static final int BOSS_WAVE = 1;
+	public static final int BOSS_WAVE = 4;
 
 	private final ArrayList<EnemyWaveReference> availableEnemies = new ArrayList<>();
 	private final ArrayList<Wave> availableWaves = new ArrayList<>();
@@ -246,6 +246,7 @@ public class WaveController extends DynamicObject {
 			if (enemyRatings.isEmpty()) {
 				// lol no that's not allowed
 				Main.LOGGER.log(EngineLogger.Level.WARNING, "No enemy exists to satisfy wave slot requirements");
+				Main.LOGGER.log(EngineLogger.Level.DEBUG, "Requirements: " + slot);
 				return;
 			}
 			else if (enemyRatings.size() >= 5) {

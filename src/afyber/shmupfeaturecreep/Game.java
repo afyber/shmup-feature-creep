@@ -60,7 +60,7 @@ public class Game {
 		Global.setIntGlobal("enemiesUnlock", 0);
 		Global.setIntGlobal("powerupsUnlock", 0);
 		Global.setIntGlobal("boostsUnlock", 0);
-		Global.setIntGlobal("bossUnlock", 1);
+		Global.setIntGlobal("bossUnlock", 0);
 
 		Global.setIntGlobal("settingsScreenSize", 0);
 		Global.setIntGlobal("settingsVolume", 10);
