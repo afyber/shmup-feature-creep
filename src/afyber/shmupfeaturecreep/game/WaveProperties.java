@@ -1,6 +1,6 @@
 package afyber.shmupfeaturecreep.game;
 
-public record WaveProperties(Stage stage, int framesToNext, boolean repeatable, int batch, double difficulty) {
+public record WaveProperties(String name, Stage stage, int framesToNext, boolean repeatable, int batch, double difficulty) {
 
 	public enum Stage {
 		BW,

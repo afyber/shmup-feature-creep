@@ -161,7 +161,7 @@ public class Game {
 						}
 					}
 					if (!stageName) {
-						loadWave(line, currentStage);
+						loadWave(line.split(",")[0], currentStage, Float.parseFloat(line.split(",")[1]));
 					}
 				}
 			}
@@ -172,7 +172,7 @@ public class Game {
 	}
 
 	// FIXME: Rewrite with on-demand retrieval of next line (Iterator?)
-	private static void loadWave(String name, WaveProperties.Stage stage) {
+	private static void loadWave(String name, WaveProperties.Stage stage, float difficulty) {
 		try {
 			String[] lines = GeneralUtil.readResourceAsLineArray("/waves/" + name);
 
@@ -181,7 +181,6 @@ public class Game {
 			int framesToNext = -1;
 			boolean repeatable = false;
 			int batch = 0;
-			double difficulty = -1;
 
 			// enemy slot information
 			double minRating = -1;
@@ -200,9 +199,6 @@ public class Game {
 					}
 					else if (line.startsWith("batch:")) {
 						batch = Integer.parseInt(line.substring(6));
-					}
-					else if (line.startsWith("difficulty:")) {
-						difficulty = Double.parseDouble(line.substring(11));
 					}
 					if (line.equals("{")) {
 						buildState = 0;
@@ -250,7 +246,7 @@ public class Game {
 				}
 			}
 
-			WaveController.allWaves.add(new Wave(enemies.toArray(new EnemyWaveSlot[0]), new WaveProperties(stage, framesToNext, repeatable, batch, difficulty)));
+			WaveController.allWaves.add(new Wave(enemies.toArray(new EnemyWaveSlot[0]), new WaveProperties(name, stage, framesToNext, repeatable, batch, difficulty)));
 		} catch (IOException e) {
 			throw new WavesNotDefinedError();
 		}

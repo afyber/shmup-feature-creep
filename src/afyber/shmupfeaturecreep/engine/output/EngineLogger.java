@@ -35,7 +35,7 @@ public class EngineLogger {
 		catch (IOException e) {
 			// do not attempt to write to file again
 			writeToFile = false;
-			System.out.println("IOException when attempting to log");
+			System.out.println("IOException when attempting to log to file, disabling logging");
 			e.printStackTrace();
 		}
 	}
@@ -55,7 +55,7 @@ public class EngineLogger {
 		}
 		catch (IOException ex) {
 			writeToFile = false;
-			System.out.println("IOError when attempting to log");
+			System.out.println("IOError when attempting to log to file, disabling logging");
 			ex.printStackTrace();
 		}
 	}
