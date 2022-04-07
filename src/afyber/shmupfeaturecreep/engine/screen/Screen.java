@@ -43,6 +43,7 @@ public class Screen {
 	private static boolean isDrawing;
 
 	private static String currentFont;
+	private static int timer;
 
 	private static boolean windowClosed;
 
@@ -152,9 +153,12 @@ public class Screen {
 		draw(spriteName, spriteIndex, x, y, xScale, yScale, depth, alpha, 0xFFFFFF);
 	}
 	public static void draw(String spriteName, double spriteIndex, double x, double y, double xScale, double yScale, int depth, double alpha, int tint) {
+		draw(spriteName, spriteIndex, x, y, xScale, yScale, depth, alpha, tint, 0);
+	}
+	public static void draw(String spriteName, double spriteIndex, double x, double y, double xScale, double yScale, int depth, double alpha, int tint, double rotation) {
 		if (isDrawing) {
 			try {
-				drawRequests.add(new SpriteDrawRequest(spriteName, (int)spriteIndex, (int)Math.round(x), (int)Math.round(y), xScale, yScale, depth, alpha, tint));
+				drawRequests.add(new SpriteDrawRequest(spriteName, (int)spriteIndex, (int)Math.round(x), (int)Math.round(y), xScale, yScale, depth, alpha, tint, rotation));
 			} catch (NullPointerException e) {
 				Main.LOGGER.log(EngineLogger.Level.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
@@ -242,6 +246,7 @@ public class Screen {
 	}
 
 	public static void applyDrawRequestsAndPaint() {
+		timer += 2;
 		// sort requests by depth
 		drawRequests.sort((o1, o2) -> {
 			if (o1.depth() < o2.depth()) {
@@ -305,10 +310,10 @@ public class Screen {
 
 		for (int y = 0; y < scaledSprite.dataHeight(); y++) {
 			for (int x = 0; x < scaledSprite.dataWidth(); x++) {
-				int calculatedX = request.x() + x - scaledSprite.originX();
-				int calculatedY = request.y() + y - scaledSprite.originY();
+				Position pos = new Position(x - scaledSprite.originX(), y - scaledSprite.originY());
+				pos.rotate(request.rotation());
 
-				applyPixelToFrameFull(calculatedX, calculatedY, spriteData[y][x], alphaPercent, request.tint());
+				applyPixelToFrameFull(pos.getX() + request.x(), pos.getY() + request.y(), spriteData[y][x], alphaPercent, request.tint());
 			}
 		}
 	}
