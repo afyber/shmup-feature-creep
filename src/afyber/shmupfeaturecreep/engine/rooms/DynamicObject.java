@@ -157,9 +157,9 @@ public class DynamicObject {
 		}
 	}
 
-	protected final void drawExtended(String sprite, double spriteIndex, double x, double y, double xScale, double yScale, double alpha) {
+	protected final void drawExtended(String sprite, double spriteIndex, double x, double y, double xScale, double yScale, double alpha, int tint) {
 		if (visible) {
-			Screen.draw(sprite, spriteIndex, x, y, xScale, yScale, depth, alpha);
+			Screen.draw(sprite, spriteIndex, x, y, xScale, yScale, depth, alpha, tint);
 		}
 	}
 

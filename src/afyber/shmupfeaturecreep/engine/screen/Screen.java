@@ -149,9 +149,12 @@ public class Screen {
 		draw(spriteName, spriteIndex, x, y, xScale, yScale, depth, 1);
 	}
 	public static void draw(String spriteName, double spriteIndex, double x, double y, double xScale, double yScale, int depth, double alpha) {
+		draw(spriteName, spriteIndex, x, y, xScale, yScale, depth, alpha, 0xFFFFFF);
+	}
+	public static void draw(String spriteName, double spriteIndex, double x, double y, double xScale, double yScale, int depth, double alpha, int tint) {
 		if (isDrawing) {
 			try {
-				drawRequests.add(new SpriteDrawRequest(spriteName, (int)spriteIndex, (int)Math.round(x), (int)Math.round(y), xScale, yScale, depth, alpha));
+				drawRequests.add(new SpriteDrawRequest(spriteName, (int)spriteIndex, (int)Math.round(x), (int)Math.round(y), xScale, yScale, depth, alpha, tint));
 			} catch (NullPointerException e) {
 				Main.LOGGER.log(EngineLogger.Level.ERROR, "Draw attempted before 'drawRequests' initialized", e);
 			}
@@ -305,7 +308,7 @@ public class Screen {
 				int calculatedX = request.x() + x - scaledSprite.originX();
 				int calculatedY = request.y() + y - scaledSprite.originY();
 
-				applyPixelToFrameWithAlpha(calculatedX, calculatedY, spriteData[y][x], alphaPercent);
+				applyPixelToFrameFull(calculatedX, calculatedY, spriteData[y][x], alphaPercent, request.tint());
 			}
 		}
 	}
@@ -315,7 +318,7 @@ public class Screen {
 
 		for (int i = 0; i < data.length; i++) {
 			for (int c = 0; c < data[0].length; c++) {
-				applyPixelToFrameWithAlpha(x + c, y + i, data[i][c], alpha);
+				applyPixelToFrameFull(x + c, y + i, data[i][c], alpha, 0xFFFFFF);
 			}
 		}
 	}
@@ -327,7 +330,7 @@ public class Screen {
 
 		for (int y = request.y1(); y < request.y2(); y++) {
 			for (int x = request.x1(); x < request.x2(); x++) {
-				applyPixelToFrameWithAlpha(x, y, request.rgbColor(), request.alpha());
+				applyPixelToFrameFull(x, y, request.rgbColor(), request.alpha(), 0xFFFFFF);
 			}
 		}
 	}
@@ -438,14 +441,22 @@ public class Screen {
 	}
 
 	private static void applyPixelToFrame(int x, int y, int rgbColor) {
-		applyPixelToFrameWithAlpha(x, y, rgbColor, 1);
+		applyPixelToFrameFull(x, y, rgbColor, 1, 0xFFFFFF);
 	}
-	private static void applyPixelToFrameWithAlpha(int x, int y, int rgbColor, double alpha) {
+	private static void applyPixelToFrameFull(int x, int y, int rgbColor, double alpha, int tint) {
 		if (y < 0 || y >= image.getHeight() ||
 				x < 0 || x >= image.getWidth()) {
 			return;
 		}
 
+		if (tint != 0xFFFFFF) {
+			if (tint == 0x0) {
+				rgbColor = 0x0;
+			}
+			else {
+				rgbColor = (rgbColor & 0xFF000000) | (int)((rgbColor >> 16 & 0xFF) / 256.0 * ((tint >> 16 & 0xFF) != 0 ? tint >> 16 & 0xFF : 0)) << 16 | (int)((rgbColor >> 8 & 0xFF) / 256.0 * ((tint >> 8 & 0xFF) != 0 ? tint >> 8 & 0xFF : 0)) << 8 | (int)((rgbColor & 0xFF) / 256.0 * ((tint & 0xFF) != 0 ? tint & 0xFF : 0));
+			}
+		}
 		if (alpha == 1 && (rgbColor >> 24 & 0xFF) == 0xFF) {
 			currentFrame[y][x] = rgbColor;
 		}

@@ -51,6 +51,6 @@ public class BossPartParentBW extends DynamicObject {
 
 	@Override
 	public void draw(WorldMiddleman world) {
-		drawExtended(sprite, spriteIndex, x, y, imageXScale, imageYScale, flash ? 1 : 0.8);
+		drawExtended(sprite, spriteIndex, x, y, imageXScale, imageYScale, flash ? 1 : 0.8, 0xffffff);
 	}
 }
