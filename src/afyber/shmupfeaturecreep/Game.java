@@ -38,6 +38,7 @@ public class Game {
 	public static final int IDEAL_FPS = 60;
 
 	public static final boolean DEBUG = true;
+	public static final boolean LOG_TO_FILE = false;
 
 	public static void gameStart() {
 		Sound.setMusicGain("small_explosion_bw", 0.65);

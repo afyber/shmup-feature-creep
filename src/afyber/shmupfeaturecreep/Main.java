@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 public class Main {
 	private Main() {}
 
-	public static final EngineLogger LOGGER = new EngineLogger("Log " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm-ss")) + ".txt", true);
+	public static final EngineLogger LOGGER = new EngineLogger("Log " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh-mm-ss")) + ".txt", Game.LOG_TO_FILE);
 
 	public static void mainLoop() {
 		if (Game.DEBUG) {
