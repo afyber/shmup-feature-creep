@@ -89,7 +89,7 @@ public class WaveController extends DynamicObject {
 			drawTextExt("0", 606, 606, 3, 3, -1, 1);
 		}
 		if (Game.DEBUG) {
-			drawTextExt(allWaves.get(currentWave).properties().name(), 100, 100, 2, 2, -1, 1);
+			drawTextExt(allWaves.get(currentWave).properties().name().toUpperCase(), 100, 100, 2, 2, -1, 1);
 		}
 	}
 

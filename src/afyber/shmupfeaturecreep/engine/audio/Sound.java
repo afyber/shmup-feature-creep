@@ -31,7 +31,7 @@ import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.audio.music.*;
 import afyber.shmupfeaturecreep.engine.audio.sounds.SoundDataReference;
 import afyber.shmupfeaturecreep.engine.audio.sounds.SoundInstance;
-import afyber.shmupfeaturecreep.engine.errors.SoundsNotDefinedError;
+import afyber.shmupfeaturecreep.engine.errors.SoundNotDefinedError;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 
 import javax.sound.sampled.*;
@@ -116,7 +116,7 @@ public class Sound {
 		}
 		catch (IOException e) {
 			Main.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sounds.txt");
-			throw new SoundsNotDefinedError();
+			throw new SoundNotDefinedError();
 		}
 
 		for (String line: lines) {

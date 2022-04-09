@@ -2,7 +2,7 @@ package afyber.shmupfeaturecreep.engine.sprites;
 
 import afyber.shmupfeaturecreep.Main;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
-import afyber.shmupfeaturecreep.engine.errors.SpriteSheetsNotDefinedError;
+import afyber.shmupfeaturecreep.engine.errors.SpriteSheetNotDefinedError;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import ar.com.hjg.pngj.PngReaderInt;
 
@@ -26,7 +26,7 @@ public class SpriteSheet {
 		}
 		catch (Exception e) {
 			Main.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite-sheet image:", e);
-			throw new SpriteSheetsNotDefinedError();
+			throw new SpriteSheetNotDefinedError();
 		}
 
 		try {
@@ -36,7 +36,7 @@ public class SpriteSheet {
 		catch (Exception e) {
 			imageReader.close();
 			Main.LOGGER.log(EngineLogger.Level.ERROR, "Couldn't load sprite-sheet image:", e);
-			throw new SpriteSheetsNotDefinedError();
+			throw new SpriteSheetNotDefinedError();
 		}
 
 		try {
@@ -44,7 +44,7 @@ public class SpriteSheet {
 		}
 		catch (IOException e) {
 			Main.LOGGER.log(EngineLogger.Level.ERROR, "Attempting to load sprite-sheet caused IOException", e);
-			throw new SpriteSheetsNotDefinedError();
+			throw new SpriteSheetNotDefinedError();
 		}
 	}
 

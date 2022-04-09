@@ -3,8 +3,8 @@ package afyber.shmupfeaturecreep;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.Registry;
 import afyber.shmupfeaturecreep.engine.audio.Sound;
-import afyber.shmupfeaturecreep.engine.errors.EnemiesNotDefinedError;
-import afyber.shmupfeaturecreep.engine.errors.WavesNotDefinedError;
+import afyber.shmupfeaturecreep.engine.errors.EnemyNotDefinedError;
+import afyber.shmupfeaturecreep.engine.errors.WaveNotDefinedError;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import afyber.shmupfeaturecreep.engine.particle.Particle;
 import afyber.shmupfeaturecreep.engine.particle.ParticleRegistry;
@@ -142,7 +142,7 @@ public class Game {
 			}
 		} catch (IOException e) {
 			Main.LOGGER.log(EngineLogger.Level.ERROR, "Enemies are not defined");
-			throw new EnemiesNotDefinedError();
+			throw new EnemyNotDefinedError();
 		}
 	}
 
@@ -168,7 +168,7 @@ public class Game {
 			}
 		} catch (IOException e) {
 			Main.LOGGER.log(EngineLogger.Level.ERROR, "Waves are not defined");
-			throw new WavesNotDefinedError();
+			throw new WaveNotDefinedError();
 		}
 	}
 
@@ -249,7 +249,7 @@ public class Game {
 
 			WaveController.allWaves.add(new Wave(enemies.toArray(new EnemyWaveSlot[0]), new WaveProperties(name, stage, framesToNext, repeatable, batch, difficulty)));
 		} catch (IOException e) {
-			throw new WavesNotDefinedError();
+			throw new WaveNotDefinedError();
 		}
 	}
 }

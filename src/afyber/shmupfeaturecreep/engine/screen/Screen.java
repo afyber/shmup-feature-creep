@@ -4,7 +4,7 @@ import afyber.shmupfeaturecreep.Main;
 import afyber.shmupfeaturecreep.engine.CompactFrameArray;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
 import afyber.shmupfeaturecreep.engine.MathUtil;
-import afyber.shmupfeaturecreep.engine.errors.SpriteSheetsNotDefinedError;
+import afyber.shmupfeaturecreep.engine.errors.SpriteSheetNotDefinedError;
 import afyber.shmupfeaturecreep.engine.input.KeyboardHandler;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
 import afyber.shmupfeaturecreep.engine.sprites.Sprite;
@@ -122,7 +122,7 @@ public class Screen {
 			}
 		}
 		catch (IOException e) {
-			throw new SpriteSheetsNotDefinedError();
+			throw new SpriteSheetNotDefinedError();
 		}
 	}
 
@@ -140,7 +140,7 @@ public class Screen {
 				}
 			}
 		} catch (IOException e) {
-			throw new SpriteSheetsNotDefinedError();
+			throw new SpriteSheetNotDefinedError();
 		}
 	}
 
@@ -390,7 +390,7 @@ public class Screen {
 				// most of the magic happens in here
 
 				// if this character will go past the wrap width, and we have drawn a character this line, wrap around
-				if (request.wrapWidth() != -1 && runningX != 0 && runningX + character.imageWidth() > request.wrapWidth()) {
+				if (request.wrapWidth() != -1 && runningX != 0 && runningX + request.xScale() * character.imageWidth() > request.wrapWidth()) {
 					runningX = 0;
 					runningY += font.getLineHeight() * request.yScale();
 				}
