@@ -3,6 +3,7 @@ package afyber.shmupfeaturecreep.engine.screen;
 import afyber.shmupfeaturecreep.Main;
 import afyber.shmupfeaturecreep.engine.CompactFrameArray;
 import afyber.shmupfeaturecreep.engine.GeneralUtil;
+import afyber.shmupfeaturecreep.engine.MathUtil;
 import afyber.shmupfeaturecreep.engine.errors.SpriteSheetsNotDefinedError;
 import afyber.shmupfeaturecreep.engine.input.KeyboardHandler;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
@@ -298,7 +299,7 @@ public class Screen {
 		int actualY = request.y() - (int)Math.round(sprite.originY() * Math.abs(request.yScale()));
 		int actualX2 = actualX + (int)Math.round(sprite.dataWidth() * Math.abs(request.xScale()));
 		int actualY2 = actualY + (int)Math.round(sprite.dataHeight() * Math.abs(request.yScale()));
-		if (!GeneralUtil.areRectanglesIntersecting(actualX, actualY, actualX2, actualY2, 0, 0, image.getWidth() - 1, image.getHeight() - 1)) {
+		if (!isScreenIntersecting(actualX, actualY, actualX2, actualY2)) {
 			return;
 		}
 
@@ -318,8 +319,11 @@ public class Screen {
 		}
 	}
 
+	// for sending custom (non-spritesheet) data straight to the screen, no scaling or rotation
 	public static void applySpriteDataToFrame(int[][] data, int x, int y, double alpha) {
-		// less efficient sometimes, faster other times
+		if (!isScreenIntersecting(x, y, x + data[0].length, y + data.length)) {
+			return;
+		}
 
 		for (int i = 0; i < data.length; i++) {
 			for (int c = 0; c < data[0].length; c++) {
@@ -329,7 +333,7 @@ public class Screen {
 	}
 
 	private static void applyRectToFrame(RectangleDrawRequest request) {
-		if (!GeneralUtil.areRectanglesIntersecting(request.x1(), request.y1(), request.x2(), request.y2(), 0, 0, image.getWidth() - 1, image.getHeight() - 1)) {
+		if (!isScreenIntersecting(request.x1(), request.y1(), request.x2(), request.y2())) {
 			return;
 		}
 
@@ -459,6 +463,12 @@ public class Screen {
 				rgbColor = 0x0;
 			}
 			else {
+				// oh boy this is getting to be a fun function
+				// this scales each color component of the pixel's color such that the color component in the tint is the new maximum
+				// as such, a tint of 0xFFFFFF does nothing, and a tint of 0x000000 gives you pure black, no matter the value of rgbColor
+				// as an example: if rgbColor is 0xFFFFFF (white), and tint is 0xAAAAFF, the resulting scaled value will be 0xAAAAFF
+				// another example: rgbColor = 0x808080, tint = 0xFF80FF, result = 0x804080
+				// a third: rgbColor = 0x88A0C0, tint = 0x0000FF, result = 0x0000C0
 				rgbColor = (rgbColor & 0xFF000000) | (int)((rgbColor >> 16 & 0xFF) / 256.0 * ((tint >> 16 & 0xFF) != 0 ? tint >> 16 & 0xFF : 0)) << 16 | (int)((rgbColor >> 8 & 0xFF) / 256.0 * ((tint >> 8 & 0xFF) != 0 ? tint >> 8 & 0xFF : 0)) << 8 | (int)((rgbColor & 0xFF) / 256.0 * ((tint & 0xFF) != 0 ? tint & 0xFF : 0));
 			}
 		}
@@ -466,7 +476,7 @@ public class Screen {
 			currentFrame[y][x] = rgbColor;
 		}
 		else if (alpha > 0 && (rgbColor >> 24 & 0xFF) > 0x0) {
-			// basically takes a weighted average of the R, G, and B components of the pixel and the current frame, with the weight being the alpha of the sprite being drawn
+			// basically takes a weighted average of the R, G, and B components of the pixel and the current frame, with the weight being the alpha of the pixel being drawn
 			double percentage = ((float)(rgbColor >> 24 & 0xFF) / 0xFF) * alpha;
 			currentFrame[y][x] = 0xFF000000 | Math.min(0xFF, (int)((currentFrame[y][x] >> 16 & 0xFF) * (1 - percentage) + (rgbColor >> 16 & 0xFF) * percentage)) << 16 | Math.min(0xFF, (int)((currentFrame[y][x] >> 8 & 0xFF) * (1 - percentage) + (rgbColor >> 8 & 0xFF) * percentage)) << 8 | Math.min(0xFF, (int)((currentFrame[y][x] & 0xFF) * (1 - percentage) + (rgbColor & 0xFF) * percentage));
 		}
@@ -636,6 +646,10 @@ public class Screen {
 			return new SpriteInformation(newDataWidth, newDataHeight, newOriginX, newOriginY);
 		}
 		return null;
+	}
+
+	public static boolean isScreenIntersecting(int c1X, int c1Y, int c2X, int c2Y) {
+		return MathUtil.areRectanglesIntersecting(c1X, c1Y, c2X, c2Y, 0, 0, imageWidth - 1, imageHeight - 1);
 	}
 
 	public static boolean isWindowClosed() {

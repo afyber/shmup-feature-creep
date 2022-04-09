@@ -1,7 +1,7 @@
 package afyber.shmupfeaturecreep.engine.world;
 
 import afyber.shmupfeaturecreep.Main;
-import afyber.shmupfeaturecreep.engine.GeneralUtil;
+import afyber.shmupfeaturecreep.engine.MathUtil;
 import afyber.shmupfeaturecreep.engine.Registry;
 import afyber.shmupfeaturecreep.engine.errors.ObjectNotDefinedError;
 import afyber.shmupfeaturecreep.engine.output.EngineLogger;
@@ -290,7 +290,7 @@ public class World {
 		int otherCorner2X = otherCorner1X + otherInfo.dataWidth();
 		int otherCorner2Y = otherCorner1Y + otherInfo.dataHeight();
 
-		if (GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
+		if (MathUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
 				otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y)) {
 			SpriteSheetRegion callerRegion = Screen.getSpriteScaled(callerCollision.getSpriteName(), 0, caller.imageXScale, caller.imageYScale);
 			SpriteSheetRegion otherRegion = Screen.getSpriteScaled(otherCollision.getSpriteName(), 0, other.imageXScale, other.imageYScale);
@@ -367,7 +367,7 @@ public class World {
 			rectCorner2Y = calcY + rectInfo.dataHeight() + rectCollision.getMargin(3);
 		}
 
-		if (GeneralUtil.areRectanglesIntersecting(spriteCorner1X, spriteCorner1Y, spriteCorner2X, spriteCorner2Y,
+		if (MathUtil.areRectanglesIntersecting(spriteCorner1X, spriteCorner1Y, spriteCorner2X, spriteCorner2Y,
 				rectCorner1X, rectCorner1Y, rectCorner2X, rectCorner2Y)) {
 			SpriteSheetRegion spriteRegion = Screen.getSpriteScaled(spriteCollision.getSpriteName(), 0, sprite.imageXScale, sprite.imageYScale);
 
@@ -448,7 +448,7 @@ public class World {
 			otherCorner2Y = calcY + otherInfo.dataHeight() + otherCollision.getMargin(3);
 		}
 
-		return GeneralUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
+		return MathUtil.areRectanglesIntersecting(callerCorner1X, callerCorner1Y, callerCorner2X, callerCorner2Y,
 				otherCorner1X, otherCorner1Y, otherCorner2X, otherCorner2Y);
 	}
 
